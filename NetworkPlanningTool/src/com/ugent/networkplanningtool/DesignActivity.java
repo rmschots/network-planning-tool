@@ -10,7 +10,7 @@ public class DesignActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new DesignView(this));
+        //setContentView(new DesignView(this));
     }
     
 }
