@@ -14,6 +14,7 @@
     <string name="erase">Erase</string>
     <string name="screenshot">Screenshot</string>
     <string name="about">About</string>
-    
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

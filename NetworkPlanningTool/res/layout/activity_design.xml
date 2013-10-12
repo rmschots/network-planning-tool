@@ -84,7 +84,8 @@
         <com.ugent.networkplanningtool.layout.DesignView
             android:id="@+id/designView1"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
 
         <TableLayout
             android:layout_width="wrap_content"
