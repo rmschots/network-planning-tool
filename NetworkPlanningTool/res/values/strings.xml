@@ -16,5 +16,9 @@
     <string name="about">About</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="requirementsText">1. Configure floor plan, networks and requirements</string>
+    <string name="parametersText">2. Configure common parameters</string>
+    <string name="toolsText">3. Run a prediction tool</string>
+    <string name="resultsText">4. Review results</string>
 
 </resources>
