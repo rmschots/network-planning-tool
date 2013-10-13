@@ -3,10 +3,13 @@
     package="com.ugent.networkplanningtool"
     android:versionCode="1"
     android:versionName="1.0" >
+    
+    <uses-feature android:name="android.hardware.touchscreen.multitouch"
+               android:required="true" />
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +17,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.ugent.networkplanningtool.DesignActivity"
-            android:label="@string/app_name" >
+            android:name="com.ugent.networkplanningtool.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
