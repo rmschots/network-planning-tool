@@ -1,6 +1,6 @@
 package com.ugent.networkplanningtool;
 
-import com.ugent.networkplanningtool.layout.DesignView;
+import com.ugent.networkplanningtool.layout.DrawingView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,17 +11,17 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 import android.app.Activity;
 
-public class DesignActivity extends Activity implements OnTouchListener {
+public class MainActivity extends Activity implements OnTouchListener {
 	
-	private DesignView designView;
+	private DrawingView designView;
 	private TextView locationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_design);
+        setContentView(R.layout.activity_main);
         
-        designView = (DesignView) findViewById(R.id.designView1);
+        designView = (DrawingView) findViewById(R.id.drawingView);
         locationText = (TextView)findViewById(R.id.textView1);
         
         designView.setOnTouchListener(this);

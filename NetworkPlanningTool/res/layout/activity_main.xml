@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".DesignActivity" >
+    tools:context=".MainActivity" >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -74,6 +74,38 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:src="@drawable/ic_launcher" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right" >
+
+        <Button
+            android:id="@+id/button10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/button11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/button12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/button13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -81,8 +113,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" >
 
-        <com.ugent.networkplanningtool.layout.DesignView
-            android:id="@+id/designView1"
+        <com.ugent.networkplanningtool.layout.DrawingView
+            android:id="@+id/drawingView"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
@@ -98,7 +130,6 @@
 
                 <Button
                     android:id="@+id/button1"
-                    android:layout_width="50dp"
                     android:layout_height="wrap_content" />
 
                 <Button

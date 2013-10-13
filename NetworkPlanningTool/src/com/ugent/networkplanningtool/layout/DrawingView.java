@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class DesignView extends View {
+public class DrawingView extends View {
 
 	private Paint paint = new Paint();
 	
@@ -21,7 +21,7 @@ public class DesignView extends View {
 	private float dragStartX = 0;
 	private float dragStartY = 0;
 
-	public DesignView(Context context, AttributeSet attrs) {
+	public DrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setupDesign();
 	}
