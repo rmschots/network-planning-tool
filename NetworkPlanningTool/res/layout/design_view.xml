@@ -3,9 +3,11 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:tag="design" >
 
     <TableLayout
+        android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -18,19 +20,25 @@
                 android:id="@+id/ImageButton02"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="walls" />
 
             <ImageButton
                 android:id="@+id/ImageButton01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="doors" />
 
             <ImageButton
                 android:id="@+id/imageButton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="windows" />
 
         </TableRow>
 
@@ -43,19 +51,25 @@
                 android:id="@+id/ImageButton05"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="accesspoints" />
 
             <ImageButton
                 android:id="@+id/ImageButton04"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="activities" />
 
             <ImageButton
                 android:id="@+id/ImageButton03"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="connections" />
 
         </TableRow>
 
@@ -68,38 +82,53 @@
                 android:id="@+id/ImageButton08"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="eraser" />
 
             <ImageButton
                 android:id="@+id/ImageButton07"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="edit" />
 
             <ImageButton
                 android:id="@+id/ImageButton06"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:onClick="onDesignFlipClick"
+                android:src="@drawable/ic_launcher"
+                android:tag="info" />
 
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
         </TableRow>
     </TableLayout>
 
     <ViewFlipper
-        android:id="@+id/viewFlipper1"
+        android:id="@+id/viewFlipper2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/draw_walls_view" />
+            layout="@layout/design_view_walls" />
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/design_view_doors" />
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/design_view_windows" />
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/design_view_accesspoints" />
 
     </ViewFlipper>
 

@@ -2,21 +2,31 @@ package com.ugent.networkplanningtool;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
 import com.ugent.networkplanningtool.model.FloorModel;
 
-public class MainActivity extends Activity implements OnTouchListener {
+public class MainActivity extends Activity implements OnTouchListener{
 	
 	private DrawingView designView;
 	private TextView locationText;
 	private MyScrollBar hScrollBar;
 	private MyScrollBar vScrollBar;
+	
+	
+	private ViewFlipper mainFlip;
+	private ViewFlipper designFlip;
 	
 	private FloorModel model;
 
@@ -29,6 +39,9 @@ public class MainActivity extends Activity implements OnTouchListener {
         hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
         vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
         locationText = (TextView)findViewById(R.id.textView1);
+        
+        mainFlip = (ViewFlipper)findViewById(R.id.viewFlipper1);
+        designFlip = (ViewFlipper)findViewById(R.id.viewFlipper2);
         
         model = new FloorModel(designView.getWidth(), designView.getHeight());
         designView.setModel(model);
@@ -73,5 +86,30 @@ public class MainActivity extends Activity implements OnTouchListener {
 		}
 		return false;
 	}
+
+	public void onMainFlipClick(View v) {
+		Object o = v.getTag();
+		for(int i = 0; i < mainFlip.getChildCount(); i ++){
+			if(mainFlip.getChildAt(i).getTag().equals(o)){
+				mainFlip.setDisplayedChild(i);
+				return;
+			}
+		}
+	}
+	
+	public void onDesignFlipClick(View v) {
+		Object o = v.getTag();
+		for(int i = 0; i < designFlip.getChildCount(); i ++){
+			View view = designFlip.getChildAt(i);
+			Object obj = view.getTag();
+			Log.d("DEBUG",""+o+" "+view+" "+obj);
+			if(designFlip.getChildAt(i).getTag().equals(o)){
+				designFlip.setDisplayedChild(i);
+				return;
+			}
+		}
+	}
+	
+	
     
 }

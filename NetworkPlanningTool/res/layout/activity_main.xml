@@ -11,114 +11,136 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <LinearLayout
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/ImageButton10"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/ImageButton09"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton10"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton08"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton09"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton07"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton08"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton06"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton07"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton05"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton06"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton04"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton05"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton03"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton04"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton02"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton03"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-        <ImageButton
-            android:id="@+id/ImageButton01"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/ic_launcher" />
+            <ImageButton
+                android:id="@+id/ImageButton02"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/ImageButton01"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="right" >
+    </HorizontalScrollView>
 
-        <Button
-            android:id="@+id/Button03"
-            style="@style/AppBaseTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
-            android:text="@string/requirementsText"
-            android:textSize="10sp" />
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right" >
 
-        <Button
-            android:id="@+id/Button02"
-            style="@style/AppBaseTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
-            android:text="@string/parametersText"
-            android:textSize="10sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="right" >
 
-        <Button
-            android:id="@+id/Button01"
-            style="@style/AppBaseTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
-            android:text="@string/toolsText"
-            android:textSize="10sp" />
+            <Button
+                android:id="@+id/Button03"
+                style="@style/AppBaseTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:onClick="onMainFlipClick"
+                android:tag="design"
+                android:text="@string/requirementsText"
+                android:textSize="10sp" />
 
-        <Button
-            android:id="@+id/button10"
-            style="@style/AppBaseTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
-            android:text="@string/resultsText"
-            android:textSize="10sp" />
+            <Button
+                android:id="@+id/Button02"
+                style="@style/AppBaseTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:onClick="onMainFlipClick"
+                android:tag="parameters"
+                android:text="@string/parametersText"
+                android:textSize="10sp" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/Button01"
+                style="@style/AppBaseTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:onClick="onMainFlipClick"
+                android:tag="tools"
+                android:text="@string/toolsText"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/button10"
+                style="@style/AppBaseTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:onClick="onMainFlipClick"
+                android:tag="results"
+                android:text="@string/resultsText"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -154,17 +176,39 @@
 
         </FrameLayout>
 
-        <ViewFlipper
-            android:id="@+id/viewFlipper1"
+        <ScrollView
+            android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" >
 
-            <include
+            <ViewFlipper
+                android:id="@+id/viewFlipper1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                layout="@layout/design_view" />
+                android:layout_height="wrap_content" >
 
-        </ViewFlipper>
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/design_view" />
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/parameters_view" />
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/tools_view" />
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/results_view" />
+
+            </ViewFlipper>
+
+        </ScrollView>
 
     </LinearLayout>
 
