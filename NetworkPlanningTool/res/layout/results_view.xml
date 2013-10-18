@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="results" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/Button03"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Render Data" />
+
+        <Button
+            android:id="@+id/Button02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Visual Options" />
+
+        <Button
+            android:id="@+id/Button01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Export Raw Data" />
+
+    </LinearLayout>
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/design_view_walls" />
+
+    </ViewFlipper>
+
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="tools" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/Button04"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Predict Coverage" />
+
+        <Button
+            android:id="@+id/Button03"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Optimal Placement" />
+
+        <Button
+            android:id="@+id/Button02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Exposure Reduction" />
+
+        <Button
+            android:id="@+id/Button01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Network Reduction" />
+
+        <Button
+            android:id="@+id/Button05"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Estimate SAR" />
+
+        <Button
+            android:id="@+id/Button06"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Monitor Wilab" />
+
+    </LinearLayout>
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/design_view_walls" />
+
+    </ViewFlipper>
+
+</LinearLayout>
