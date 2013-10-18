@@ -12,40 +12,63 @@
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/Button04"
+            android:id="@+id/recieversButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:onClick="onParametersFlipClick"
+            android:tag="receivers"
             android:text="Receivers" />
 
         <Button
             android:id="@+id/Button03"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:onClick="onParametersFlipClick"
+            android:tag="margins"
             android:text="Margins" />
 
         <Button
             android:id="@+id/Button02"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:onClick="onParametersFlipClick"
+            android:tag="algorithms"
             android:text="Algorithms" />
 
         <Button
             android:id="@+id/Button01"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:onClick="onParametersFlipClick"
+            android:tag="generatedaps"
             android:text="Generated APs" />
 
     </LinearLayout>
 
     <ViewFlipper
-        android:id="@+id/viewFlipper1"
+        android:id="@+id/viewFlipper3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_walls" />
+            layout="@layout/parameters_view_receivers" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/parameters_view_margins" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/parameters_view_algorithms" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/parameters_view_generatedaps" />
 
     </ViewFlipper>
 

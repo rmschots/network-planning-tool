@@ -21,61 +21,54 @@
             android:layout_height="wrap_content" >
 
             <ImageButton
-                android:id="@+id/ImageButton10"
+                android:id="@+id/newButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />
 
             <ImageButton
-                android:id="@+id/ImageButton09"
+                android:id="@+id/openButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />
 
             <ImageButton
-                android:id="@+id/ImageButton08"
+                android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />
 
             <ImageButton
-                android:id="@+id/ImageButton07"
+                android:id="@+id/attachButton"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_launcher" />
+
+            <ZoomControls
+                android:id="@+id/zoomControls1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/undoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />
 
             <ImageButton
-                android:id="@+id/ImageButton06"
+                android:id="@+id/redoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />
 
             <ImageButton
-                android:id="@+id/ImageButton05"
+                android:id="@+id/screenshotButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />
 
             <ImageButton
-                android:id="@+id/ImageButton04"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ImageButton03"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ImageButton02"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ImageButton01"
+                android:id="@+id/aboutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/ic_launcher" />

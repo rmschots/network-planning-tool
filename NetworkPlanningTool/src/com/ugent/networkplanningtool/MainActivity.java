@@ -8,25 +8,32 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
 import com.ugent.networkplanningtool.model.FloorModel;
 
-public class MainActivity extends Activity implements OnTouchListener{
+public class MainActivity extends Activity{
 	
 	private DrawingView designView;
 	private TextView locationText;
 	private MyScrollBar hScrollBar;
 	private MyScrollBar vScrollBar;
 	
+	private View designActive;
+	private View mainActive;
+	private View parametersActive;
+	
 	
 	private ViewFlipper mainFlip;
 	private ViewFlipper designFlip;
+	private ViewFlipper parametersFlip;
 	
 	private FloorModel model;
 
@@ -42,52 +49,29 @@ public class MainActivity extends Activity implements OnTouchListener{
         
         mainFlip = (ViewFlipper)findViewById(R.id.viewFlipper1);
         designFlip = (ViewFlipper)findViewById(R.id.viewFlipper2);
+        parametersFlip = (ViewFlipper)findViewById(R.id.viewFlipper3);
+        
+        mainActive = findViewById(R.id.Button03);
+        onMainFlipClick(mainActive);
+        
+        designActive = findViewById(R.id.ImageButton02);
+        onDesignFlipClick(designActive);
+        
+        parametersActive = findViewById(R.id.recieversButton);
+        onDesignFlipClick(parametersActive);
         
         model = new FloorModel(designView.getWidth(), designView.getHeight());
         designView.setModel(model);
         hScrollBar.setModel(model);
         vScrollBar.setModel(model);
+        
+        
     }
 
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		if(v == designView){
-			float touchX = event.getX();
-			float touchY = event.getY();
-
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				locationText.setText("x: "+touchX+" y: "+touchY);;
-				break;
-
-	        case MotionEvent.ACTION_MOVE:
-	            //a touch placement has changed
-	            break;
-
-	        case MotionEvent.ACTION_UP:
-	            //first finger went up
-	            break;
-
-	        case MotionEvent.ACTION_CANCEL:
-	            //gesture aborted (I think this means the finger was dragged outside of the touchscreen)
-	            break;
-
-	        case MotionEvent.ACTION_POINTER_DOWN:
-	        	
-	            //second finger (or third, or more) went down.
-	            break;
-
-	        case MotionEvent.ACTION_POINTER_UP:
-	            //second finger (or more) went up.
-	            break;
-
-	        default: break;
-			}
-		}
-		return false;
-	}
-
 	public void onMainFlipClick(View v) {
+		mainActive.setEnabled(true);
+		v.setEnabled(false);
+		mainActive = v;
 		Object o = v.getTag();
 		for(int i = 0; i < mainFlip.getChildCount(); i ++){
 			if(mainFlip.getChildAt(i).getTag().equals(o)){
@@ -98,18 +82,28 @@ public class MainActivity extends Activity implements OnTouchListener{
 	}
 	
 	public void onDesignFlipClick(View v) {
-		Object o = v.getTag();
+		designActive.setEnabled(true);
+		v.setEnabled(false);
+		designActive = v;
+		Object tag = v.getTag();
 		for(int i = 0; i < designFlip.getChildCount(); i ++){
-			View view = designFlip.getChildAt(i);
-			Object obj = view.getTag();
-			Log.d("DEBUG",""+o+" "+view+" "+obj);
-			if(designFlip.getChildAt(i).getTag().equals(o)){
+			if(designFlip.getChildAt(i).getTag().equals(tag)){
 				designFlip.setDisplayedChild(i);
 				return;
 			}
 		}
 	}
 	
-	
-    
+	public void onParametersFlipClick(View v) {
+		parametersActive.setEnabled(true);
+		v.setEnabled(false);
+		parametersActive = v;
+		Object o = v.getTag();
+		for(int i = 0; i < parametersFlip.getChildCount(); i ++){
+			if(parametersFlip.getChildAt(i).getTag().equals(o)){
+				parametersFlip.setDisplayedChild(i);
+				return;
+			}
+		}
+	}
 }
