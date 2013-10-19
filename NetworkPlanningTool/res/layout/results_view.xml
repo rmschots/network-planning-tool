@@ -12,22 +12,31 @@
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/Button03"
+            android:id="@+id/renderDataButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Render Data" />
+            android:onClick="onResultsFlipClick"
+            android:tag="renderdata"
+            android:text="Render Data"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button02"
+            android:id="@+id/visualOptionsButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Visual Options" />
+            android:onClick="onResultsFlipClick"
+            android:tag="visualoptions"
+            android:text="Visual Options"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button01"
+            android:id="@+id/exportRawDataButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Export Raw Data" />
+            android:onClick="onResultsFlipClick"
+            android:tag="export"
+            android:text="Export Raw Data"
+            android:textColor="@color/toggle_text_color" />
 
     </LinearLayout>
 
@@ -39,7 +48,17 @@
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_walls" />
+            layout="@layout/results_view_renderdata" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/results_view_visualoptions" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/results_view_exportrawdata" />
 
     </ViewFlipper>
 

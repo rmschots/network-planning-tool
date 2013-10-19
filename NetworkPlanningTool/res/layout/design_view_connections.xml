@@ -7,14 +7,14 @@
     android:tag="connections" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/connectionTypeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connection Type"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/radioGroup1"
+        android:id="@+id/connectionTypeRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 

@@ -12,40 +12,58 @@
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/Button04"
+            android:id="@+id/predictCoverageButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Predict Coverage" />
+            android:onClick="onToolsFlipClick"
+            android:tag="coverage"
+            android:text="Predict Coverage"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button03"
+            android:id="@+id/optimalPlacementButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Optimal Placement" />
+            android:onClick="onToolsFlipClick"
+            android:tag="placement"
+            android:text="Optimal Placement"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button02"
+            android:id="@+id/exposureReductionButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Exposure Reduction" />
+            android:onClick="onToolsFlipClick"
+            android:tag="exposure"
+            android:text="Exposure Reduction"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button01"
+            android:id="@+id/networkReductionButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Network Reduction" />
+            android:onClick="onToolsFlipClick"
+            android:tag="network"
+            android:text="Network Reduction"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button05"
+            android:id="@+id/estimateSARButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Estimate SAR" />
+            android:onClick="onToolsFlipClick"
+            android:tag="sar"
+            android:text="Estimate SAR"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button06"
+            android:id="@+id/monitorWiLabButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Monitor Wilab" />
+            android:onClick="onToolsFlipClick"
+            android:tag="wilab"
+            android:text="Monitor Wilab"
+            android:textColor="@color/toggle_text_color" />
 
     </LinearLayout>
 
@@ -57,7 +75,32 @@
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_walls" />
+            layout="@layout/tools_coverage" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tools_placement" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tools_exposure" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tools_network" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tools_sar" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tools_wilab" />
 
     </ViewFlipper>
 

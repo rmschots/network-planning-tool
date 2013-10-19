@@ -7,14 +7,14 @@
     android:tag="eraser" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/eraserInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Eraser Info"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/eraserInfoText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -22,21 +22,21 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/quickEraseText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Quick Erase"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/eraseAccesspointsButton"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Erase accesspoints" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/eraseActivitiesButton"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

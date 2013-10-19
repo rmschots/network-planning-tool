@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/exposureLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:tag="exposure" >
+
+    <TextView
+        android:id="@+id/distanceToAPText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance to AP"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <SeekBar
+        android:id="@+id/distanceToAPSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/distanceToAPTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="10 cm"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/maxElectricFieldText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Max Electric Field"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/maxElectricFieldEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="3" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/voltPerMeterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="V/m"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/placeAccesspointsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place Accesspoints"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Spinner
+        android:id="@+id/placeAccesspointsSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/defaultActivityEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Default Activity"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Spinner
+        android:id="@+id/defaultActivitySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/reduceExposureButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reduce Exposure!" />
+
+</LinearLayout>

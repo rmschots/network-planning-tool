@@ -7,19 +7,19 @@
     android:tag="accesspoints" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/networkText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Network"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Spinner
-        android:id="@+id/spinner1"
+        android:id="@+id/networkIDSpinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/networkSignalTypeSpinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
@@ -28,13 +28,13 @@
         android:layout_height="wrap_content" >
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/networkMHzSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/mhzText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -48,13 +48,13 @@
         android:layout_height="wrap_content" >
 
         <Spinner
-            android:id="@+id/spinner4"
+            android:id="@+id/networkChannelSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/networkChannelText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -64,19 +64,19 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/networkModelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Model"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Spinner
-        android:id="@+id/spinner5"
+        android:id="@+id/networkModelSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/transmitPowerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Transmit Power"
@@ -86,14 +86,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Spinner
-            android:id="@+id/spinner6"
+        <EditText
+            android:id="@+id/transmitPowerEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="numberSigned" >
+
+            <requestFocus />
+        </EditText>
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/dbmText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -103,7 +108,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/antennaGainText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Antenna Gain"
@@ -113,14 +118,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Spinner
-            android:id="@+id/spinner7"
+        <EditText
+            android:id="@+id/antennaGainEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="numberSigned" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/dbText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -130,7 +137,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/elevationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Elevation"
@@ -140,14 +147,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Spinner
-            android:id="@+id/spinner8"
+        <EditText
+            android:id="@+id/elevationEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/mText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

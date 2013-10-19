@@ -7,14 +7,14 @@
     android:tag="walls" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/materialText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Material"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/radioGroup1"
+        android:id="@+id/wallsMaterialRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -63,14 +63,14 @@
     </RadioGroup>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/thicknessText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thickness"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/radioGroup2"
+        android:id="@+id/wallsThicknessRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -89,14 +89,14 @@
     </RadioGroup>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/snapToText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Snap to"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/radioGroup3"
+        android:id="@+id/wallsSnapToRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -115,7 +115,7 @@
     </RadioGroup>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/predictButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Stop drawing" />

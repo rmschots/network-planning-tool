@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activitiesLayout"
+    android:id="@+id/networkReductionLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="activities" >
+    android:tag="network" >
 
     <TextView
-        android:id="@+id/activityTypeText"
+        android:id="@+id/defaultActivityEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activity type"
+        android:text="Default Activity"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/activityTypeRadioGroup"
-        android:layout_width="fill_parent"
+        android:id="@+id/defaultActivityRadioGroup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <RadioButton
@@ -38,16 +38,24 @@
             android:text="YouTube" />
 
         <RadioButton
-            android:id="@+id/RadioButton04"
+            android:id="@+id/RadioButton01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Surfing" />
 
         <RadioButton
-            android:id="@+id/RadioButton03"
+            android:id="@+id/RadioButton02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No coverage" />
+
     </RadioGroup>
+
+    <Button
+        android:id="@+id/reduceNetworkButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reduce Network!" />
 
 </LinearLayout>

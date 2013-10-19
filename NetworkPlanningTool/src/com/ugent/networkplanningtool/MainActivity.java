@@ -33,11 +33,14 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private View designActive;
 	private View mainActive;
 	private View parametersActive;
-	
+	private View toolsActive;
+	private View resultsActive;
 	
 	private ViewFlipper mainFlip;
 	private ViewFlipper designFlip;
 	private ViewFlipper parametersFlip;
+	private ViewFlipper toolsFlip;
+	private ViewFlipper resultsFlip;
 	
 	private FloorModel model;
 
@@ -55,15 +58,19 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         mainFlip = (ViewFlipper)findViewById(R.id.mainFlipper);
         designFlip = (ViewFlipper)findViewById(R.id.designFlipper);
         parametersFlip = (ViewFlipper)findViewById(R.id.parametersFlipper);
+        toolsFlip = (ViewFlipper)findViewById(R.id.toolsFlipper);
+        resultsFlip = (ViewFlipper)findViewById(R.id.resultsFlipper);
         
         mainActive = findViewById(R.id.designButton);
-        onMainFlipClick(mainActive);
-        
         designActive = findViewById(R.id.wallsButton);
-        onDesignFlipClick(designActive);
-        
         parametersActive = findViewById(R.id.recieversButton);
+        toolsActive = findViewById(R.id.predictCoverageButton);
+        resultsActive = findViewById(R.id.renderDataButton);
+        onMainFlipClick(mainActive);
+        onDesignFlipClick(designActive);
         onParametersFlipClick(parametersActive);
+        onToolsFlipClick(toolsActive);
+        onResultsFlipClick(resultsActive);
         
         model = new FloorModel(designView.getWidth(), designView.getHeight());
         
@@ -76,40 +83,43 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
     }
 
+
 	public void onMainFlipClick(View v) {
 		mainActive.setEnabled(true);
-		v.setEnabled(false);
 		mainActive = v;
-		Object o = v.getTag();
-		for(int i = 0; i < mainFlip.getChildCount(); i ++){
-			if(mainFlip.getChildAt(i).getTag().equals(o)){
-				mainFlip.setDisplayedChild(i);
-				return;
-			}
-		}
+		onFlipClick(v, mainFlip);
 	}
 	
 	public void onDesignFlipClick(View v) {
 		designActive.setEnabled(true);
-		v.setEnabled(false);
 		designActive = v;
-		Object tag = v.getTag();
-		for(int i = 0; i < designFlip.getChildCount(); i ++){
-			if(designFlip.getChildAt(i).getTag().equals(tag)){
-				designFlip.setDisplayedChild(i);
-				return;
-			}
-		}
+		onFlipClick(v, designFlip);
 	}
 	
 	public void onParametersFlipClick(View v) {
 		parametersActive.setEnabled(true);
-		v.setEnabled(false);
 		parametersActive = v;
+		onFlipClick(v, parametersFlip);
+	}
+	
+	public void onToolsFlipClick(View v) {
+		toolsActive.setEnabled(true);
+		toolsActive = v;
+		onFlipClick(v, toolsFlip);
+	}
+	
+	public void onResultsFlipClick(View v) {
+		resultsActive.setEnabled(true);
+		resultsActive = v;
+		onFlipClick(v, resultsFlip);
+	}
+	
+	private void onFlipClick(View v, ViewFlipper vf){
+		v.setEnabled(false);
 		Object o = v.getTag();
-		for(int i = 0; i < parametersFlip.getChildCount(); i ++){
-			if(parametersFlip.getChildAt(i).getTag().equals(o)){
-				parametersFlip.setDisplayedChild(i);
+		for(int i = 0; i < vf.getChildCount(); i ++){
+			if(vf.getChildAt(i).getTag().equals(o)){
+				vf.setDisplayedChild(i);
 				return;
 			}
 		}

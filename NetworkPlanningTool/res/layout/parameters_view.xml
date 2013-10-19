@@ -17,31 +17,35 @@
             android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="receivers"
-            android:text="Receivers" />
+            android:text="Receivers"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button03"
+            android:id="@+id/marginsButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="margins"
-            android:text="Margins" />
+            android:text="Margins"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button02"
+            android:id="@+id/algorithmsButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="algorithms"
-            android:text="Algorithms" />
+            android:text="Algorithms"
+            android:textColor="@color/toggle_text_color" />
 
         <Button
-            android:id="@+id/Button01"
+            android:id="@+id/generatedAPsButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="generatedaps"
-            android:text="Generated APs" />
+            android:text="Generated APs"
+            android:textColor="@color/toggle_text_color" />
 
     </LinearLayout>
 

@@ -13,8 +13,8 @@ public class FloorModel extends Observable{
 	private STATE state;
 	
 	public static final float INTERVAL = 0.5f;
-	public static final float FLOOR_WIDTH = 100f;
-	public static final float FLOOR_HEIGHT = 75f;
+	public static final float FLOOR_WIDTH = 40f;
+	public static final float FLOOR_HEIGHT = 30f;
 	
 	private static final float maxZoomIn = 2f;
 	
