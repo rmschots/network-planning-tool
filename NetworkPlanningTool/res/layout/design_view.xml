@@ -17,7 +17,7 @@
             android:layout_height="wrap_content" >
 
             <ImageButton
-                android:id="@+id/ImageButton02"
+                android:id="@+id/wallsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -25,7 +25,7 @@
                 android:tag="walls" />
 
             <ImageButton
-                android:id="@+id/ImageButton01"
+                android:id="@+id/doorsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -33,7 +33,7 @@
                 android:tag="doors" />
 
             <ImageButton
-                android:id="@+id/imageButton1"
+                android:id="@+id/windowsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content" >
 
             <ImageButton
-                android:id="@+id/ImageButton05"
+                android:id="@+id/accesspointsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -56,7 +56,7 @@
                 android:tag="accesspoints" />
 
             <ImageButton
-                android:id="@+id/ImageButton04"
+                android:id="@+id/activitiesButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -64,7 +64,7 @@
                 android:tag="activities" />
 
             <ImageButton
-                android:id="@+id/ImageButton03"
+                android:id="@+id/connectionsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content" >
 
             <ImageButton
-                android:id="@+id/ImageButton08"
+                android:id="@+id/designEraserButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -87,7 +87,7 @@
                 android:tag="eraser" />
 
             <ImageButton
-                android:id="@+id/ImageButton07"
+                android:id="@+id/editButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -95,7 +95,7 @@
                 android:tag="edit" />
 
             <ImageButton
-                android:id="@+id/ImageButton06"
+                android:id="@+id/infoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
@@ -106,7 +106,7 @@
     </TableLayout>
 
     <ViewFlipper
-        android:id="@+id/viewFlipper2"
+        android:id="@+id/designFlipper"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 

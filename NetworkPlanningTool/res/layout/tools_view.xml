@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <ViewFlipper
-        android:id="@+id/viewFlipper1"
+        android:id="@+id/toolsFlipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 

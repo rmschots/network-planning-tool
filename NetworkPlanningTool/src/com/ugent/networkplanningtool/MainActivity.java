@@ -1,5 +1,8 @@
 package com.ugent.networkplanningtool;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,10 +22,11 @@ import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
 import com.ugent.networkplanningtool.model.FloorModel;
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	private DrawingView designView;
 	private TextView locationText;
+	private TextView coordinatesText;
 	private MyScrollBar hScrollBar;
 	private MyScrollBar vScrollBar;
 	
@@ -45,26 +49,30 @@ public class MainActivity extends Activity{
         designView = (DrawingView) findViewById(R.id.drawingView);
         hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
         vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
-        locationText = (TextView)findViewById(R.id.textView1);
+        locationText = (TextView)findViewById(R.id.locationText);
+        coordinatesText = (TextView)findViewById(R.id.coordinatesTextView);
         
-        mainFlip = (ViewFlipper)findViewById(R.id.viewFlipper1);
-        designFlip = (ViewFlipper)findViewById(R.id.viewFlipper2);
-        parametersFlip = (ViewFlipper)findViewById(R.id.viewFlipper3);
+        mainFlip = (ViewFlipper)findViewById(R.id.mainFlipper);
+        designFlip = (ViewFlipper)findViewById(R.id.designFlipper);
+        parametersFlip = (ViewFlipper)findViewById(R.id.parametersFlipper);
         
-        mainActive = findViewById(R.id.Button03);
+        mainActive = findViewById(R.id.designButton);
         onMainFlipClick(mainActive);
         
-        designActive = findViewById(R.id.ImageButton02);
+        designActive = findViewById(R.id.wallsButton);
         onDesignFlipClick(designActive);
         
         parametersActive = findViewById(R.id.recieversButton);
-        onDesignFlipClick(parametersActive);
+        onParametersFlipClick(parametersActive);
         
         model = new FloorModel(designView.getWidth(), designView.getHeight());
+        
         designView.setModel(model);
         hScrollBar.setModel(model);
         vScrollBar.setModel(model);
+        model.addObserver(this);
         
+        designView.setOnTouchListener(this);
         
     }
 
@@ -105,5 +113,26 @@ public class MainActivity extends Activity{
 				return;
 			}
 		}
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		coordinatesText.setText(Math.round(model.getOffsetX()*100)/100+":"+Math.round(model.getOffsetY()*100)/100);
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if(v == designView){
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+	        case MotionEvent.ACTION_MOVE:
+	        case MotionEvent.ACTION_UP:
+	        case MotionEvent.ACTION_CANCEL:
+	        	locationText.setText((int)event.getX(0)+":"+(int)event.getY(0));
+	            break;
+	        default: break;
+			}
+		}
+		return false;
 	}
 }

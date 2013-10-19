@@ -46,7 +46,7 @@
     </LinearLayout>
 
     <ViewFlipper
-        android:id="@+id/viewFlipper3"
+        android:id="@+id/parametersFlipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
