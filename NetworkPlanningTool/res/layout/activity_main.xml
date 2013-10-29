@@ -1,6 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Background"
@@ -12,7 +11,6 @@
     tools:context=".MainActivity" >
 
     <HorizontalScrollView
-        android:id="@+id/horizontalScrollView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
@@ -24,25 +22,25 @@
                 android:id="@+id/newButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/new_icon" />
 
             <ImageButton
                 android:id="@+id/openButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/open" />
 
             <ImageButton
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/save" />
 
             <ImageButton
                 android:id="@+id/attachButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/attach" />
 
             <ZoomControls
                 android:id="@+id/zoomControls1"
@@ -53,25 +51,25 @@
                 android:id="@+id/undoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/undo2" />
 
             <ImageButton
                 android:id="@+id/redoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/redo2" />
 
             <ImageButton
                 android:id="@+id/screenshotButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/screenshot" />
 
             <ImageButton
                 android:id="@+id/aboutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/info" />
         </LinearLayout>
 
     </HorizontalScrollView>
@@ -80,18 +78,18 @@
         android:id="@+id/horizontalScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right" >
+        android:layout_gravity="end" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:gravity="right" >
+            android:gravity="end" >
 
             <Button
                 android:id="@+id/designButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:onClick="onMainFlipClick"
                 android:tag="design"
                 android:text="@string/requirementsText"
@@ -103,7 +101,7 @@
                 style="@style/AppBaseTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:onClick="onMainFlipClick"
                 android:tag="parameters"
                 android:text="@string/parametersText"
@@ -115,7 +113,7 @@
                 style="@style/AppBaseTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:onClick="onMainFlipClick"
                 android:tag="tools"
                 android:text="@string/toolsText"
@@ -127,7 +125,7 @@
                 style="@style/AppBaseTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:onClick="onMainFlipClick"
                 android:tag="results"
                 android:text="@string/resultsText"
@@ -144,7 +142,7 @@
         android:layout_weight="1" >
 
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
@@ -183,22 +181,22 @@
                 android:layout_height="wrap_content" >
 
                 <include
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     layout="@layout/design_view" />
 
                 <include
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     layout="@layout/parameters_view" />
 
                 <include
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     layout="@layout/tools_view" />
 
                 <include
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     layout="@layout/results_view" />
 

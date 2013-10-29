@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:tag="design" >
@@ -21,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/wall"
                 android:tag="walls" />
 
             <ImageButton
@@ -29,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/door"
                 android:tag="doors" />
 
             <ImageButton
@@ -37,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/window"
                 android:tag="windows" />
 
         </TableRow>
@@ -52,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/accesspoint2"
                 android:tag="accesspoints" />
 
             <ImageButton
@@ -60,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/activities"
                 android:tag="activities" />
 
             <ImageButton
@@ -68,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/connections"
                 android:tag="connections" />
 
         </TableRow>
@@ -83,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/eraser3"
                 android:tag="eraser" />
 
             <ImageButton
@@ -91,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/edit"
                 android:tag="edit" />
 
             <ImageButton
@@ -99,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/info2"
                 android:tag="info" />
 
         </TableRow>

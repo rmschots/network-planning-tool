@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:tag="tools" >
@@ -75,32 +75,32 @@
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/tools_coverage" />
+            layout="@layout/tools_view_coverage" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/tools_placement" />
+            layout="@layout/tools_view_placement" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/tools_exposure" />
+            layout="@layout/tools_view_exposure" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/tools_network" />
+            layout="@layout/tools_view_network" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/tools_sar" />
+            layout="@layout/tools_view_sar" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/tools_wilab" />
+            layout="@layout/tools_view_wilab" />
 
     </ViewFlipper>
 
