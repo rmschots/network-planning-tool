@@ -4,10 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Background"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
     <HorizontalScrollView
@@ -82,14 +78,13 @@
         android:layout_below="@+id/HorizontalScrollView1" >
 
         <LinearLayout
-            style="@android:style/ButtonBar"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:gravity="end" >
 
             <Button
                 android:id="@+id/designButton"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/MyButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -101,7 +96,7 @@
 
             <Button
                 android:id="@+id/parametersButton"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/MyButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -113,7 +108,7 @@
 
             <Button
                 android:id="@+id/toolsButton"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/MyButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -125,7 +120,7 @@
 
             <Button
                 android:id="@+id/resultsButton"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/MyButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -141,9 +136,10 @@
         android:id="@+id/drawingView"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/LinearLayout2"
+        android:layout_above="@+id/textView2"
         android:layout_below="@+id/HorizontalScrollView2"
-        android:layout_toLeftOf="@+id/scrollView1" />
+        android:layout_toLeftOf="@+id/scrollView1"
+        android:background="@android:color/white" />
 
     <com.ugent.networkplanningtool.layout.MyScrollBar
         android:id="@+id/myScrollBar1"
@@ -202,56 +198,71 @@
         </ViewFlipper>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/LinearLayout2"
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/HorizontalScrollView1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/HorizontalScrollView1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitEnd"
+        android:src="@drawable/ugent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/locationText"
+        android:layout_alignParentLeft="true"
+        android:layout_weight="1"
+        android:text="Location on screen"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/locationText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/scrollView1" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@id/textView2"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text=":" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:orientation="vertical" >
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/coordinatesTextView"
+        android:layout_toRightOf="@id/textView2"
+        android:paddingLeft="10dp"
+        android:text="Coordinates"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Location on screen"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/coordinatesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/textView1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@id/textView1"
+        android:gravity="center_horizontal"
+        android:paddingLeft="10dp"
+        android:text=":"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
-                android:id="@+id/locationText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text=":" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Coordinates"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/coordinatesTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text=":"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/drawingView"
+        android:layout_below="@id/drawingView"
+        android:layout_toRightOf="@id/textView1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logos" />
 
 </RelativeLayout>
