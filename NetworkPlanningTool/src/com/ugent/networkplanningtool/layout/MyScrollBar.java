@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -17,6 +18,8 @@ import android.view.View;
 public class MyScrollBar extends View implements Observer{
 	
 	private Paint paint = new Paint();
+	
+	private RectF rect = new RectF();
 	
 	private boolean horizontal;
 	private FloorModel model;
@@ -73,7 +76,8 @@ public class MyScrollBar extends View implements Observer{
 					paint.setColor(sliderColor);
 					barStart = getWidth()*start/max;
 					barEnd = getWidth()*stop/max;
-					canvas.drawRoundRect(new RectF(barStart, 0, barEnd, getHeight()-1), 20, 20, paint);
+					rect.set(barStart, 0, barEnd, getHeight()-1);
+					canvas.drawRoundRect(rect, 20, 20, paint);
 				}
 			}else{
 				float max = FloorModel.FLOOR_HEIGHT;
@@ -86,7 +90,8 @@ public class MyScrollBar extends View implements Observer{
 					paint.setColor(sliderColor);
 					barStart = getHeight()*start/max;
 					barEnd = getHeight()*stop/max;
-					canvas.drawRoundRect(new RectF(0, getHeight()*start/max, getWidth()-1, getHeight()*stop/max), 20, 20, paint);
+					rect.set(0, getHeight()*start/max, getWidth()-1, getHeight()*stop/max);
+					canvas.drawRoundRect(rect, 20, 20, paint);
 				}
 			}
 		}

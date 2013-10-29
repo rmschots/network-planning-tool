@@ -75,14 +75,12 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/radio0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Thin" />
 
         <RadioButton
-            android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Thick" />
@@ -101,14 +99,12 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/radio0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Grid" />
 
         <RadioButton
-            android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Walls" />
