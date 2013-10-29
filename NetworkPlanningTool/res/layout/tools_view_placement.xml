@@ -47,14 +47,14 @@
 
     <Button
         android:id="@+id/changeGeneratedAPsButton"
-        style="?android:attr/buttonStyleSmall"
+        style="@style/MyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Change..." />
 
     <Button
         android:id="@+id/optimizeButton"
-        style="?android:attr/buttonStyleSmall"
+        style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Optimize!" />

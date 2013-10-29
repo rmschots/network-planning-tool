@@ -1,9 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Background"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -11,6 +11,7 @@
     tools:context=".MainActivity" >
 
     <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
@@ -71,14 +72,14 @@
                 android:layout_height="fill_parent"
                 android:src="@drawable/info" />
         </LinearLayout>
-
     </HorizontalScrollView>
 
     <HorizontalScrollView
-        android:id="@+id/horizontalScrollView1"
+        android:id="@+id/HorizontalScrollView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end" >
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/HorizontalScrollView1" >
 
         <LinearLayout
             style="@android:style/ButtonBar"
@@ -88,7 +89,7 @@
 
             <Button
                 android:id="@+id/designButton"
-                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -100,7 +101,7 @@
 
             <Button
                 android:id="@+id/parametersButton"
-                style="@android:style/Widget.Holo.Button.Borderless"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -112,7 +113,7 @@
 
             <Button
                 android:id="@+id/toolsButton"
-                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -124,7 +125,7 @@
 
             <Button
                 android:id="@+id/resultsButton"
-                style="@android:style/Widget.Holo.Button.Borderless.Small"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
@@ -133,84 +134,80 @@
                 android:text="@string/resultsText"
                 android:textColor="@color/toggle_text_color"
                 android:textSize="12sp" />
-
         </LinearLayout>
-
     </HorizontalScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:baselineAligned="false" >
+    <com.ugent.networkplanningtool.layout.DrawingView
+        android:id="@+id/drawingView"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/LinearLayout2"
+        android:layout_below="@+id/HorizontalScrollView2"
+        android:layout_toLeftOf="@+id/scrollView1" />
 
-        <FrameLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
+    <com.ugent.networkplanningtool.layout.MyScrollBar
+        android:id="@+id/myScrollBar1"
+        android:layout_width="fill_parent"
+        android:layout_height="16dp"
+        android:layout_alignBottom="@+id/drawingView"
+        android:layout_alignLeft="@+id/drawingView"
+        android:layout_alignRight="@+id/drawingView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
-            <com.ugent.networkplanningtool.layout.DrawingView
-                android:id="@+id/drawingView"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent" />
+    <com.ugent.networkplanningtool.layout.MyScrollBar
+        android:id="@+id/myScrollBar2"
+        android:layout_width="16dp"
+        android:layout_height="fill_parent"
+        android:layout_alignBottom="@+id/drawingView"
+        android:layout_alignRight="@+id/drawingView"
+        android:layout_alignTop="@+id/drawingView"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp" />
 
-            <com.ugent.networkplanningtool.layout.MyScrollBar
-                android:id="@+id/myScrollBar1"
-                android:layout_width="fill_parent"
-                android:layout_height="16dp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp" />
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/HorizontalScrollView2"
+        android:measureAllChildren="false" >
 
-            <com.ugent.networkplanningtool.layout.MyScrollBar
-                android:id="@+id/myScrollBar2"
-                android:layout_width="16dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="15dp" />
-
-        </FrameLayout>
-
-        <ScrollView
-            android:id="@+id/scrollView1"
+        <ViewFlipper
+            android:id="@+id/mainFlipper"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content"
+            android:measureAllChildren="false" >
 
-            <ViewFlipper
-                android:id="@+id/mainFlipper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/design_view" />
 
-                <include
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    layout="@layout/design_view" />
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                layout="@layout/parameters_view" />
 
-                <include
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    layout="@layout/parameters_view" />
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                layout="@layout/tools_view" />
 
-                <include
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    layout="@layout/tools_view" />
-
-                <include
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    layout="@layout/results_view" />
-
-            </ViewFlipper>
-
-        </ScrollView>
-
-    </LinearLayout>
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                layout="@layout/results_view" />
+        </ViewFlipper>
+    </ScrollView>
 
     <LinearLayout
+        android:id="@+id/LinearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/scrollView1" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -233,7 +230,6 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text=":" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -255,9 +251,7 @@
                 android:gravity="center_horizontal"
                 android:text=":"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
         </LinearLayout>
-
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

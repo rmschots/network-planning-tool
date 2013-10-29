@@ -13,8 +13,8 @@
 
         <Button
             android:id="@+id/recieversButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="receivers"
             android:text="Receivers"
@@ -22,8 +22,8 @@
 
         <Button
             android:id="@+id/marginsButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="margins"
             android:text="Margins"
@@ -31,8 +31,8 @@
 
         <Button
             android:id="@+id/algorithmsButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="algorithms"
             android:text="Algorithms"
@@ -40,8 +40,8 @@
 
         <Button
             android:id="@+id/generatedAPsButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onParametersFlipClick"
             android:tag="generatedaps"
             android:text="Generated APs"
@@ -52,7 +52,8 @@
     <ViewFlipper
         android:id="@+id/parametersFlipper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:measureAllChildren="false" >
 
         <include
             android:layout_width="match_parent"

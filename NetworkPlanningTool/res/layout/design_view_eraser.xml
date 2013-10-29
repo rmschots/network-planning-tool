@@ -30,14 +30,14 @@
 
     <Button
         android:id="@+id/eraseAccesspointsButton"
-        style="?android:attr/buttonStyleSmall"
+        style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Erase accesspoints" />
 
     <Button
         android:id="@+id/eraseActivitiesButton"
-        style="?android:attr/buttonStyleSmall"
+        style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Erase activities" />

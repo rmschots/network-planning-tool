@@ -80,6 +80,7 @@
 
     <Button
         android:id="@+id/stopDrawingButton"
+        style="@style/MyButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Stop drawing" />

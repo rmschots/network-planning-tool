@@ -84,7 +84,7 @@
 
     <Button
         android:id="@+id/reduceExposureButton"
-        style="?android:attr/buttonStyleSmall"
+        style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Reduce Exposure!" />

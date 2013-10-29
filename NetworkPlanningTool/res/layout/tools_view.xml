@@ -7,14 +7,14 @@
     android:tag="tools" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <Button
             android:id="@+id/predictCoverageButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/MyButton"
+            android:layout_width="match_parent"
             android:onClick="onToolsFlipClick"
             android:tag="coverage"
             android:text="Predict Coverage"
@@ -22,8 +22,8 @@
 
         <Button
             android:id="@+id/optimalPlacementButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onToolsFlipClick"
             android:tag="placement"
             android:text="Optimal Placement"
@@ -31,8 +31,8 @@
 
         <Button
             android:id="@+id/exposureReductionButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onToolsFlipClick"
             android:tag="exposure"
             android:text="Exposure Reduction"
@@ -40,8 +40,8 @@
 
         <Button
             android:id="@+id/networkReductionButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onToolsFlipClick"
             android:tag="network"
             android:text="Network Reduction"
@@ -49,8 +49,8 @@
 
         <Button
             android:id="@+id/estimateSARButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onToolsFlipClick"
             android:tag="sar"
             android:text="Estimate SAR"
@@ -58,8 +58,8 @@
 
         <Button
             android:id="@+id/monitorWiLabButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onToolsFlipClick"
             android:tag="wilab"
             android:text="Monitor Wilab"
@@ -70,7 +70,8 @@
     <ViewFlipper
         android:id="@+id/toolsFlipper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:measureAllChildren="false" >
 
         <include
             android:layout_width="match_parent"

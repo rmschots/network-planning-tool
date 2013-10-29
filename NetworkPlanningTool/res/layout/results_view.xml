@@ -13,8 +13,8 @@
 
         <Button
             android:id="@+id/renderDataButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onResultsFlipClick"
             android:tag="renderdata"
             android:text="Render Data"
@@ -22,8 +22,8 @@
 
         <Button
             android:id="@+id/visualOptionsButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onResultsFlipClick"
             android:tag="visualoptions"
             android:text="Visual Options"
@@ -31,8 +31,8 @@
 
         <Button
             android:id="@+id/exportRawDataButton"
+            style="@style/MyButton"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:onClick="onResultsFlipClick"
             android:tag="export"
             android:text="Export Raw Data"
@@ -43,7 +43,8 @@
     <ViewFlipper
         android:id="@+id/resultsFlipper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:measureAllChildren="false" >
 
         <include
             android:layout_width="match_parent"
