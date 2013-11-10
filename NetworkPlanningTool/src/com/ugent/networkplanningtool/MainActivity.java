@@ -17,10 +17,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
+import android.widget.ZoomControls;
 
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
-import com.ugent.networkplanningtool.model.FloorModel;
+import com.ugent.networkplanningtool.model.DrawingModel;
 
 public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
@@ -42,7 +43,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private ViewFlipper toolsFlip;
 	private ViewFlipper resultsFlip;
 	
-	private FloorModel model;
+	private ZoomControls zoomControls;
+	
+	private DrawingModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,21 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         onToolsFlipClick(toolsActive);
         onResultsFlipClick(resultsActive);
         
-        model = new FloorModel(designView.getWidth(), designView.getHeight());
+        zoomControls = (ZoomControls) findViewById(R.id.zoomControls1);
+        zoomControls.setOnZoomInClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				model.zoomIn();
+			}
+		});
+        zoomControls.setOnZoomOutClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				model.zoomOut();
+			}
+		});
+        
+        model = new DrawingModel(designView.getWidth(), designView.getHeight());
         
         designView.setModel(model);
         hScrollBar.setModel(model);
@@ -127,7 +144,14 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		coordinatesText.setText(Math.round(model.getOffsetX()*100)/100+":"+Math.round(model.getOffsetY()*100)/100);
+		String newCoords = Math.round(model.getOffsetX()*100)/100+":"+Math.round(model.getOffsetY()*100)/100;
+		if(newCoords.equals(coordinatesText.getText())){
+			coordinatesText.setText(newCoords);
+		}
+		
+		//Log.d("DEBUG",""+model.isZoomInMaxed());
+		zoomControls.setIsZoomInEnabled(!model.isZoomInMaxed());
+		zoomControls.setIsZoomOutEnabled(!model.isZoomOutMaxed());
 	}
 
 	@Override

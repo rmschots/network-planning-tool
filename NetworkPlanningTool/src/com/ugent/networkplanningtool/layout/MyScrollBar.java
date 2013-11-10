@@ -3,7 +3,7 @@ package com.ugent.networkplanningtool.layout;
 import java.util.Observable;
 import java.util.Observer;
 
-import com.ugent.networkplanningtool.model.FloorModel;
+import com.ugent.networkplanningtool.model.DrawingModel;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -22,7 +22,7 @@ public class MyScrollBar extends View implements Observer{
 	private RectF rect = new RectF();
 	
 	private boolean horizontal;
-	private FloorModel model;
+	private DrawingModel model;
 	
 	private int progressColor = Color.argb(50, 0, 0, 0);
 	private int sliderColor = Color.argb(100, 0, 0, 0);
@@ -50,14 +50,14 @@ public class MyScrollBar extends View implements Observer{
 	/**
 	 * @return the model
 	 */
-	public FloorModel getModel() {
+	public DrawingModel getModel() {
 		return model;
 	}
 
 	/**
 	 * @param model the model to set
 	 */
-	public void setModel(FloorModel model) {
+	public void setModel(DrawingModel model) {
 		this.model = model;
 		model.addObserver(this);
 	}
@@ -66,7 +66,7 @@ public class MyScrollBar extends View implements Observer{
 	protected void onDraw(Canvas canvas) {
 		if(model != null){
 			if(horizontal){
-				float max = FloorModel.FLOOR_WIDTH;
+				float max = DrawingModel.FLOOR_WIDTH;
 				float start = model.getOffsetX();
 				float stop = start+model.getActualViewWidth();
 				if(stop - start < max){
@@ -80,7 +80,7 @@ public class MyScrollBar extends View implements Observer{
 					canvas.drawRoundRect(rect, 20, 20, paint);
 				}
 			}else{
-				float max = FloorModel.FLOOR_HEIGHT;
+				float max = DrawingModel.FLOOR_HEIGHT;
 				float start = model.getOffsetY();
 				float stop = start+model.getActualViewHeight();
 				if(stop - start < max){
@@ -113,12 +113,12 @@ public class MyScrollBar extends View implements Observer{
         	if(startDrag != -1){
         		if(horizontal){
         			barStart = barStart - startDrag + event.getX();
-        			float newActualX = barStart*FloorModel.FLOOR_WIDTH/getWidth();
+        			float newActualX = barStart*DrawingModel.FLOOR_WIDTH/getWidth();
         			model.setOffsetX(newActualX);
         			startDrag = event.getX();
         		}else{
         			barStart = barStart - startDrag + event.getY();
-        			float newActualY = barStart*FloorModel.FLOOR_HEIGHT/getHeight();
+        			float newActualY = barStart*DrawingModel.FLOOR_HEIGHT/getHeight();
         			model.setOffsetY(newActualY);
         			startDrag = event.getY();
         		}
