@@ -1,29 +1,32 @@
 package com.ugent.networkplanningtool;
 
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
+import com.ugent.networkplanningtool.model.FloorPlanModel;
 
-public class MainActivity extends Activity implements Observer,OnTouchListener{
+public class MainActivity extends Activity implements Observer,OnTouchListener,OnFileSelectedListener{
+	
+	private static Context mContext;
 	
 	private DrawingView designView;
 	private TextView locationText;
@@ -50,6 +53,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_main);
         
         designView = (DrawingView) findViewById(R.id.drawingView);
@@ -169,4 +173,34 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		}
 		return false;
 	}
+	
+	public void handleOpenFileClick(View v){
+		FileChooserDialog dialog = new FileChooserDialog(this);
+		dialog.addListener(this);
+		// dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
+		dialog.show();
+		
+	}
+
+
+	@Override
+	public void onFileSelected(Dialog source, File file) {
+		source.dismiss();
+		try {
+			FloorPlanModel.loadFloorPlan(file);
+		} catch (Exception e) {
+			Log.d("DEBUG","Error loading file: "+e);
+		}
+	}
+
+
+	@Override
+	public void onFileSelected(Dialog source, File folder, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public static Context getContext(){
+        return mContext;
+    }
 }

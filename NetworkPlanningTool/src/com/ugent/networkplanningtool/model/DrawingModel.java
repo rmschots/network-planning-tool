@@ -1,12 +1,12 @@
 package com.ugent.networkplanningtool.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 
 import android.util.Log;
 
+import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Wall;
+import com.ugent.networkplanningtool.data.WallType;
 
 public class DrawingModel extends Observable {
 
@@ -39,13 +39,12 @@ public class DrawingModel extends Observable {
 	private int viewHeight;
 
 	// Location on screen which is touched (in units)
+	private WallType touchWall = null;
 	private int touchLocationX = -1;
 	private int touchLocationY = -1;
 
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
-
-	private List<Wall> wallList = new ArrayList<Wall>();
 
 	private boolean snapToGrid = true;
 
@@ -105,10 +104,6 @@ public class DrawingModel extends Observable {
 		return touchLocationY;
 	}
 
-	public List<Wall> getWallList() {
-		return wallList;
-	}
-
 	public boolean isMoving() {
 		return state.equals(STATE.MOVING);
 	}
@@ -159,7 +154,14 @@ public class DrawingModel extends Observable {
 
 	public void place() {
 		if(touchLocationX != -1 && touchLocationY != -1){
-			wallList.add(new Wall(touchLocationX, touchLocationY));
+			if(touchWall == null){
+				touchWall = new Wall(touchLocationX, touchLocationY, Material.BRICK);
+			}else{
+				touchWall.setX2(touchLocationX);
+				touchWall.setY2(touchLocationY);
+				FloorPlanModel.getInstance().addWallType(touchWall);
+				touchWall = null;
+			}
 			touchLocationX = -1;
 			touchLocationY = -1;
 			state = STATE.IDLE;
@@ -169,12 +171,6 @@ public class DrawingModel extends Observable {
 			Log.e("DEBUG","Error: Trying to create a non-existing wall");
 		}
 		
-	}
-
-	public void place(int x, int y) {
-		wallList.add(new Wall(x, y));
-		setChanged();
-		notifyObservers();
 	}
 
 	public void setOffsetX(float offsetX) {
@@ -277,4 +273,13 @@ public class DrawingModel extends Observable {
 		setChanged();
 		notifyObservers();
 	}
+
+	/**
+	 * @return the touchWall
+	 */
+	public WallType getTouchWall() {
+		return touchWall;
+	}
+	
+	
 }

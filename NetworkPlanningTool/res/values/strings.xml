@@ -20,5 +20,13 @@
     <string name="parametersText">2. Configure common parameters</string>
     <string name="toolsText">3. Run a prediction tool</string>
     <string name="resultsText">4. Review results</string>
+    
+    <string name="brickText">Brick</string>
+    <string name="layeredDrywallText">Layered Drywall</string>
+    <string name="concreteText">Concrete</string>
+    <string name="woodText">Wood</string>
+    <string name="glassText">Glass</string>
+    <string name="metalText">Metal</string>
+    <string name="zeroDbText">0db</string>
 
 </resources>
