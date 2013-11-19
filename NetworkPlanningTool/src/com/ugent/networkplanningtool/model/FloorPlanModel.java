@@ -15,7 +15,15 @@ import org.w3c.dom.NodeList;
 
 import android.util.Log;
 
+import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.ActivityType;
+import com.ugent.networkplanningtool.data.ConnectionPoint;
+import com.ugent.networkplanningtool.data.DataActivity;
+import com.ugent.networkplanningtool.data.DataConnectionPoint;
 import com.ugent.networkplanningtool.data.Material;
+import com.ugent.networkplanningtool.data.PowerConnectionPoint;
+import com.ugent.networkplanningtool.data.RadioModel;
+import com.ugent.networkplanningtool.data.RadioType;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.utils.Utils;
@@ -24,32 +32,54 @@ public class FloorPlanModel extends Observable {
 	
 	private static FloorPlanModel model = new FloorPlanModel();
 	
-	private List<WallType> wallList;
+	private static List<Wall> wallList;
+	private static List<ConnectionPoint> connectionPointList;
+	private static List<AccessPoint> accessPointList;
+	private static List<DataActivity> dataActivityList;
+	
 
 	private FloorPlanModel() {
-		wallList = new ArrayList<WallType>();
+		wallList = new ArrayList<Wall>();
+		connectionPointList = new ArrayList<ConnectionPoint>();
+		accessPointList = new ArrayList<AccessPoint>();
+		dataActivityList = new ArrayList<DataActivity>();
 	}
 	
 	public static FloorPlanModel getInstance(){
 		return model;
 	}
 	
-	public void addWallType(WallType wall){
+	public void addWall(Wall wall){
 		if(wall.enoughData()){
-			if(wall instanceof Wall){
-				wallList.add(wall);
-			}
+			wallList.add(wall);
 			setChanged();
 			notifyObservers();
 		}
 	}
 	
-	public List<WallType> getWallList() {
+	public List<Wall> getWallList() {
 		return wallList;
 	}
 	
-	private void reset(){
+	public static List<ConnectionPoint> getConnectionPointList() {
+		return connectionPointList;
+	}
+	
+	public static List<AccessPoint> getAccessPointList() {
+		return accessPointList;
+	}
+	
+	public static List<DataActivity> getDataActivityList() {
+		return dataActivityList;
+	}
+
+	public void reset(){
 		wallList.clear();
+		connectionPointList.clear();
+		accessPointList.clear();
+		dataActivityList.clear();
+		setChanged();
+		notifyObservers();
 	}
 	
 	public static void loadFloorPlan(File file) throws Exception{
@@ -59,6 +89,7 @@ public class FloorPlanModel extends Observable {
 	    factory.setIgnoringElementContentWhitespace(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(file);
+        // parse walls
         NodeList wallNodes = doc.getElementsByTagName("wall");
         for(int i = 0; i < wallNodes.getLength(); i++){
         	Node wallNode = wallNodes.item(i);
@@ -67,12 +98,59 @@ public class FloorPlanModel extends Observable {
         	int wallY1 = Integer.parseInt(attributes.getNamedItem("y1").getTextContent());
         	int wallX2 = Integer.parseInt(attributes.getNamedItem("x2").getTextContent());
         	int wallY2 = Integer.parseInt(attributes.getNamedItem("y2").getTextContent());
+        	WallType wallType = WallType.getWallTypeByText(attributes.getNamedItem("type").getTextContent());
+        	int thickness = Integer.parseInt(attributes.getNamedItem("thickness").getTextContent());
         	
-        	String material = Utils.getChildrenWithName(wallNode, "material").get(0).getAttributes().getNamedItem("name").getTextContent();
-        	model.addWallType(new Wall(wallX1, wallY1, wallX2, wallY2, Material.getMaterialByText(material)));
-        	
-        	Log.d("DEBUG","wall: "+wallX1+" "+wallY1+" "+wallX2+" "+wallY2);
+        	Material material = Material.getMaterialByText(Utils.getChildrenWithName(wallNode, "material").get(0).getAttributes().getNamedItem("name").getTextContent());
+        	wallList.add(new Wall(wallX1, wallY1, wallX2, wallY2, wallType, thickness, material));
         }
+        // parse connectionPoints
+        NodeList dataConnectionPoints = doc.getElementsByTagName("dataconnpoint");
+        for(int i = 0; i < dataConnectionPoints.getLength(); i++){
+        	Node dataConnectionNode = dataConnectionPoints.item(i);
+        	NamedNodeMap attributes = dataConnectionNode.getAttributes();
+        	int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
+        	int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
+        	connectionPointList.add(new DataConnectionPoint(x, y));
+        }
+        NodeList powerConnectionPoints = doc.getElementsByTagName("powerconnpoint");
+        for(int i = 0; i < powerConnectionPoints.getLength(); i++){
+        	Node powerConnectionNode = powerConnectionPoints.item(i);
+        	NamedNodeMap attributes = powerConnectionNode.getAttributes();
+        	int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
+        	int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
+        	connectionPointList.add(new PowerConnectionPoint(x, y));
+        }
+        // parse accessPoints
+        NodeList accessPoints = doc.getElementsByTagName("accesspoint");
+        for(int i = 0; i < accessPoints.getLength(); i++){
+        	Node accessPoint = accessPoints.item(i);
+        	NamedNodeMap attributes = accessPoint.getAttributes();
+        	int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
+        	int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
+        	int height = Integer.parseInt(attributes.getNamedItem("height").getTextContent());
+        	String name = attributes.getNamedItem("name").getTextContent();
+        	NamedNodeMap attributeList = Utils.getChildrenWithName(accessPoint, "radio").get(0).getAttributes();
+        	RadioType type = RadioType.getRadioTypeByText(attributeList.getNamedItem("type").getTextContent());
+        	RadioModel model = RadioModel.getRadioModelByText(attributeList.getNamedItem("model").getTextContent());
+        	int freq = Integer.parseInt(attributeList.getNamedItem("frequency").getTextContent());
+        	int freqBand = Integer.parseInt(attributeList.getNamedItem("frequencyband").getTextContent());
+        	int gain = Integer.parseInt(attributeList.getNamedItem("gain").getTextContent());
+        	int power = Integer.parseInt(attributeList.getNamedItem("power").getTextContent());
+        	String network = attributeList.getNamedItem("network").getTextContent();
+        	accessPointList.add(new AccessPoint(x,y,name,height,type,model, freq, freqBand,gain,power,network));
+        }
+        // parse dataActivities
+        NodeList dataActivities = doc.getElementsByTagName("activity");
+        for(int i = 0; i < dataActivities.getLength(); i++){
+        	Node dataActivity = dataActivities.item(i);
+        	NamedNodeMap attributes = dataActivity.getAttributes();
+        	int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
+        	int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
+        	ActivityType activityType = ActivityType.getActivityTypeByText(attributes.getNamedItem("type").getTextContent());
+        	dataActivityList.add(new DataActivity(x, y,activityType));
+        }
+        // update observers
         model.setChanged();
 		model.notifyObservers();
 	}

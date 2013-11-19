@@ -19,6 +19,7 @@
                 android:id="@+id/newButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:onClick="handleNewFileClick"
                 android:src="@drawable/new_icon" />
 
             <ImageButton

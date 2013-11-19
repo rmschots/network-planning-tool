@@ -181,6 +181,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		dialog.show();
 		
 	}
+	
+	public void handleNewFileClick(View v){
+		FloorPlanModel.getInstance().reset();
+	}
 
 
 	@Override
@@ -190,6 +194,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 			FloorPlanModel.loadFloorPlan(file);
 		} catch (Exception e) {
 			Log.d("DEBUG","Error loading file: "+e);
+			e.printStackTrace();
 		}
 	}
 

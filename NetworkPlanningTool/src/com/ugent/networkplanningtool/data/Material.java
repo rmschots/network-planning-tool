@@ -24,7 +24,6 @@ public enum Material {
 	private static Map<String, Material> textToMaterialMapping;
 	
 	private Material(String text, int color){
-		Log.d("TEST",text);
 		this.text = text;
 		this.color = color;
 		

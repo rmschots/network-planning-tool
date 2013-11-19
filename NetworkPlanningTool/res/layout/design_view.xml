@@ -19,6 +19,7 @@
                 android:id="@+id/wallsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/wallText"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/wall"
                 android:tag="walls" />
@@ -27,6 +28,7 @@
                 android:id="@+id/doorsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/doorText"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/door"
                 android:tag="doors" />
@@ -35,6 +37,7 @@
                 android:id="@+id/windowsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/windowText"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/window"
                 android:tag="windows" />

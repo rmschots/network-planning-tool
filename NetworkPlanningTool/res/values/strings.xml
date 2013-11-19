@@ -28,5 +28,72 @@
     <string name="glassText">Glass</string>
     <string name="metalText">Metal</string>
     <string name="zeroDbText">0db</string>
+    
+    <string name="wallText">wall</string>
+    <string name="doorText">door</string>
+    <string name="windowText">window</string>
+    
+    <string name="dlinkText">DLink</string>
+    <string name="customText">Custom</string>
+    <string name="cc2420Text">CC2420</string>
+    <string name="jn516xtext">JN516x</string>
+    <string name="huaweiText">Huawei</string>
+    
+    <string-array name="wifiArray">
+        <item>@string/dlinkText</item>
+        <item>@string/customText</item>
+    </string-array>
+    
+    <string-array name="sensorArray">
+        <item>@string/cc2420Text</item>
+        <item>@string/jn516xtext</item>
+    </string-array>
+    
+    <string-array name="lteFemtocellArray">
+        <item>@string/customText</item>
+    </string-array>
+    
+    <string-array name="umtsFemtocellArray">
+        <item>@string/huaweiText</item>
+        <item>@string/customText</item>
+    </string-array>
+    
+    <string name="wifiText">WiFi</string>
+    <string name="sensorText">Sensor</string>
+    <string name="lteFemtocellText">LTE Femtocell</string>
+    <string name="umtsFemtocellText">UMTS Femtocell</string>
+    
+    <string-array name="accesspointsTypesArray">
+        <item>@string/wifiText</item>
+        <item>@string/sensorText</item>
+        <item>@string/lteFemtocellText</item>
+        <item>@string/umtsFemtocellText</item>
+    </string-array>
+    
+    <string name="hdVideotext">HD video</string>
+    <string name="actionGamesText">Action games</string>
+    <string name="youtubeText">YouTube</string>
+    <string name="surfingText">Surfing</string>
+    <string name="noCoverageText">No coverage</string>
+    
+    <string name="networkAText">Network A</string>
+    <string name="networkBText">Network B</string>
+    <string name="networkCText">Network C</string>
+    <string name="networkDText">Network D</string>
+    <string name="networkEText">Network E</string>
+    <string name="networkFText">Network F</string>
+    <string name="networkGText">Network G</string>
+    <string name="networkHText">Network H</string>
+    
+    <string-array name="networksArray">
+        <item>@string/networkAText</item>
+        <item>@string/networkBText</item>
+        <item>@string/networkCText</item>
+        <item>@string/networkDText</item>
+        <item>@string/networkEText</item>
+        <item>@string/networkFText</item>
+        <item>@string/networkGText</item>
+        <item>@string/networkHText</item>
+    </string-array>
 
 </resources>

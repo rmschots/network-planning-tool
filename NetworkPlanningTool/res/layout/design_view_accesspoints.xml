@@ -6,22 +6,11 @@
     android:orientation="vertical"
     android:tag="accesspoints" >
 
-    <TextView
-        android:id="@+id/networkText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Network"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Spinner
-        android:id="@+id/networkIDSpinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
     <Spinner
         android:id="@+id/networkSignalTypeSpinner"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/accesspointsTypesArray" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,7 +62,8 @@
     <Spinner
         android:id="@+id/networkModelSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/wifiArray" />
 
     <TextView
         android:id="@+id/transmitPowerText"
@@ -164,5 +154,18 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/networkText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Network"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Spinner
+        android:id="@+id/networkIDSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/networksArray" />
 
 </LinearLayout>

@@ -11,7 +11,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.ugent.networkplanningtool.data.WallType;
+import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
@@ -38,12 +38,12 @@ public class DrawingView extends View implements Observer{
 	}
 	
 	private void drawWalls(Canvas canvas) {
-		List<WallType> wallList = floorPlanModel.getWallList();
+		List<Wall> wallList = floorPlanModel.getWallList();
 		
 		float var = drawingModel.getPixelsPerInterval()/DrawingModel.INTERVAL;
 		
 		paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/8);
-		for(WallType w : wallList){
+		for(Wall w : wallList){
 			float pixelsX1 = (w.getX1()-drawingModel.getOffsetX())*var;
 			float pixelsY1 = (w.getY1()-drawingModel.getOffsetY())*var;
 			float pixelsX2 = (w.getX2()-drawingModel.getOffsetX())*var;
@@ -55,7 +55,7 @@ public class DrawingView extends View implements Observer{
 		paint.setColor(Color.BLACK); 
 		
 		float circleRadius = drawingModel.getPixelsPerInterval()/4;
-		for(WallType w : wallList){
+		for(Wall w : wallList){
 			float pixelsX1 = (w.getX1()-drawingModel.getOffsetX())*var;
 			float pixelsY1 = (w.getY1()-drawingModel.getOffsetY())*var;
 			float pixelsX2 = (w.getX2()-drawingModel.getOffsetX())*var;
@@ -66,32 +66,21 @@ public class DrawingView extends View implements Observer{
 	}
 	
 	private void drawTouch(Canvas canvas) {
-		WallType tw = drawingModel.getTouchWall();
+		Wall tw = drawingModel.getTouchWall();
 		if(tw != null){
 			float var = drawingModel.getPixelsPerInterval()/DrawingModel.INTERVAL;
 			float circleRadius = drawingModel.getPixelsPerInterval()/4;
 			float pixelsX1 = (tw.getX1()-drawingModel.getOffsetX())*var;
 			float pixelsY1 = (tw.getY1()-drawingModel.getOffsetY())*var;
-			if(tw.enoughData()){
-				float pixelsX2 = (tw.getX2()-drawingModel.getOffsetX())*var;
-				float pixelsY2 = (tw.getY2()-drawingModel.getOffsetY())*var;
+			if(drawingModel.isPlacing()){
+				float pixelsX2 = (drawingModel.getTouchLocationX()-drawingModel.getOffsetX())*var;
+				float pixelsY2 = (drawingModel.getTouchLocationY()-drawingModel.getOffsetY())*var;
 				paint.setColor(tw.getMaterial().getColor());
 				paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/8);
 				canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 				paint.setStrokeWidth(0);
-				paint.setColor(Color.BLACK); 
-				canvas.drawCircle(pixelsX2, pixelsY2, circleRadius, paint);
-			}else{
-				if(drawingModel.isPlacing()){
-					float pixelsX2 = (drawingModel.getTouchLocationX()-drawingModel.getOffsetX())*var;
-					float pixelsY2 = (drawingModel.getTouchLocationY()-drawingModel.getOffsetY())*var;
-					paint.setColor(tw.getMaterial().getColor());
-					paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/8);
-					canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
-					paint.setStrokeWidth(0);
-				}
 			}
-			paint.setColor(Color.BLACK); 
+			paint.setColor(Color.BLUE); 
 			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius, paint);
 			
 		}

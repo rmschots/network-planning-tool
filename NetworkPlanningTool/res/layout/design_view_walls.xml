@@ -23,43 +23,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Brick" />
+            android:text="@string/brickText" />
 
         <RadioButton
             android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Layered Drywall" />
+            android:text="@string/layeredDrywallText" />
 
         <RadioButton
             android:id="@+id/radio2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Concrete" />
+            android:text="@string/concreteText" />
 
         <RadioButton
             android:id="@+id/RadioButton04"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Glass" />
+            android:text="@string/glassText" />
 
         <RadioButton
             android:id="@+id/RadioButton03"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wood" />
+            android:text="@string/woodText" />
 
         <RadioButton
             android:id="@+id/RadioButton02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Metal" />
+            android:text="@string/metalText" />
 
         <RadioButton
             android:id="@+id/RadioButton01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0db" />
+            android:text="@string/zeroDbText" />
     </RadioGroup>
 
     <TextView

@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Wall;
-import com.ugent.networkplanningtool.data.WallType;
 
 public class DrawingModel extends Observable {
 
@@ -39,7 +38,7 @@ public class DrawingModel extends Observable {
 	private int viewHeight;
 
 	// Location on screen which is touched (in units)
-	private WallType touchWall = null;
+	private Wall touchWall = null;
 	private int touchLocationX = -1;
 	private int touchLocationY = -1;
 
@@ -159,7 +158,7 @@ public class DrawingModel extends Observable {
 			}else{
 				touchWall.setX2(touchLocationX);
 				touchWall.setY2(touchLocationY);
-				FloorPlanModel.getInstance().addWallType(touchWall);
+				FloorPlanModel.getInstance().addWall(touchWall);
 				touchWall = null;
 			}
 			touchLocationX = -1;
@@ -277,7 +276,7 @@ public class DrawingModel extends Observable {
 	/**
 	 * @return the touchWall
 	 */
-	public WallType getTouchWall() {
+	public Wall getTouchWall() {
 		return touchWall;
 	}
 	
