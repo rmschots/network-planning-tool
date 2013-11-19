@@ -7,16 +7,15 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 import android.graphics.Color;
-import android.util.Log;
 
 public enum Material {
-	BRICK(MainActivity.getContext().getResources().getString(R.string.brickText),Color.RED),
-	LAYERED_DRYWALL(MainActivity.getContext().getResources().getString(R.string.layeredDrywallText),Color.rgb(205,133,63)),
-	CONCRETE(MainActivity.getContext().getResources().getString(R.string.concreteText),Color.DKGRAY),
-	WOOD(MainActivity.getContext().getResources().getString(R.string.woodText),Color.rgb(255,165,0)),
-	GLASS(MainActivity.getContext().getResources().getString(R.string.glassText),Color.rgb(132,112,255)),
-	METAL(MainActivity.getContext().getResources().getString(R.string.metalText),Color.rgb(106,90,205)),
-	ZERO_DB(MainActivity.getContext().getResources().getString(R.string.zeroDbText),Color.LTGRAY);
+	BRICK(MainActivity.getContext().getResources().getString(R.string.brickText),Color.rgb(221,0,0)),
+	LAYERED_DRYWALL(MainActivity.getContext().getResources().getString(R.string.layeredDrywallText),Color.rgb(176,129,64)),
+	CONCRETE(MainActivity.getContext().getResources().getString(R.string.concreteText),Color.rgb(136,136,136)),
+	WOOD(MainActivity.getContext().getResources().getString(R.string.woodText),Color.rgb(252,206,140)),
+	GLASS(MainActivity.getContext().getResources().getString(R.string.glassText),Color.rgb(149,165,236)),
+	METAL(MainActivity.getContext().getResources().getString(R.string.metalText),Color.rgb(102,102,153)),
+	ZERO_DB(MainActivity.getContext().getResources().getString(R.string.zeroDbText),Color.rgb(221,221,221));
 
 	private String text;
 	private int color;

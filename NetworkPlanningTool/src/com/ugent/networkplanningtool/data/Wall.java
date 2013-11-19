@@ -11,18 +11,17 @@ public class Wall extends DataObject{
 	
 	private Material material;
 	
-	public Wall(int x1, int y1, Material material) {
+	public Wall(int x1, int y1, WallType wallType, int thickness, Material material) {
 		super(x1,y1);
+		this.wallType = wallType;
+		this.thickness = thickness;
 		this.material = material;
 	}
 
 	public Wall(int x1, int y1, int x2, int y2, WallType wallType, int thickness, Material material){
-		this(x1,y1,material);
+		this(x1, y1, wallType, thickness, material);
 		this.x2 = x2;
 		this.y2 = y2;
-		this.wallType = wallType;
-		this.thickness = thickness;
-		this.material = material;
 	}
 
 	/**

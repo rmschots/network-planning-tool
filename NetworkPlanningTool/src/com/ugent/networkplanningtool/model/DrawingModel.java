@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Wall;
+import com.ugent.networkplanningtool.data.WallType;
 
 public class DrawingModel extends Observable {
 
@@ -151,10 +152,10 @@ public class DrawingModel extends Observable {
 		notifyObservers();
 	}
 
-	public void place() {
+	public void placeWall() {
 		if(touchLocationX != -1 && touchLocationY != -1){
 			if(touchWall == null){
-				touchWall = new Wall(touchLocationX, touchLocationY, Material.BRICK);
+				touchWall = new Wall(touchLocationX, touchLocationY, WallType.WALL, 10, Material.BRICK);
 			}else{
 				touchWall.setX2(touchLocationX);
 				touchWall.setY2(touchLocationY);

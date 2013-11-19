@@ -61,15 +61,15 @@ public class FloorPlanModel extends Observable {
 		return wallList;
 	}
 	
-	public static List<ConnectionPoint> getConnectionPointList() {
+	public List<ConnectionPoint> getConnectionPointList() {
 		return connectionPointList;
 	}
 	
-	public static List<AccessPoint> getAccessPointList() {
+	public List<AccessPoint> getAccessPointList() {
 		return accessPointList;
 	}
 	
-	public static List<DataActivity> getDataActivityList() {
+	public List<DataActivity> getDataActivityList() {
 		return dataActivityList;
 	}
 
