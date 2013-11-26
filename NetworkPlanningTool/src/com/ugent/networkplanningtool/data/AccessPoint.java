@@ -135,7 +135,7 @@ public class AccessPoint extends DataObject{
 
 
 	@Override
-	public DataObject deepCopy() {
-		return new AccessPoint(getX1(), getY1(), name, height, type, model, frequency, frequencyband, gain, power, network);
+	public DataObject getPartialDeepCopy() {
+		return new AccessPoint(-1, -1, name, height, type, model, frequency, frequencyband, gain, power, network);
 	}
 }

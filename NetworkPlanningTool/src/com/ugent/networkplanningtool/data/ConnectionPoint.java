@@ -25,8 +25,8 @@ public class ConnectionPoint extends DataObject{
 	}
 
 	@Override
-	public DataObject deepCopy() {
-		return new ConnectionPoint(getX1(), getY1());
+	public DataObject getPartialDeepCopy() {
+		return new ConnectionPoint(-1, -1);
 	}
 
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
+import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
 
@@ -40,8 +41,7 @@ public class DrawingModel extends Observable {
 	private int viewHeight;
 
 	// Touch object info
-	private DataObject drawItem = new Wall(-1, -1, WallType.WALL, 10, Material.BRICK);
-	private DataObject touchDataObject = null;
+	private DataObject touchDataObject = new Wall(-1, -1, WallType.WALL, Thickness.THIN, Material.BRICK);
 
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
@@ -128,7 +128,7 @@ public class DrawingModel extends Observable {
 	}
 
 	public void moveStart(float x1, float y1, float x2, float y2) {
-		touchDataObject = null;
+		touchDataObject = touchDataObject.getPartialDeepCopy();
 		state = STATE.MOVING;
 		distanceStart = calculateDistance(x1, y1, x2, y2);
 		dragStartX = offsetX + Math.min(x1, x2) / pixelsPerInterval
@@ -151,22 +151,30 @@ public class DrawingModel extends Observable {
 		if(touchDataObject != null){
 			if(touchDataObject instanceof Wall){
 				Wall wall = (Wall) touchDataObject;
-				if(wall.hasEnoughData()){
+				if(wall.isComplete()){
 					if(!(wall.getX1() == wall.getX2() && wall.getY1() == wall.getY2())){
 						FloorPlanModel.getInstance().addDataObject(wall);
 					}
-					touchDataObject = null;
+					touchDataObject = touchDataObject.getPartialDeepCopy();
 				}else{
 					wall.setX2(wall.getX1());
 					wall.setY2(wall.getY1());
 				}
 			}else{
-				FloorPlanModel.getInstance().addDataObject(touchDataObject);
-				touchDataObject = null;
+				if(touchDataObject.isComplete()){
+					FloorPlanModel.getInstance().addDataObject(touchDataObject);
+					touchDataObject = touchDataObject.getPartialDeepCopy();
+				}else{
+					// should not happen (trying to place non-complete non-wall)
+					Log.e("DEBUG","error: trying to place non-complete non-wall");
+					touchDataObject = touchDataObject.getPartialDeepCopy();
+				}
+				
 			}
+			
 			setChanged();
 			notifyObservers();
-		} // else touch was cancelled
+		} // else nothing to place
 	}
 
 	public void setOffsetX(float offsetX) {
@@ -245,20 +253,13 @@ public class DrawingModel extends Observable {
 				wallY = wallY + INTERVAL - rest;
 			}
 		}
-		if(touchDataObject == null){
-			touchDataObject = drawItem.deepCopy();
+		if(touchDataObject instanceof Wall && ((Wall)touchDataObject).isComplete()){
+			Wall wall = (Wall) touchDataObject;
+			wall.setX2(wallX);
+			wall.setY2(wallY);
+		}else{
 			touchDataObject.setX1(wallX);
 			touchDataObject.setY1(wallY);
-		}else{
-			if(touchDataObject instanceof Wall && ((Wall)touchDataObject).hasEnoughData()){
-				Wall wall = (Wall) touchDataObject;
-				wall.setX2(wallX);
-				wall.setY2(wallY);
-			}else{
-				touchDataObject.setX1(wallX);
-				touchDataObject.setY1(wallY);
-			}
-			
 		}
 		setChanged();
 		notifyObservers();
@@ -290,14 +291,13 @@ public class DrawingModel extends Observable {
 	public DataObject getTouchDataObject() {
 		return touchDataObject;
 	}
-	
-	public DataObject getDrawItem() {
-		return drawItem;
-	}
 
-	public void setDrawItem(DataObject drawItem) {
-		this.drawItem = drawItem;
-		touchDataObject = null;
+	public void setTouchDataObject(DataObject drawItem) {
+		if(touchDataObject == drawItem){
+			touchDataObject = touchDataObject.getPartialDeepCopy();
+		}else{
+			touchDataObject = drawItem;
+		}
 		setChanged();
 		notifyObservers();
 	}

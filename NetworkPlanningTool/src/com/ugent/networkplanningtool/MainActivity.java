@@ -23,11 +23,14 @@ import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.ActivityType;
+import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Network;
 import com.ugent.networkplanningtool.data.RadioModel;
 import com.ugent.networkplanningtool.data.RadioType;
+import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.layout.DrawingView;
@@ -57,6 +60,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 	private ViewFlipper toolsFlip;
 	private ViewFlipper resultsFlip;
 	
+	private RadioGroup wallMaterialRadioGroup;
+	private RadioGroup doorMaterialRadioGroup;
+	private RadioGroup windowMaterialRadioGroup;
+	private RadioGroup wallThicknessRadioGroup;
+	private RadioGroup doorThicknessRadioGroup;
+	private RadioGroup windowThicknessRadioGroup;
+	
 	private ZoomControls zoomControls;
 	
 	private DrawingModel model;
@@ -80,6 +90,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
         parametersFlip = (ViewFlipper)findViewById(R.id.parametersFlipper);
         toolsFlip = (ViewFlipper)findViewById(R.id.toolsFlipper);
         resultsFlip = (ViewFlipper)findViewById(R.id.resultsFlipper);
+        
+        wallMaterialRadioGroup = (RadioGroup) findViewById(R.id.wallsMaterialRadioGroup);
+        doorMaterialRadioGroup = (RadioGroup) findViewById(R.id.doorsMaterialRadioGroup);
+        windowMaterialRadioGroup = (RadioGroup) findViewById(R.id.windowsMaterialRadioGroup);
+        wallThicknessRadioGroup = (RadioGroup) findViewById(R.id.wallsThicknessRadioGroup);
+        doorThicknessRadioGroup = (RadioGroup) findViewById(R.id.doorsThicknessRadioGroup);
+        windowThicknessRadioGroup = (RadioGroup) findViewById(R.id.windowsThicknessRadioGroup);
         
         mainActive = findViewById(R.id.designButton);
         designActive = findViewById(R.id.wallsButton);
@@ -118,19 +135,35 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
         OnCheckedChangeListener materialListener = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId){
-				DataObject obj = model.getDrawItem();
+				RadioButton rb = (RadioButton) findViewById(checkedId);
+				DataObject obj = model.getTouchDataObject();
 				if(obj instanceof Wall){
 					Wall w = (Wall) obj;
-					RadioButton rb = (RadioButton) group.getChildAt(checkedId);
 					w.setMaterial(Material.getMaterialByText(rb.getText().toString()));
-					model.setDrawItem(w);
 				}else{
 					// should not happen
 				}
 			}
 		};
-		RadioGroup rg = (RadioGroup) findViewById(R.id.wallsMaterialRadioGroup);
-		rg.setOnCheckedChangeListener(materialListener);
+		wallMaterialRadioGroup.setOnCheckedChangeListener(materialListener);
+		doorMaterialRadioGroup.setOnCheckedChangeListener(materialListener);
+		windowMaterialRadioGroup.setOnCheckedChangeListener(materialListener);
+		OnCheckedChangeListener thicknessListener = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId){
+				RadioButton rb = (RadioButton) findViewById(checkedId);
+				DataObject obj = model.getTouchDataObject();
+				if(obj instanceof Wall){
+					Wall w = (Wall) obj;
+					w.setThickness(Thickness.getThicknessByText(rb.getText().toString()));
+				}else{
+					// should not happen
+				}
+			}
+		};
+		wallThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
+		doorThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
+		windowThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
     }
 
 
@@ -146,13 +179,30 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		View flippedView = onFlipClick(v, designFlip);
 		Object tag = flippedView.getTag();
 		if(tag.equals("walls")){
-			model.setDrawItem(new Wall(-1, -1, WallType.WALL, 10, Material.BRICK));
+			setDrawWall(WallType.WALL,wallMaterialRadioGroup,wallThicknessRadioGroup);
 		}else if(tag.equals("doors")){
-			model.setDrawItem(new Wall(-1, -1, WallType.DOOR, 10, Material.METAL));
+			setDrawWall(WallType.DOOR,doorMaterialRadioGroup,doorThicknessRadioGroup);
 		}else if(tag.equals("windows")){
-			model.setDrawItem(new Wall(-1, -1, WallType.WINDOW, 10, Material.GLASS));
+			setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
 		}else if(tag.equals("accesspoints")){
-			model.setDrawItem(new AccessPoint(-1, -1, "", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
+			model.setTouchDataObject(new AccessPoint(-1, -1, "", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
+		}else if(tag.equals("activities")){
+			model.setTouchDataObject(new DataActivity(-1,-1,ActivityType.HD_VIDEO));
+		}else{
+			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
+		}
+	}
+	
+	private void setDrawWall(WallType wallType, RadioGroup materialRadioGroup, RadioGroup thicknessRadiogroup){
+		RadioButton rb = (RadioButton) findViewById(materialRadioGroup.getCheckedRadioButtonId());
+		Material material = Material.getMaterialByText(rb.getText().toString());
+		rb = (RadioButton) findViewById(thicknessRadiogroup.getCheckedRadioButtonId());
+		Thickness thickness = Thickness.getThicknessByText(rb.getText().toString());
+		if(model.getTouchDataObject() instanceof Wall){
+			Wall wall = (Wall) model.getTouchDataObject();
+			wall.setMaterial(material);
+		}else{
+			model.setTouchDataObject(new Wall(-1, -1, wallType, thickness, material));
 		}
 	}
 	
@@ -250,6 +300,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
     }
 	
 	public void handleStopDrawing(View view){
-		model.setDrawItem(model.getDrawItem());
+		model.setTouchDataObject(model.getTouchDataObject());
 	}
 }

@@ -46,7 +46,7 @@ public class DataActivity extends DataObject{
 	}
 
 	@Override
-	public DataObject deepCopy() {
-		return new DataActivity(getX1(), getY1(), type);
+	public DataObject getPartialDeepCopy() {
+		return new DataActivity(-1, -1, type);
 	}
 }

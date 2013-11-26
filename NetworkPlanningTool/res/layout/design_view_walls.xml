@@ -19,44 +19,44 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/radio0"
+            android:id="@+id/wallsMaterialBrickRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/brickText" />
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/wallsMaterialLayeredDrywallRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/layeredDrywallText" />
 
         <RadioButton
-            android:id="@+id/radio2"
+            android:id="@+id/wallsMaterialConcreteRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/concreteText" />
 
         <RadioButton
-            android:id="@+id/RadioButton04"
+            android:id="@+id/wallsMaterialGlassRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/glassText" />
 
         <RadioButton
-            android:id="@+id/RadioButton03"
+            android:id="@+id/wallsMaterialWoodRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/woodText" />
 
         <RadioButton
-            android:id="@+id/RadioButton02"
+            android:id="@+id/wallsMaterialMetalRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/metalText" />
 
         <RadioButton
-            android:id="@+id/RadioButton01"
+            android:id="@+id/wallsMaterialZeroDBRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/zeroDbText" />
@@ -75,15 +75,18 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/wallsThinRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/thinText" />
 
         <RadioButton
+            android:id="@+id/wallsThickRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/thickText" />
+
     </RadioGroup>
 
     <TextView
@@ -99,15 +102,18 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/wallsSnapToGridRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/snapToGridText" />
 
         <RadioButton
+            android:id="@+id/wallsSnapToWallsRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/snapToWallsText" />
+
     </RadioGroup>
 
     <Button

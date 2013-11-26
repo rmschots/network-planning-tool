@@ -26,6 +26,7 @@ import com.ugent.networkplanningtool.data.Network;
 import com.ugent.networkplanningtool.data.PowerConnectionPoint;
 import com.ugent.networkplanningtool.data.RadioModel;
 import com.ugent.networkplanningtool.data.RadioType;
+import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.utils.Utils;
@@ -93,7 +94,7 @@ public class FloorPlanModel extends Observable {
         	int wallX2 = Integer.parseInt(attributes.getNamedItem("x2").getTextContent());
         	int wallY2 = Integer.parseInt(attributes.getNamedItem("y2").getTextContent());
         	WallType wallType = WallType.getWallTypeByText(attributes.getNamedItem("type").getTextContent());
-        	int thickness = Integer.parseInt(attributes.getNamedItem("thickness").getTextContent());
+        	Thickness thickness = Thickness.getThicknessByNumber(Integer.parseInt(attributes.getNamedItem("thickness").getTextContent()));
         	
         	Material material = Material.getMaterialByText(Utils.getChildrenWithName(wallNode, "material").get(0).getAttributes().getNamedItem("name").getTextContent());
         	wallList.add(new Wall(wallX1, wallY1, wallX2, wallY2, wallType, thickness, material));
@@ -150,7 +151,7 @@ public class FloorPlanModel extends Observable {
 	}
 
 	public void addDataObject(DataObject touchDataObject) {
-		if(touchDataObject.hasEnoughData()){
+		if(touchDataObject.isComplete()){
 			if(touchDataObject instanceof AccessPoint){
 				accessPointList.add((AccessPoint) touchDataObject);
 			}else if(touchDataObject instanceof Wall){

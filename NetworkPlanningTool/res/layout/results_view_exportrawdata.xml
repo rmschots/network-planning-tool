@@ -18,32 +18,32 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/RadioButton02"
+            android:id="@+id/wallsMaterialMetalRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Normalized plan" />
 
         <RadioButton
-            android:id="@+id/RadioButton01"
+            android:id="@+id/wallsMaterialZeroDBRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Optimized plan" />
 
         <RadioButton
-            android:id="@+id/radio0"
+            android:id="@+id/wallsMaterialBrickRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Coverage Data" />
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/wallsMaterialLayeredDrywallRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exposure info" />
 
         <RadioButton
-            android:id="@+id/radio2"
+            android:id="@+id/wallsMaterialConcreteRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Benchmarks" />

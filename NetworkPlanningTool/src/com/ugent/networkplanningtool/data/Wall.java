@@ -5,6 +5,7 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 
 public class Wall extends DataObject{
@@ -13,18 +14,18 @@ public class Wall extends DataObject{
 	private int y2 = -1;
 	
 	private WallType wallType;
-	private int thickness;
+	private Thickness thickness;
 	
 	private Material material;
 	
-	public Wall(int x1, int y1, WallType wallType, int thickness, Material material) {
+	public Wall(int x1, int y1, WallType wallType, Thickness thickness, Material material) {
 		super(x1,y1);
 		this.wallType = wallType;
 		this.thickness = thickness;
 		this.material = material;
 	}
 
-	public Wall(int x1, int y1, int x2, int y2, WallType wallType, int thickness, Material material){
+	public Wall(int x1, int y1, int x2, int y2, WallType wallType, Thickness thickness, Material material){
 		this(x1, y1, wallType, thickness, material);
 		this.x2 = x2;
 		this.y2 = y2;
@@ -78,15 +79,15 @@ public class Wall extends DataObject{
 	/**
 	 * @return the thickness
 	 */
-	public int getThickness() {
+	public Thickness getThickness() {
 		return thickness;
 	}
 
 	/**
 	 * @param thickness the thickness to set
 	 */
-	public void setThickness(int thickness) {
-		if(thickness > 0){
+	public void setThickness(Thickness thickness) {
+		if(thickness != null){
 			this.thickness = thickness;
 		}
 	}
@@ -108,12 +109,19 @@ public class Wall extends DataObject{
 	}
 
 	@Override
-	public boolean hasEnoughData(){
-		return super.hasEnoughData()
+	public boolean isComplete(){
+		return super.isComplete()
 				&& getX2() != -1
 				&& getY2() != -1
 				&& getMaterial() != null
-				&& getThickness() > 0
+				&& getThickness() != null
+				&& getWallType() != null;
+	}
+	
+	public boolean canDraw(){
+		return super.isComplete()
+				&& getMaterial() != null
+				&& getThickness() != null
 				&& getWallType() != null;
 	}
 
@@ -123,12 +131,12 @@ public class Wall extends DataObject{
 		float pixelsX1 = convertCoordinateToLocation(drawingModel, true, getX1());
 		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getY1());
 		float circleRadius = drawingModel.getPixelsPerInterval()/4;
-		if(hasEnoughData()){
+		if(isComplete()){
 			float pixelsX2 = convertCoordinateToLocation(drawingModel, true, getX2());
 			float pixelsY2 = convertCoordinateToLocation(drawingModel, false, getY2());
 			
-			// TODO ivm thickness
-			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/8);
+			Log.d("DEBUG","width: "+thickness.getNumber());
+			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()*(float)thickness.getNumber()/(float)DrawingModel.INTERVAL);
 			paint.setColor(getMaterial().getColor());
 			canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 			
@@ -146,7 +154,7 @@ public class Wall extends DataObject{
 	}
 
 	@Override
-	public DataObject deepCopy() {
-		return new Wall(getX1(), getY1(), x2, y2, wallType, thickness, material);
+	public DataObject getPartialDeepCopy() {
+		return new Wall(-1, -1, wallType, thickness, material);
 	}
 }

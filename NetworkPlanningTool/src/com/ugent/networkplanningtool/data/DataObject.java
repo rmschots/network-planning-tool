@@ -45,11 +45,11 @@ public abstract class DataObject{
 	
 	public abstract void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint);
 	
-	public boolean hasEnoughData(){
+	public boolean isComplete(){
 		return x1 != -1 && y1 != -1;
 	}
 	
-	public abstract DataObject deepCopy();
+	public abstract DataObject getPartialDeepCopy();
 	
 	protected float convertCoordinateToLocation(DrawingModel drawingModel, boolean x, float coordinate){
 		return (coordinate-(x?drawingModel.getOffsetX():drawingModel.getOffsetY()))

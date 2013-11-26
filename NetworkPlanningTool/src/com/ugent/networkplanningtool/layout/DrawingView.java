@@ -80,36 +80,15 @@ public class DrawingView extends View implements Observer{
 		// TODO beter systeem
 		DataObject tw = drawingModel.getTouchDataObject();
 		if(tw != null){
-			tw.drawOnCanvas(canvas, drawingModel, paint);
-		}
-		/*if(tw != null){
-			float circleRadius = drawingModel.getPixelsPerInterval()/4;
-			float pixelsX1 = convertCoordinateToLocation(true, tw.getX1());
-			float pixelsY1 = convertCoordinateToLocation(false, tw.getY1());
-			if(drawingModel.isPlacing()){
-				float pixelsX2 = convertCoordinateToLocation(true, drawingModel.getTouchLocationX());
-				float pixelsY2 = convertCoordinateToLocation(false, drawingModel.getTouchLocationY());
-				paint.setColor(tw.getMaterial().getColor());
-				paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/8);
-				canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
-				paint.setStrokeWidth(0);
+			if(tw.isComplete()){
+				tw.drawOnCanvas(canvas, drawingModel, paint);
+			}else{
+				if(tw instanceof Wall && ((Wall)tw).canDraw()){
+					tw.drawOnCanvas(canvas, drawingModel, paint);
+				}
 			}
-			paint.setColor(Color.BLUE); 
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius, paint);
 			
 		}
-		if(drawingModel.isPlacing()){
-			paint.setColor(Color.RED);
-			
-			float touchPixelsX1 = convertCoordinateToLocation(true, drawingModel.getTouchLocationX());
-			float touchPixelsY1 = convertCoordinateToLocation(false, drawingModel.getTouchLocationY());
-			canvas.drawCircle(touchPixelsX1, touchPixelsY1, drawingModel.getPixelsPerInterval()/4, paint);
-		}*/
-	}
-	
-	private float convertCoordinateToLocation(boolean x, float coordinate){
-		return (coordinate-(x?drawingModel.getOffsetX():drawingModel.getOffsetY()))
-				*drawingModel.getPixelsPerInterval()/DrawingModel.INTERVAL;
 	}
 
 	private void drawGrid(Canvas canvas){

@@ -19,6 +19,7 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/windowsMaterialGlassRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -40,13 +41,14 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/windowThinRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/thinText" />
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/windowThickRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/thickText" />
@@ -65,15 +67,18 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
+            android:id="@+id/windowsSnapToGridRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/snapToGridText" />
 
         <RadioButton
+            android:id="@+id/windowsSnapToWallsRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/snapToWallsText" />
+
     </RadioGroup>
 
     <Button
