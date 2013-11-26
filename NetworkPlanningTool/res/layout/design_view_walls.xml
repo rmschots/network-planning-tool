@@ -10,7 +10,7 @@
         android:id="@+id/materialText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Material"
+        android:text="@string/materialText"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
@@ -66,7 +66,7 @@
         android:id="@+id/thicknessText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thickness"
+        android:text="@string/thicknessText"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
@@ -78,19 +78,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Thin" />
+            android:text="@string/thinText" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thick" />
+            android:text="@string/thickText" />
     </RadioGroup>
 
     <TextView
         android:id="@+id/snapToText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Snap to"
+        android:text="@string/snapToText"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
@@ -102,12 +102,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Grid" />
+            android:text="@string/snapToGridText" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Walls" />
+            android:text="@string/snapToWallsText" />
     </RadioGroup>
 
     <Button
@@ -115,6 +115,7 @@
         style="@style/MyButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Stop drawing" />
+        android:onClick="handleStopDrawing"
+        android:text="@string/stopDrawingText" />
 
 </LinearLayout>

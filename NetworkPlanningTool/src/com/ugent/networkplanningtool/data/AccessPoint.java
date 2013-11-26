@@ -1,5 +1,11 @@
 package com.ugent.networkplanningtool.data;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
+import com.ugent.networkplanningtool.model.DrawingModel;
+
 public class AccessPoint extends DataObject{
 	
 	private String name;
@@ -11,13 +17,13 @@ public class AccessPoint extends DataObject{
 	private int frequencyband;
 	private int gain;
 	private int power;
-	private String network;
+	private Network network;
 
 	
 	
 	public AccessPoint(int x, int y, String name, int height, RadioType type,
 			RadioModel model, int frequency, int frequencyband, int gain,
-			int power, String network) {
+			int power, Network network) {
 		super(x, y);
 		this.name = name;
 		this.height = height;
@@ -107,7 +113,29 @@ public class AccessPoint extends DataObject{
 	/**
 	 * @return the network
 	 */
-	public String getNetwork() {
+	public Network getNetwork() {
 		return network;
+	}
+
+
+
+	@Override
+	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
+		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
+		float circleRadius2 = circleRadius1*5/6;
+		float x = convertCoordinateToLocation(drawingModel, true, getX1());
+		float y = convertCoordinateToLocation(drawingModel, false, getY1());
+		
+		paint.setColor(Color.BLACK);
+		canvas.drawCircle(x, y, circleRadius1, paint);
+		paint.setColor(getNetwork().getColor());
+		canvas.drawCircle(x, y, circleRadius2, paint);
+	}
+
+
+
+	@Override
+	public DataObject deepCopy() {
+		return new AccessPoint(getX1(), getY1(), name, height, type, model, frequency, frequencyband, gain, power, network);
 	}
 }

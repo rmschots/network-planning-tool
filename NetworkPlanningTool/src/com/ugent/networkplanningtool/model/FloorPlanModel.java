@@ -20,7 +20,9 @@ import com.ugent.networkplanningtool.data.ActivityType;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataConnectionPoint;
+import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
+import com.ugent.networkplanningtool.data.Network;
 import com.ugent.networkplanningtool.data.PowerConnectionPoint;
 import com.ugent.networkplanningtool.data.RadioModel;
 import com.ugent.networkplanningtool.data.RadioType;
@@ -47,14 +49,6 @@ public class FloorPlanModel extends Observable {
 	
 	public static FloorPlanModel getInstance(){
 		return model;
-	}
-	
-	public void addWall(Wall wall){
-		if(wall.enoughData()){
-			wallList.add(wall);
-			setChanged();
-			notifyObservers();
-		}
 	}
 	
 	public List<Wall> getWallList() {
@@ -137,7 +131,7 @@ public class FloorPlanModel extends Observable {
         	int freqBand = Integer.parseInt(attributeList.getNamedItem("frequencyband").getTextContent());
         	int gain = Integer.parseInt(attributeList.getNamedItem("gain").getTextContent());
         	int power = Integer.parseInt(attributeList.getNamedItem("power").getTextContent());
-        	String network = attributeList.getNamedItem("network").getTextContent();
+        	Network network = Network.getNetworkByText(attributeList.getNamedItem("network").getTextContent());
         	accessPointList.add(new AccessPoint(x,y,name,height,type,model, freq, freqBand,gain,power,network));
         }
         // parse dataActivities
@@ -153,6 +147,24 @@ public class FloorPlanModel extends Observable {
         // update observers
         model.setChanged();
 		model.notifyObservers();
+	}
+
+	public void addDataObject(DataObject touchDataObject) {
+		if(touchDataObject.hasEnoughData()){
+			if(touchDataObject instanceof AccessPoint){
+				accessPointList.add((AccessPoint) touchDataObject);
+			}else if(touchDataObject instanceof Wall){
+				wallList.add((Wall) touchDataObject);
+			}else if(touchDataObject instanceof ConnectionPoint){
+				connectionPointList.add((ConnectionPoint) touchDataObject);
+			}else if(touchDataObject instanceof DataActivity){
+				dataActivityList.add((DataActivity) touchDataObject);
+			}else{
+				Log.e("DEBUG", "Trying to add an invalid type of DataObject");
+			}
+			setChanged();
+			notifyObservers();
+		}
 	}
 
 }

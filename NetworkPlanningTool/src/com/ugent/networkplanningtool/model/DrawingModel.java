@@ -4,6 +4,7 @@ import java.util.Observable;
 
 import android.util.Log;
 
+import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
@@ -38,10 +39,9 @@ public class DrawingModel extends Observable {
 	private int viewWidth;
 	private int viewHeight;
 
-	// Location on screen which is touched (in units)
-	private Wall touchWall = null;
-	private int touchLocationX = -1;
-	private int touchLocationY = -1;
+	// Touch object info
+	private DataObject drawItem = new Wall(-1, -1, WallType.WALL, 10, Material.BRICK);
+	private DataObject touchDataObject = null;
 
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
@@ -53,7 +53,7 @@ public class DrawingModel extends Observable {
 		offsetY = 0;
 
 		state = STATE.IDLE;
-
+		
 		this.viewWidth = viewWidth;
 		this.viewHeight = viewHeight;
 
@@ -96,14 +96,6 @@ public class DrawingModel extends Observable {
 		return pixelsPerInterval;
 	}
 
-	public float getTouchLocationX() {
-		return touchLocationX;
-	}
-
-	public float getTouchLocationY() {
-		return touchLocationY;
-	}
-
 	public boolean isMoving() {
 		return state.equals(STATE.MOVING);
 	}
@@ -136,6 +128,7 @@ public class DrawingModel extends Observable {
 	}
 
 	public void moveStart(float x1, float y1, float x2, float y2) {
+		touchDataObject = null;
 		state = STATE.MOVING;
 		distanceStart = calculateDistance(x1, y1, x2, y2);
 		dragStartX = offsetX + Math.min(x1, x2) / pixelsPerInterval
@@ -152,25 +145,28 @@ public class DrawingModel extends Observable {
 		notifyObservers();
 	}
 
-	public void placeWall() {
-		if(touchLocationX != -1 && touchLocationY != -1){
-			if(touchWall == null){
-				touchWall = new Wall(touchLocationX, touchLocationY, WallType.WALL, 10, Material.BRICK);
+	public void place() {
+		Log.d("debug","place");
+		state = STATE.IDLE;
+		if(touchDataObject != null){
+			if(touchDataObject instanceof Wall){
+				Wall wall = (Wall) touchDataObject;
+				if(wall.hasEnoughData()){
+					if(!(wall.getX1() == wall.getX2() && wall.getY1() == wall.getY2())){
+						FloorPlanModel.getInstance().addDataObject(wall);
+					}
+					touchDataObject = null;
+				}else{
+					wall.setX2(wall.getX1());
+					wall.setY2(wall.getY1());
+				}
 			}else{
-				touchWall.setX2(touchLocationX);
-				touchWall.setY2(touchLocationY);
-				FloorPlanModel.getInstance().addWall(touchWall);
-				touchWall = null;
+				FloorPlanModel.getInstance().addDataObject(touchDataObject);
+				touchDataObject = null;
 			}
-			touchLocationX = -1;
-			touchLocationY = -1;
-			state = STATE.IDLE;
 			setChanged();
 			notifyObservers();
-		}else{
-			Log.e("DEBUG","Error: Trying to create a non-existing wall");
-		}
-		
+		} // else touch was cancelled
 	}
 
 	public void setOffsetX(float offsetX) {
@@ -231,6 +227,7 @@ public class DrawingModel extends Observable {
 	}
 
 	public void setTouchLocation(float x, float y) {
+		Log.d("debug","settouchlocation");
 		state = STATE.PLACING;
 		int wallX = getActualLocationX(x);
 		int wallY = getActualLocationY(y);
@@ -248,8 +245,21 @@ public class DrawingModel extends Observable {
 				wallY = wallY + INTERVAL - rest;
 			}
 		}
-		touchLocationX = wallX;
-		touchLocationY = wallY;
+		if(touchDataObject == null){
+			touchDataObject = drawItem.deepCopy();
+			touchDataObject.setX1(wallX);
+			touchDataObject.setY1(wallY);
+		}else{
+			if(touchDataObject instanceof Wall && ((Wall)touchDataObject).hasEnoughData()){
+				Wall wall = (Wall) touchDataObject;
+				wall.setX2(wallX);
+				wall.setY2(wallY);
+			}else{
+				touchDataObject.setX1(wallX);
+				touchDataObject.setY1(wallY);
+			}
+			
+		}
 		setChanged();
 		notifyObservers();
 	}
@@ -277,9 +287,19 @@ public class DrawingModel extends Observable {
 	/**
 	 * @return the touchWall
 	 */
-	public Wall getTouchWall() {
-		return touchWall;
+	public DataObject getTouchDataObject() {
+		return touchDataObject;
 	}
 	
+	public DataObject getDrawItem() {
+		return drawItem;
+	}
+
+	public void setDrawItem(DataObject drawItem) {
+		this.drawItem = drawItem;
+		touchDataObject = null;
+		setChanged();
+		notifyObservers();
+	}
 	
 }

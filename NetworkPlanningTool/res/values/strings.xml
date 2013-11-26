@@ -21,6 +21,7 @@
     <string name="toolsText">3. Run a prediction tool</string>
     <string name="resultsText">4. Review results</string>
     
+    <string name="materialText">Material</string>
     <string name="brickText">Brick</string>
     <string name="layeredDrywallText">Layered Drywall</string>
     <string name="concreteText">Concrete</string>
@@ -95,5 +96,16 @@
         <item>@string/networkGText</item>
         <item>@string/networkHText</item>
     </string-array>
+    
+    <string name="thicknessText">Thickness</string>
+    <string name="thinText">Thin</string>
+    <string name="thickText">Thick</string>
+    
+    <string name="snapToText">Snap to</string>
+    <string name="snapToWallsText">Walls</string>
+    <string name="snapToGridText">Grid</string>
+    
+    
+    <string name="stopDrawingText">Stop Drawing</string>
 
 </resources>

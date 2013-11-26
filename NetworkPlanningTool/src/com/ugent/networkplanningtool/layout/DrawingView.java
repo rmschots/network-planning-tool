@@ -17,6 +17,7 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ActivityType;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
+import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
@@ -47,91 +48,41 @@ public class DrawingView extends View implements Observer{
 	}
 	
 	private void drawAccessPoints(Canvas canvas) {
-		List<AccessPoint> accessPointList = floorPlanModel.getAccessPointList();
-		
-		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
-		float circleRadius2 = circleRadius1*5/6;
-		
+		List<AccessPoint> accessPointList = floorPlanModel.getAccessPointList();		
 		for(AccessPoint ap : accessPointList){
-			float pixelsX1 = convertCoordinateToLocation(true, ap.getX1());
-			float pixelsY1 = convertCoordinateToLocation(false, ap.getY1());
-			paint.setColor(Color.BLACK);
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
-			paint.setColor(Color.rgb(115, 128, 190));
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius2, paint);
+			ap.drawOnCanvas(canvas, drawingModel, paint);
 		}
 	}
 
 	private void drawConnectionPoints(Canvas canvas) {
-		List<ConnectionPoint> connectionPointList = floorPlanModel.getConnectionPointList();
-		float circleRadius1 = drawingModel.getPixelsPerInterval()/6;
-		float circleRadius2 = circleRadius1*4/6;
-		
+		List<ConnectionPoint> connectionPointList = floorPlanModel.getConnectionPointList();		
 		for(ConnectionPoint cp : connectionPointList){
-			float pixelsX1 = convertCoordinateToLocation(true, cp.getX1());
-			float pixelsY1 = convertCoordinateToLocation(false, cp.getY1());
-			paint.setColor(Color.BLACK);
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
-			paint.setColor(Color.rgb(114, 15, 24));
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius2, paint);
+			cp.drawOnCanvas(canvas, drawingModel, paint);
 		}
 		
 	}
 
 	private void drawActivities(Canvas canvas) {
-		List<DataActivity> activityList = floorPlanModel.getDataActivityList();
-		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
-		float circleRadius2 = circleRadius1/2;
-		
-		
+		List<DataActivity> activityList = floorPlanModel.getDataActivityList();		
 		for(DataActivity cp : activityList){
-			float pixelsX1 = convertCoordinateToLocation(true, cp.getX1());
-			float pixelsY1 = convertCoordinateToLocation(false, cp.getY1());
-			paint.setColor(Color.BLACK);
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
-			String textToDraw = cp.getType().getText();
-			paint.setTextSize(determineMaxTextSize(textToDraw, circleRadius2*2*2/3));
-			canvas.drawRect(pixelsX1, pixelsY1-circleRadius2, pixelsX1+circleRadius1+paint.measureText(textToDraw)+circleRadius2/2, pixelsY1+circleRadius2, paint);
-			if(cp.getType().equals(ActivityType.NO_COVERAGE)){
-				paint.setColor(Color.RED);
-			}else{
-				paint.setColor(Color.GREEN);
-			}
-			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius2, paint);
-			paint.setColor(Color.WHITE);
-			canvas.drawText(textToDraw, pixelsX1+circleRadius1, pixelsY1+circleRadius2*2/3-paint.descent()/2, paint);
+			cp.drawOnCanvas(canvas, drawingModel, paint);
 		}
 	}
 
 	private void drawWalls(Canvas canvas) {
 		List<Wall> wallList = floorPlanModel.getWallList();
-		
-		paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/8);
 		for(Wall w : wallList){
-			float pixelsX1 = convertCoordinateToLocation(true, w.getX1());
-			float pixelsY1 = convertCoordinateToLocation(false, w.getY1());
-			float pixelsX2 = convertCoordinateToLocation(true, w.getX2());
-			float pixelsY2 = convertCoordinateToLocation(false, w.getY2());
-			paint.setColor(w.getMaterial().getColor());
-			canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
-		}
-		paint.setStrokeWidth(0);
-		paint.setColor(Color.BLACK); 
-		
-		float circleRadius = drawingModel.getPixelsPerInterval()/4;
-		for(Wall w : wallList){
-			float pixelsX1 = convertCoordinateToLocation(true, w.getX1());
-			float pixelsY1 = convertCoordinateToLocation(false, w.getY1());
-			float pixelsX2 = convertCoordinateToLocation(true, w.getX2());
-			float pixelsY2 = convertCoordinateToLocation(false, w.getY2());
-			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
-			canvas.drawRect(pixelsX2-circleRadius, pixelsY2-circleRadius, pixelsX2+circleRadius, pixelsY2+circleRadius, paint);
+			w.drawOnCanvas(canvas, drawingModel, paint);
 		}
 	}
 	
 	private void drawTouch(Canvas canvas) {
-		Wall tw = drawingModel.getTouchWall();
+		// TODO beter systeem
+		DataObject tw = drawingModel.getTouchDataObject();
 		if(tw != null){
+			tw.drawOnCanvas(canvas, drawingModel, paint);
+		}
+		/*if(tw != null){
 			float circleRadius = drawingModel.getPixelsPerInterval()/4;
 			float pixelsX1 = convertCoordinateToLocation(true, tw.getX1());
 			float pixelsY1 = convertCoordinateToLocation(false, tw.getY1());
@@ -153,7 +104,7 @@ public class DrawingView extends View implements Observer{
 			float touchPixelsX1 = convertCoordinateToLocation(true, drawingModel.getTouchLocationX());
 			float touchPixelsY1 = convertCoordinateToLocation(false, drawingModel.getTouchLocationY());
 			canvas.drawCircle(touchPixelsX1, touchPixelsY1, drawingModel.getPixelsPerInterval()/4, paint);
-		}
+		}*/
 	}
 	
 	private float convertCoordinateToLocation(boolean x, float coordinate){
@@ -196,7 +147,7 @@ public class DrawingView extends View implements Observer{
             break;
         case MotionEvent.ACTION_UP:
         	if(drawingModel.isPlacing()){
-        		drawingModel.placeWall();
+        		drawingModel.place();
         	}
             break;
         case MotionEvent.ACTION_CANCEL:
@@ -242,21 +193,6 @@ public class DrawingView extends View implements Observer{
 			invalidate();
 		}
 		super.onSizeChanged(w, h, oldw, oldh);
-	}
-	
-	private int determineMaxTextSize(String str, float maxHeight)
-	{
-	    int size = 0;       
-	    Paint paint = new Paint();
-
-	    Rect r = new Rect();
-	    paint.getTextBounds(str, 0, 1, r);
-	    do {
-	        paint.setTextSize(++ size);
-	        paint.getTextBounds(str, 0, str.length()-1, r);
-	    } while(r.height() < maxHeight);
-
-	    return size;
 	}
 	
 }
