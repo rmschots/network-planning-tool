@@ -6,6 +6,8 @@ import com.ugent.networkplanningtool.utils.Utils;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.util.Log;
 
 public class DataActivity extends DataObject{
 	
@@ -23,12 +25,20 @@ public class DataActivity extends DataObject{
 		return type;
 	}
 	
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(ActivityType type) {
+		this.type = type;
+	}
+
 	public int getColor(){
 		return type.equals(ActivityType.NO_COVERAGE)?Color.RED:Color.GREEN;
 	}
 
 	@Override
 	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
+		
 		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
 		float circleRadius2 = circleRadius1/2;
 		
@@ -37,10 +47,13 @@ public class DataActivity extends DataObject{
 		paint.setColor(Color.BLACK);
 		canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
 		String textToDraw = getType().getText();
-		paint.setTextSize(Utils.determineMaxTextSize(textToDraw, circleRadius2*2*2/3));
+		int textSize = Utils.determineMaxTextSize(textToDraw, circleRadius2*2*2/3, type.getTextSize());
+		type.setTextSize(textSize);
+		paint.setTextSize(textSize);
 		canvas.drawRect(pixelsX1, pixelsY1-circleRadius2, pixelsX1+circleRadius1+paint.measureText(textToDraw)+circleRadius2/2, pixelsY1+circleRadius2, paint);
 		paint.setColor(getColor());
 		canvas.drawCircle(pixelsX1, pixelsY1, circleRadius2, paint);
+		paint.setTextAlign(Align.LEFT);
 		paint.setColor(Color.WHITE);
 		canvas.drawText(textToDraw, pixelsX1+circleRadius1, pixelsY1+circleRadius2*2/3-paint.descent()/2, paint);
 	}

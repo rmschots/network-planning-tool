@@ -1,6 +1,7 @@
 package com.ugent.networkplanningtool.model;
 
 import java.util.Observable;
+import java.util.Stack;
 
 import android.util.Log;
 
@@ -20,8 +21,8 @@ public class DrawingModel extends Observable {
 
 	// ground plan dimensions (in units)
 	public static final int INTERVAL = 50;
-	public static final int FLOOR_WIDTH = 3000;
-	public static final int FLOOR_HEIGHT = 2000;
+	public static final int FLOOR_WIDTH = 4750;
+	public static final int FLOOR_HEIGHT = 3550;
 
 	// maximum allowed zoom (in units)
 	private static final int maxZoomIn = 200;
@@ -236,33 +237,40 @@ public class DrawingModel extends Observable {
 
 	public void setTouchLocation(float x, float y) {
 		Log.d("debug","settouchlocation");
-		state = STATE.PLACING;
-		int wallX = getActualLocationX(x);
-		int wallY = getActualLocationY(y);
-		if (snapToGrid) {
-			int rest = wallX % INTERVAL;
-			if (rest < INTERVAL / 2) {
-				wallX = wallX - rest;
-			} else {
-				wallX = wallX + INTERVAL - rest;
+		if(touchDataObject != null){
+			state = STATE.PLACING;
+			int wallX = getActualLocationX(x);
+			int wallY = getActualLocationY(y);
+			if(touchDataObject instanceof Wall){
+				if (snapToGrid) {
+					int rest = wallX % INTERVAL;
+					if (rest < INTERVAL / 2) {
+						wallX = wallX - rest;
+					} else {
+						wallX = wallX + INTERVAL - rest;
+					}
+					rest = wallY % INTERVAL;
+					if (rest < INTERVAL / 2) {
+						wallY = wallY - rest;
+					} else {
+						wallY = wallY + INTERVAL - rest;
+					}
+				}
+				if(touchDataObject instanceof Wall && ((Wall)touchDataObject).isComplete()){
+					Wall wall = (Wall) touchDataObject;
+					wall.setX2(wallX);
+					wall.setY2(wallY);
+				}else{
+					touchDataObject.setX1(wallX);
+					touchDataObject.setY1(wallY);
+				}
+			}else{
+				touchDataObject.setX1(wallX);
+				touchDataObject.setY1(wallY);
 			}
-			rest = wallY % INTERVAL;
-			if (rest < INTERVAL / 2) {
-				wallY = wallY - rest;
-			} else {
-				wallY = wallY + INTERVAL - rest;
-			}
+			setChanged();
+			notifyObservers();
 		}
-		if(touchDataObject instanceof Wall && ((Wall)touchDataObject).isComplete()){
-			Wall wall = (Wall) touchDataObject;
-			wall.setX2(wallX);
-			wall.setY2(wallY);
-		}else{
-			touchDataObject.setX1(wallX);
-			touchDataObject.setY1(wallY);
-		}
-		setChanged();
-		notifyObservers();
 	}
 
 	public void setViewSize(int width, int height) {

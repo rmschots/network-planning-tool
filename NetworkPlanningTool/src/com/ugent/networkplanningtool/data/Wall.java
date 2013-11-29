@@ -1,12 +1,12 @@
 package com.ugent.networkplanningtool.data;
 
 import com.ugent.networkplanningtool.model.DrawingModel;
+import com.ugent.networkplanningtool.utils.Utils;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
-
+import android.graphics.Paint.Align;
 
 public class Wall extends DataObject{
 	
@@ -17,6 +17,7 @@ public class Wall extends DataObject{
 	private Thickness thickness;
 	
 	private Material material;
+	
 	
 	public Wall(int x1, int y1, WallType wallType, Thickness thickness, Material material) {
 		super(x1,y1);
@@ -135,8 +136,7 @@ public class Wall extends DataObject{
 			float pixelsX2 = convertCoordinateToLocation(drawingModel, true, getX2());
 			float pixelsY2 = convertCoordinateToLocation(drawingModel, false, getY2());
 			
-			Log.d("DEBUG","width: "+thickness.getNumber());
-			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()*(float)thickness.getNumber()/(float)DrawingModel.INTERVAL);
+			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()*thickness.getNumber()/DrawingModel.INTERVAL);
 			paint.setColor(getMaterial().getColor());
 			canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 			
@@ -145,6 +145,17 @@ public class Wall extends DataObject{
 			
 			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
 			canvas.drawRect(pixelsX2-circleRadius, pixelsY2-circleRadius, pixelsX2+circleRadius, pixelsY2+circleRadius, paint);
+			
+			String textToDraw = Math.round(Utils.getDistance(getX1(), getY1(), getX2(), getY2()))/100.0+" m";
+			paint.setTextSize(20);
+			if(paint.measureText(textToDraw) < drawingModel.getPixelsPerInterval()*2){
+				paint.setTextAlign(Align.CENTER);
+				float textX = (pixelsX2+pixelsX1)/2;
+				float textY = ((pixelsY2+pixelsY1)/2 - ((paint.descent() + paint.ascent()) / 2)) ;;
+				float distanceCM = Utils.getDistance(getX1(), getY1(), getX2(), getY2());
+				canvas.drawText(Math.round(distanceCM)/100.0+" m", textX, textY, paint);
+			}
+			
 		}else{
 			paint.setStrokeWidth(0);
 			paint.setColor(Color.BLACK); 

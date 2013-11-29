@@ -105,6 +105,9 @@
     <string name="snapToWallsText">Walls</string>
     <string name="snapToGridText">Grid</string>
     
+    <string name="dataConnectionPointText">Data</string>
+    <string name="powerConnectionPointText">Power</string>
+    
     
     <string name="stopDrawingText">Stop Drawing</string>
 

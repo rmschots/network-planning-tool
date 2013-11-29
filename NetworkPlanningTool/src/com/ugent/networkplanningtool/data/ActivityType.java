@@ -16,6 +16,7 @@ public enum ActivityType {
 	NO_COVERAGE(MainActivity.getContext().getResources().getString(R.string.noCoverageText));
 
 	private String text;
+	private int textSize = 0;
 	
 	private static Map<String, ActivityType> textToActivityTypeMapping;
 	
@@ -40,4 +41,22 @@ public enum ActivityType {
 	public String getText(){
 		return text;
 	}
+
+	/**
+	 * @return the textSize
+	 */
+	public int getTextSize() {
+		return textSize;
+	}
+
+	/**
+	 * @param textSize the textSize to set
+	 */
+	public void setTextSize(int textSize) {
+		this.textSize = textSize;
+	}
+	
+	
+	
+	
 }

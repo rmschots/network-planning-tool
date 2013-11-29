@@ -7,9 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class ConnectionPoint extends DataObject{
+	
+	private ConnectionPointType type;
 
-	public ConnectionPoint(int x, int y) {
+	public ConnectionPoint(int x, int y, ConnectionPointType type) {
 		super(x,y);
+		this.type = type;
 	}
 
 	@Override
@@ -20,13 +23,23 @@ public class ConnectionPoint extends DataObject{
 			float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getY1());
 			paint.setColor(Color.BLACK);
 			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
-			paint.setColor(Color.rgb(114, 15, 24));
+			paint.setColor(type.getColor());
 			canvas.drawCircle(pixelsX1, pixelsY1, circleRadius2, paint);
+	}
+	
+	public ConnectionPointType getType() {
+		return type;
+	}
+
+	public void setType(ConnectionPointType type) {
+		if(type != null){
+			this.type = type;
+		}
 	}
 
 	@Override
 	public DataObject getPartialDeepCopy() {
-		return new ConnectionPoint(-1, -1);
+		return new ConnectionPoint(-1, -1, type);
 	}
 
 }

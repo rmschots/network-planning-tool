@@ -19,17 +19,17 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/wallsMaterialBrickRadioButton"
+            android:id="@+id/connectionPointPowerRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Power" />
+            android:text="@string/powerConnectionPointText" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialLayeredDrywallRadioButton"
+            android:id="@+id/connectionPointDataRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data" />
+            android:text="@string/dataConnectionPointText" />
     </RadioGroup>
 
 </LinearLayout>

@@ -19,32 +19,32 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/wallsMaterialBrickRadioButton"
+            android:id="@+id/activityHDVideoRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/hdVideotext" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialLayeredDrywallRadioButton"
+            android:id="@+id/activityActionGamesRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/actionGamesText" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialConcreteRadioButton"
+            android:id="@+id/activityYouTubeRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/youtubeText" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialGlassRadioButton"
+            android:id="@+id/activitySurfingRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/surfingText" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialWoodRadioButton"
+            android:id="@+id/activityNoCoverageRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/noCoverageText" />

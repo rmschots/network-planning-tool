@@ -13,7 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,6 +26,8 @@ import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ActivityType;
+import com.ugent.networkplanningtool.data.ConnectionPoint;
+import com.ugent.networkplanningtool.data.ConnectionPointType;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
@@ -67,9 +71,16 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 	private RadioGroup doorThicknessRadioGroup;
 	private RadioGroup windowThicknessRadioGroup;
 	
-	private ZoomControls zoomControls;
+	private RadioGroup activityTypeRadioGroup;
 	
-	private DrawingModel model;
+	private RadioGroup connectionTypeRadioGroup;
+	
+	private ZoomControls zoomControls;
+	private ImageButton undoButton;
+	private ImageButton redoButton;
+	
+	private DrawingModel drawingModel;
+	private FloorPlanModel floorPlanModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +89,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
         setContentView(R.layout.activity_main);
         
         designView = (DrawingView) findViewById(R.id.drawingView);
-        model = new DrawingModel(designView.getWidth(), designView.getHeight());
+        drawingModel = new DrawingModel(designView.getWidth(), designView.getHeight());
+        floorPlanModel = FloorPlanModel.getInstance();
         
         hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
         vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
@@ -98,37 +110,64 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
         doorThicknessRadioGroup = (RadioGroup) findViewById(R.id.doorsThicknessRadioGroup);
         windowThicknessRadioGroup = (RadioGroup) findViewById(R.id.windowsThicknessRadioGroup);
         
+        activityTypeRadioGroup = (RadioGroup) findViewById(R.id.activityTypeRadioGroup);
+        
+        connectionTypeRadioGroup = (RadioGroup) findViewById(R.id.connectionTypeRadioGroup);
+        
         mainActive = findViewById(R.id.designButton);
         designActive = findViewById(R.id.wallsButton);
         parametersActive = findViewById(R.id.recieversButton);
         toolsActive = findViewById(R.id.predictCoverageButton);
         resultsActive = findViewById(R.id.renderDataButton);
+        
+        zoomControls = (ZoomControls) findViewById(R.id.zoomControls1);
+        
+        undoButton = (ImageButton) findViewById(R.id.undoButton);
+        redoButton = (ImageButton) findViewById(R.id.redoButton);
+        
         onMainFlipClick(mainActive);
         onDesignFlipClick(designActive);
         onParametersFlipClick(parametersActive);
         onToolsFlipClick(toolsActive);
         onResultsFlipClick(resultsActive);
         
-        zoomControls = (ZoomControls) findViewById(R.id.zoomControls1);
+        
         zoomControls.setOnZoomInClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				model.zoomIn();
+				drawingModel.zoomIn();
 			}
 		});
         zoomControls.setOnZoomOutClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				model.zoomOut();
+				drawingModel.zoomOut();
+			}
+		});
+        
+        undoButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				floorPlanModel.undo();
+				Log.d("DEBUG","undo");
+			}
+		});
+        
+        redoButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				floorPlanModel.redo();
+				Log.d("DEBUG","redo");
 			}
 		});
         
         
         
-        designView.setModel(model);
-        hScrollBar.setModel(model);
-        vScrollBar.setModel(model);
-        model.addObserver(this);
+        designView.setModel(drawingModel);
+        hScrollBar.setModel(drawingModel);
+        vScrollBar.setModel(drawingModel);
+        drawingModel.addObserver(this);
+        floorPlanModel.addObserver(this);
         
         designView.setOnTouchListener(this);
         
@@ -136,7 +175,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId){
 				RadioButton rb = (RadioButton) findViewById(checkedId);
-				DataObject obj = model.getTouchDataObject();
+				DataObject obj = drawingModel.getTouchDataObject();
 				if(obj instanceof Wall){
 					Wall w = (Wall) obj;
 					w.setMaterial(Material.getMaterialByText(rb.getText().toString()));
@@ -152,7 +191,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId){
 				RadioButton rb = (RadioButton) findViewById(checkedId);
-				DataObject obj = model.getTouchDataObject();
+				DataObject obj = drawingModel.getTouchDataObject();
 				if(obj instanceof Wall){
 					Wall w = (Wall) obj;
 					w.setThickness(Thickness.getThicknessByText(rb.getText().toString()));
@@ -164,6 +203,34 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		wallThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
 		doorThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
 		windowThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
+		OnCheckedChangeListener activityTypeListener = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId){
+				RadioButton rb = (RadioButton) findViewById(checkedId);
+				DataObject obj = drawingModel.getTouchDataObject();
+				if(obj instanceof DataActivity){
+					DataActivity da = (DataActivity) obj;
+					da.setType(ActivityType.getActivityTypeByText(rb.getText().toString()));
+				}else{
+					// should not happen
+				}
+			}
+		};
+		activityTypeRadioGroup.setOnCheckedChangeListener(activityTypeListener);
+		OnCheckedChangeListener connectionTypeListener = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId){
+				RadioButton rb = (RadioButton) findViewById(checkedId);
+				DataObject obj = drawingModel.getTouchDataObject();
+				if(obj instanceof ConnectionPoint){
+					ConnectionPoint cp = (ConnectionPoint) obj;
+					cp.setType(ConnectionPointType.getConnectionPointTypeByText(rb.getText().toString()));
+				}else{
+					// should not happen
+				}
+			}
+		};
+		connectionTypeRadioGroup.setOnCheckedChangeListener(connectionTypeListener);		
     }
 
 
@@ -185,12 +252,18 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		}else if(tag.equals("windows")){
 			setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
 		}else if(tag.equals("accesspoints")){
-			model.setTouchDataObject(new AccessPoint(-1, -1, "", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
+			drawingModel.setTouchDataObject(new AccessPoint(-1, -1, "", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
 		}else if(tag.equals("activities")){
-			model.setTouchDataObject(new DataActivity(-1,-1,ActivityType.HD_VIDEO));
+			drawingModel.setTouchDataObject(new DataActivity(-1,-1,ActivityType.HD_VIDEO));
+		}else if(tag.equals("connections")){
+			drawingModel.setTouchDataObject(new ConnectionPoint(-1, -1, ConnectionPointType.POWER));
 		}else{
 			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
 		}
+	}
+	
+	private void setDrawAccessPoints(){
+		
 	}
 	
 	private void setDrawWall(WallType wallType, RadioGroup materialRadioGroup, RadioGroup thicknessRadiogroup){
@@ -198,11 +271,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		Material material = Material.getMaterialByText(rb.getText().toString());
 		rb = (RadioButton) findViewById(thicknessRadiogroup.getCheckedRadioButtonId());
 		Thickness thickness = Thickness.getThicknessByText(rb.getText().toString());
-		if(model.getTouchDataObject() instanceof Wall){
-			Wall wall = (Wall) model.getTouchDataObject();
+		if(drawingModel.getTouchDataObject() instanceof Wall){
+			Wall wall = (Wall) drawingModel.getTouchDataObject();
 			wall.setMaterial(material);
 		}else{
-			model.setTouchDataObject(new Wall(-1, -1, wallType, thickness, material));
+			drawingModel.setTouchDataObject(new Wall(-1, -1, wallType, thickness, material));
 		}
 	}
 	
@@ -238,14 +311,18 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		String newCoords = Math.round(model.getOffsetX()*100)/100+":"+Math.round(model.getOffsetY()*100)/100;
+		String newCoords = Math.round(drawingModel.getOffsetX()*100)/100+":"+Math.round(drawingModel.getOffsetY()*100)/100;
 		if(newCoords.equals(coordinatesText.getText())){
 			coordinatesText.setText(newCoords);
 		}
 		
 		//Log.d("DEBUG",""+model.isZoomInMaxed());
-		zoomControls.setIsZoomInEnabled(!model.isZoomInMaxed());
-		zoomControls.setIsZoomOutEnabled(!model.isZoomOutMaxed());
+		zoomControls.setIsZoomInEnabled(!drawingModel.isZoomInMaxed());
+		zoomControls.setIsZoomOutEnabled(!drawingModel.isZoomOutMaxed());
+		
+		Log.d("DEBUG","UPDATE");
+		undoButton.setEnabled(floorPlanModel.canUndo());
+		redoButton.setEnabled(floorPlanModel.canRedo());
 	}
 
 	@Override
@@ -272,8 +349,19 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		
 	}
 	
+	public void handleSaveClick(View v){
+		Dialog d = new Dialog(this);
+		// ...
+		// todo eerst filename, checkbox default location, dan dit eventueel
+		FileChooserDialog dialog = new FileChooserDialog(this);
+		dialog.addListener(this);
+		dialog.setFolderMode(true);
+		dialog.setCanCreateFiles(true);
+		dialog.show();
+	}
+	
 	public void handleNewFileClick(View v){
-		FloorPlanModel.getInstance().reset();
+		floorPlanModel.reset();
 	}
 
 
@@ -300,6 +388,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
     }
 	
 	public void handleStopDrawing(View view){
-		model.setTouchDataObject(model.getTouchDataObject());
+		drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
 	}
 }

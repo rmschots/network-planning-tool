@@ -4,11 +4,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Stack;
+
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,12 +27,13 @@ import android.util.Log;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ActivityType;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
+import com.ugent.networkplanningtool.data.ConnectionPointType;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.DataConnectionPoint;
 import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.FloorPlanOperation;
+import com.ugent.networkplanningtool.data.FloorPlanOperation.Type;
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Network;
-import com.ugent.networkplanningtool.data.PowerConnectionPoint;
 import com.ugent.networkplanningtool.data.RadioModel;
 import com.ugent.networkplanningtool.data.RadioType;
 import com.ugent.networkplanningtool.data.Thickness;
@@ -40,12 +50,17 @@ public class FloorPlanModel extends Observable {
 	private static List<AccessPoint> accessPointList;
 	private static List<DataActivity> dataActivityList;
 	
+	private Stack<FloorPlanOperation> undoStack;
+	private Stack<FloorPlanOperation> redoStack;
+	
 
 	private FloorPlanModel() {
 		wallList = new ArrayList<Wall>();
 		connectionPointList = new ArrayList<ConnectionPoint>();
 		accessPointList = new ArrayList<AccessPoint>();
 		dataActivityList = new ArrayList<DataActivity>();
+		undoStack = new Stack<FloorPlanOperation>();
+		redoStack = new Stack<FloorPlanOperation>();
 	}
 	
 	public static FloorPlanModel getInstance(){
@@ -73,6 +88,8 @@ public class FloorPlanModel extends Observable {
 		connectionPointList.clear();
 		accessPointList.clear();
 		dataActivityList.clear();
+		undoStack.clear();
+		redoStack.clear();
 		setChanged();
 		notifyObservers();
 	}
@@ -106,7 +123,7 @@ public class FloorPlanModel extends Observable {
         	NamedNodeMap attributes = dataConnectionNode.getAttributes();
         	int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
         	int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
-        	connectionPointList.add(new DataConnectionPoint(x, y));
+        	connectionPointList.add(new ConnectionPoint(x, y, ConnectionPointType.DATA));
         }
         NodeList powerConnectionPoints = doc.getElementsByTagName("powerconnpoint");
         for(int i = 0; i < powerConnectionPoints.getLength(); i++){
@@ -114,7 +131,7 @@ public class FloorPlanModel extends Observable {
         	NamedNodeMap attributes = powerConnectionNode.getAttributes();
         	int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
         	int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
-        	connectionPointList.add(new PowerConnectionPoint(x, y));
+        	connectionPointList.add(new ConnectionPoint(x, y, ConnectionPointType.POWER));
         }
         // parse accessPoints
         NodeList accessPoints = doc.getElementsByTagName("accesspoint");
@@ -149,23 +166,132 @@ public class FloorPlanModel extends Observable {
         model.setChanged();
 		model.notifyObservers();
 	}
+	
+	public static void saveFloorPlan(File file) throws Exception{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+ 
+		// root elements
+		Document doc = docBuilder.newDocument();
+		Element rootElement = doc.createElement("plan");
+		doc.appendChild(rootElement);
+		
+		Element levelElement = doc.createElement("level");
+		rootElement.appendChild(levelElement);
+		
+		Element extraWallsElement = doc.createElement("extraWalls");
+		levelElement.appendChild(extraWallsElement);
+		
+		for(Wall wall: wallList){
+			Element wallElement = doc.createElement("wall");
+			extraWallsElement.appendChild(extraWallsElement);
+			wallElement.setAttribute("x1", ""+wall.getX1());
+			wallElement.setAttribute("y1", ""+wall.getY1());
+			wallElement.setAttribute("x2", ""+wall.getX2());
+			wallElement.setAttribute("y2", ""+wall.getY2());
+			wallElement.setAttribute("type", wall.getWallType().getText());
+			wallElement.setAttribute("thickness", ""+wall.getThickness().getNumber());
+			Element materialElement = doc.createElement("material");
+			materialElement.setAttribute("name", wall.getMaterial().getText());
+			wallElement.appendChild(materialElement);
+		}
+		
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(file);
+		transformer.transform(source, result);
+		Log.i("DEBUG","File saved");
+	}
 
 	public void addDataObject(DataObject touchDataObject) {
 		if(touchDataObject.isComplete()){
-			if(touchDataObject instanceof AccessPoint){
-				accessPointList.add((AccessPoint) touchDataObject);
-			}else if(touchDataObject instanceof Wall){
-				wallList.add((Wall) touchDataObject);
-			}else if(touchDataObject instanceof ConnectionPoint){
-				connectionPointList.add((ConnectionPoint) touchDataObject);
-			}else if(touchDataObject instanceof DataActivity){
-				dataActivityList.add((DataActivity) touchDataObject);
-			}else{
-				Log.e("DEBUG", "Trying to add an invalid type of DataObject");
-			}
+			addDataObjectToList(touchDataObject);
+			undoStack.push(new FloorPlanOperation(Type.ADD, touchDataObject));
+			redoStack.clear();
 			setChanged();
 			notifyObservers();
 		}
+	}
+	
+	private void addDataObjectToList(DataObject dataObject){
+		if(dataObject instanceof AccessPoint){
+			accessPointList.add((AccessPoint) dataObject);
+		}else if(dataObject instanceof Wall){
+			wallList.add((Wall) dataObject);
+		}else if(dataObject instanceof ConnectionPoint){
+			connectionPointList.add((ConnectionPoint) dataObject);
+		}else if(dataObject instanceof DataActivity){
+			dataActivityList.add((DataActivity) dataObject);
+		}else{
+			Log.e("DEBUG", "Trying to add an invalid type of DataObject");
+		}
+	}
+	
+	public void removeDataObject(DataObject touchDataObject) {
+		removeDataObjectFromList(touchDataObject);
+		undoStack.push(new FloorPlanOperation(Type.REMOVE, touchDataObject));
+		redoStack.clear();
+		setChanged();
+		notifyObservers();
+	}
+	
+	private void removeDataObjectFromList(DataObject dataobject){
+		if(dataobject instanceof AccessPoint){
+			accessPointList.remove(dataobject);
+		}else if(dataobject instanceof Wall){
+			wallList.remove(dataobject);
+		}else if(dataobject instanceof ConnectionPoint){
+			connectionPointList.remove(dataobject);
+		}else if(dataobject instanceof DataActivity){
+			dataActivityList.remove(dataobject);
+		}else{
+			Log.e("DEBUG", "Trying to add an invalid type of DataObject");
+		}
+	}
+	
+	public void undo(){
+		FloorPlanOperation operation = undoStack.pop();
+		DataObject dataObject = operation.getDataObject();
+		switch (operation.getType()) {
+		case ADD:
+			removeDataObjectFromList(dataObject);
+			break;
+		case REMOVE:
+			addDataObjectToList(dataObject);
+			break;
+		default:
+			break;
+		}
+		redoStack.push(operation);
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void redo(){
+		FloorPlanOperation operation = redoStack.pop();
+		DataObject dataObject = operation.getDataObject();
+		switch (operation.getType()) {
+		case ADD:
+			addDataObjectToList(dataObject);
+			break;
+		case REMOVE:
+			removeDataObjectFromList(dataObject);
+			break;
+		default:
+			break;
+		}
+		undoStack.push(operation);
+		setChanged();
+		notifyObservers();
+	}
+	
+	public boolean canUndo(){
+		return !undoStack.isEmpty();
+	}
+	
+	public boolean canRedo(){
+		return !redoStack.isEmpty();
 	}
 
 }
