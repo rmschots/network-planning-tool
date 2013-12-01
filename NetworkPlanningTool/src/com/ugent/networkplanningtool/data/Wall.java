@@ -167,4 +167,11 @@ public class Wall extends DataObject{
 	public DataObject getPartialDeepCopy() {
 		return new Wall(wallType, thickness, material);
 	}
+	
+	public boolean equals(Wall wall2){
+		if(isComplete() && wall2.isComplete()){
+			return getPoint1().equals(wall2.getPoint1()) && getPoint2().equals(getPoint2());
+		}
+		return false;
+	}
 }

@@ -3,7 +3,10 @@ package com.ugent.networkplanningtool.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Stack;
 
@@ -50,6 +53,7 @@ import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
+import com.ugent.networkplanningtool.utils.Couple;
 import com.ugent.networkplanningtool.utils.Utils;
 
 public class FloorPlanModel extends Observable {
@@ -128,12 +132,68 @@ public class FloorPlanModel extends Observable {
 
 	public void addDataObject(DataObject touchDataObject) {
 		if(touchDataObject.isComplete()){
-			addDataObjectToList(touchDataObject);
-			undoStack.push(new FloorPlanOperation(Type.ADD, touchDataObject));
-			redoStack.clear();
-			setChanged();
-			notifyObservers();
+			if(touchDataObject instanceof Wall){
+				Wall newWall = (Wall) touchDataObject;
+				Map<Integer, Couple<Point, Wall>> splitWalls = new HashMap<Integer, Couple<Point,Wall>>();
+				// wall is vertical?
+				boolean vertical = newWall.getPoint1().x == newWall.getPoint2().x;
+				for(Wall w : wallList){
+					Point p = Utils.getIntersection(w.getPoint1(), w.getPoint2(), newWall.getPoint1(), newWall.getPoint2());
+					if(p != null){
+						Log.d("DEBUG","SPLIT");
+						splitWalls.put(vertical?p.y:p.x, new Couple<Point, Wall>(p, w));
+					}
+				}
+				if(!splitWalls.isEmpty()){
+					Integer[] coordArr = splitWalls.keySet().toArray(new Integer[1]);
+					Arrays.sort(coordArr);
+					boolean down;
+					if(vertical){
+						down = newWall.getPoint1().y < newWall.getPoint2().y;
+					}else{
+						down = newWall.getPoint1().x < newWall.getPoint2().x;
+					}
+					
+					for(Integer i : coordArr){
+						Point p = splitWalls.get(i).getA();
+						Wall w = splitWalls.get(i).getB();
+						
+						Wall add1 = (Wall) w.getPartialDeepCopy();
+						add1.setPoint1(w.getPoint1());
+						add1.setPoint2(p);
+						Wall add2 = (Wall) w.getPartialDeepCopy();
+						add2.setPoint1(p);
+						add2.setPoint2(w.getPoint2());
+						Wall add3 = (Wall) newWall.getPartialDeepCopy();
+						if(down){
+							add3.setPoint1(newWall.getPoint1());
+							add3.setPoint2(p);
+							newWall.setPoint1(p);
+						}else{
+							add3.setPoint1(p);
+							add3.setPoint2(newWall.getPoint1());
+							newWall.setPoint2(p);
+						}
+						wallList.remove(w);
+						wallList.add(add1);
+						wallList.add(add2);
+						wallList.add(add3);
+					}
+				}
+				addDataObjectToList(touchDataObject);
+				undoStack.push(new FloorPlanOperation(Type.ADD, touchDataObject));
+				redoStack.clear();
+				setChanged();
+				notifyObservers();
+			}else{
+				addDataObjectToList(touchDataObject);
+				undoStack.push(new FloorPlanOperation(Type.ADD, touchDataObject));
+				redoStack.clear();
+				setChanged();
+				notifyObservers();
+			}
 		}
+		Log.d("DEBUG","size: "+wallList.size());
 	}
 	
 	private void addDataObjectToList(DataObject dataObject){
@@ -173,6 +233,7 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	public void undo(){
+		// TODO more advanced
 		FloorPlanOperation operation = undoStack.pop();
 		DataObject dataObject = operation.getDataObject();
 		switch (operation.getType()) {
@@ -191,6 +252,7 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	public void redo(){
+		// TODO more advanced
 		FloorPlanOperation operation = redoStack.pop();
 		DataObject dataObject = operation.getDataObject();
 		switch (operation.getType()) {
