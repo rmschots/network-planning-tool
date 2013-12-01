@@ -6,6 +6,7 @@ import com.ugent.networkplanningtool.utils.Utils;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Paint.Align;
 import android.util.Log;
 
@@ -13,8 +14,13 @@ public class DataActivity extends DataObject{
 	
 	private ActivityType type;
 
-	public DataActivity(int x, int y, ActivityType type) {
-		super(x,y);
+	public DataActivity(ActivityType type) {
+		super();
+		this.type = type;
+	}
+	
+	public DataActivity(Point point, ActivityType type) {
+		super(point);
 		this.type = type;
 	}
 
@@ -42,8 +48,8 @@ public class DataActivity extends DataObject{
 		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
 		float circleRadius2 = circleRadius1/2;
 		
-		float pixelsX1 = convertCoordinateToLocation(drawingModel, true, getX1());
-		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getY1());
+		float pixelsX1 = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
+		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
 		paint.setColor(Color.BLACK);
 		canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
 		String textToDraw = getType().getText();
@@ -60,6 +66,6 @@ public class DataActivity extends DataObject{
 
 	@Override
 	public DataObject getPartialDeepCopy() {
-		return new DataActivity(-1, -1, type);
+		return new DataActivity(type);
 	}
 }

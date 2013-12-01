@@ -235,7 +235,7 @@
         android:text=":" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/fileNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/coordinatesTextView"
@@ -248,9 +248,9 @@
         android:id="@+id/coordinatesTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/textView1"
+        android:layout_alignLeft="@id/fileNameText"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@id/textView1"
+        android:layout_alignRight="@id/fileNameText"
         android:gravity="center_horizontal"
         android:paddingLeft="10dp"
         android:text=":"
@@ -263,7 +263,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/drawingView"
         android:layout_below="@id/drawingView"
-        android:layout_toRightOf="@id/textView1"
+        android:layout_toRightOf="@id/fileNameText"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/logos" />

@@ -3,6 +3,8 @@ package com.ugent.networkplanningtool.model;
 import java.util.Observable;
 import java.util.Stack;
 
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.util.Log;
 
 import com.ugent.networkplanningtool.data.DataObject;
@@ -34,15 +36,14 @@ public class DrawingModel extends Observable {
 	private static final float DEFAULT_PIXELS_PER_INTERVAL = 100;
 
 	private double distanceStart = -1; // in pixels
-	private float dragStartX = -1; // in units
-	private float dragStartY = -1; // in units
+	private PointF dragStart = null; // in units
 
 	// dimensions of the actual view (in pixels)
 	private int viewWidth;
 	private int viewHeight;
 
 	// Touch object info
-	private DataObject touchDataObject = new Wall(-1, -1, WallType.WALL, Thickness.THIN, Material.BRICK);
+	private DataObject touchDataObject = new Wall(WallType.WALL, Thickness.THIN, Material.BRICK);
 
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
@@ -120,9 +121,9 @@ public class DrawingModel extends Observable {
 				/ (float) (distanceStart / distanceMoved));
 		distanceStart = distanceMoved;
 
-		setOffsetX(dragStartX - Math.min(x1, x2) / pixelsPerInterval
+		setOffsetX(dragStart.x - Math.min(x1, x2) / pixelsPerInterval
 				* DrawingModel.INTERVAL);
-		setOffsetY(dragStartY - Math.min(y1, y2) / pixelsPerInterval
+		setOffsetY(dragStart.y - Math.min(y1, y2) / pixelsPerInterval
 				* DrawingModel.INTERVAL);
 		setChanged();
 		notifyObservers();
@@ -132,10 +133,8 @@ public class DrawingModel extends Observable {
 		touchDataObject = touchDataObject.getPartialDeepCopy();
 		state = STATE.MOVING;
 		distanceStart = calculateDistance(x1, y1, x2, y2);
-		dragStartX = offsetX + Math.min(x1, x2) / pixelsPerInterval
-				* DrawingModel.INTERVAL;
-		dragStartY = offsetY + Math.min(y1, y2) / pixelsPerInterval
-				* DrawingModel.INTERVAL;
+		dragStart = new PointF(offsetX + Math.min(x1, x2) / pixelsPerInterval* DrawingModel.INTERVAL,
+				offsetY + Math.min(y1, y2) / pixelsPerInterval * DrawingModel.INTERVAL);
 		setChanged();
 		notifyObservers();
 	}
@@ -153,13 +152,12 @@ public class DrawingModel extends Observable {
 			if(touchDataObject instanceof Wall){
 				Wall wall = (Wall) touchDataObject;
 				if(wall.isComplete()){
-					if(!(wall.getX1() == wall.getX2() && wall.getY1() == wall.getY2())){
+					if(!(wall.getPoint1().x == wall.getPoint2().x && wall.getPoint1().y == wall.getPoint2().y)){
 						FloorPlanModel.getInstance().addDataObject(wall);
 					}
 					touchDataObject = touchDataObject.getPartialDeepCopy();
 				}else{
-					wall.setX2(wall.getX1());
-					wall.setY2(wall.getY1());
+					wall.setPoint2(new Point(wall.getPoint1()));
 				}
 			}else{
 				if(touchDataObject.isComplete()){
@@ -258,15 +256,12 @@ public class DrawingModel extends Observable {
 				}
 				if(touchDataObject instanceof Wall && ((Wall)touchDataObject).isComplete()){
 					Wall wall = (Wall) touchDataObject;
-					wall.setX2(wallX);
-					wall.setY2(wallY);
+					wall.setPoint2(wallX, wallY);
 				}else{
-					touchDataObject.setX1(wallX);
-					touchDataObject.setY1(wallY);
+					touchDataObject.setPoint1(wallX, wallY);
 				}
 			}else{
-				touchDataObject.setX1(wallX);
-				touchDataObject.setY1(wallY);
+				touchDataObject.setPoint1(wallX, wallY);
 			}
 			setChanged();
 			notifyObservers();

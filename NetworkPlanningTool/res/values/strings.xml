@@ -110,5 +110,7 @@
     
     
     <string name="stopDrawingText">Stop Drawing</string>
+    
+    <string name="savePlanTitle">Save floorplan</string>
 
 </resources>

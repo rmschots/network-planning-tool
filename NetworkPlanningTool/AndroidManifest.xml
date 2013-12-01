@@ -6,10 +6,11 @@
     
     <uses-feature android:name="android.hardware.touchscreen.multitouch"
                android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:hardwareAccelerated="true"

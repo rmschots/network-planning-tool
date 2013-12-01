@@ -3,6 +3,7 @@ package com.ugent.networkplanningtool.data;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 
 import com.ugent.networkplanningtool.model.DrawingModel;
 
@@ -19,12 +20,25 @@ public class AccessPoint extends DataObject{
 	private int power;
 	private Network network;
 
-	
-	
-	public AccessPoint(int x, int y, String name, int height, RadioType type,
+	public AccessPoint(String name, int height, RadioType type,
 			RadioModel model, int frequency, int frequencyband, int gain,
 			int power, Network network) {
-		super(x, y);
+		super();
+		this.name = name;
+		this.height = height;
+		this.type = type;
+		this.model = model;
+		this.frequency = frequency;
+		this.frequencyband = frequencyband;
+		this.gain = gain;
+		this.power = power;
+		this.network = network;
+	}
+	
+	public AccessPoint(Point point, String name, int height, RadioType type,
+			RadioModel model, int frequency, int frequencyband, int gain,
+			int power, Network network) {
+		super(point);
 		this.name = name;
 		this.height = height;
 		this.type = type;
@@ -123,8 +137,8 @@ public class AccessPoint extends DataObject{
 	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
 		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
 		float circleRadius2 = circleRadius1*5/6;
-		float x = convertCoordinateToLocation(drawingModel, true, getX1());
-		float y = convertCoordinateToLocation(drawingModel, false, getY1());
+		float x = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
+		float y = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
 		
 		paint.setColor(Color.BLACK);
 		canvas.drawCircle(x, y, circleRadius1, paint);
@@ -136,6 +150,6 @@ public class AccessPoint extends DataObject{
 
 	@Override
 	public DataObject getPartialDeepCopy() {
-		return new AccessPoint(-1, -1, name, height, type, model, frequency, frequencyband, gain, power, network);
+		return new AccessPoint(name, height, type, model, frequency, frequencyband, gain, power, network);
 	}
 }

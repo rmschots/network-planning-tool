@@ -1,19 +1,24 @@
 package com.ugent.networkplanningtool;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -42,7 +47,7 @@ import com.ugent.networkplanningtool.layout.MyScrollBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
-public class MainActivity extends Activity implements Observer,OnTouchListener,OnFileSelectedListener{
+public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	private static Context mContext;
 	
@@ -230,7 +235,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 				}
 			}
 		};
-		connectionTypeRadioGroup.setOnCheckedChangeListener(connectionTypeListener);		
+		connectionTypeRadioGroup.setOnCheckedChangeListener(connectionTypeListener);
     }
 
 
@@ -252,18 +257,18 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 		}else if(tag.equals("windows")){
 			setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
 		}else if(tag.equals("accesspoints")){
-			drawingModel.setTouchDataObject(new AccessPoint(-1, -1, "", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
+			drawingModel.setTouchDataObject(new AccessPoint("", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
 		}else if(tag.equals("activities")){
-			drawingModel.setTouchDataObject(new DataActivity(-1,-1,ActivityType.HD_VIDEO));
+			drawingModel.setTouchDataObject(new DataActivity(ActivityType.HD_VIDEO));
 		}else if(tag.equals("connections")){
-			drawingModel.setTouchDataObject(new ConnectionPoint(-1, -1, ConnectionPointType.POWER));
+			drawingModel.setTouchDataObject(new ConnectionPoint(ConnectionPointType.POWER));
 		}else{
 			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
 		}
 	}
 	
 	private void setDrawAccessPoints(){
-		
+		// TODO
 	}
 	
 	private void setDrawWall(WallType wallType, RadioGroup materialRadioGroup, RadioGroup thicknessRadiogroup){
@@ -275,7 +280,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 			Wall wall = (Wall) drawingModel.getTouchDataObject();
 			wall.setMaterial(material);
 		}else{
-			drawingModel.setTouchDataObject(new Wall(-1, -1, wallType, thickness, material));
+			drawingModel.setTouchDataObject(new Wall(wallType, thickness, material));
 		}
 	}
 	
@@ -342,45 +347,89 @@ public class MainActivity extends Activity implements Observer,OnTouchListener,O
 	}
 	
 	public void handleOpenFileClick(View v){
-		FileChooserDialog dialog = new FileChooserDialog(this);
-		dialog.addListener(this);
+		FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
+		dialog.addListener(new OnFileSelectedListener() {
+			
+			@Override
+			public void onFileSelected(Dialog source, File folder, String name) {
+			}
+			
+			@Override
+			public void onFileSelected(Dialog source, File file) {
+				Log.d("DEBUG",file.getAbsolutePath());
+				source.dismiss();
+				try {
+					FloorPlanModel.loadFloorPlan(file);
+				} catch (Exception e) {
+					Log.d("DEBUG","Error loading file: "+e);
+					e.printStackTrace();
+				}
+			}
+		});
 		// dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
 		dialog.show();
 		
 	}
 	
 	public void handleSaveClick(View v){
-		Dialog d = new Dialog(this);
-		// ...
-		// todo eerst filename, checkbox default location, dan dit eventueel
-		FileChooserDialog dialog = new FileChooserDialog(this);
-		dialog.addListener(this);
-		dialog.setFolderMode(true);
-		dialog.setCanCreateFiles(true);
-		dialog.show();
+		final Dialog d = new Dialog(this);
+		d.setTitle(R.string.savePlanTitle);
+		d.setContentView(R.layout.save_floorplan);
+		Button saveButton = (Button)d.findViewById(R.id.saveButton);
+		saveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				d.dismiss();
+				String fileName = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
+				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
+					Log.d("DEBUG","3: "+Environment.getExternalStorageDirectory().getAbsolutePath());
+					File f = new File(Environment.getExternalStorageDirectory(),fileName);
+					if(!f.exists()){
+						try {
+							f.createNewFile();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							Log.e("DEBUG","cannot create new file");
+						}
+					}
+					try {
+						floorPlanModel.saveFloorPlan(f);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						String StackTrace = "";
+						for(StackTraceElement s : e.getStackTrace()){
+							StackTrace+=" "+s.toString();
+						}
+						Log.d("DEBUG","error saving to "+f.getAbsolutePath()+" "+StackTrace);
+						e.printStackTrace();
+					}
+				}else{
+					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
+					dialog.addListener(new OnFileSelectedListener() {
+						
+						@Override
+						public void onFileSelected(Dialog source, File folder, String name) {
+							Log.d("DEBUG","1111");
+						}
+						
+						@Override
+						public void onFileSelected(Dialog source, File file) {
+							Log.d("DEBUG","2222");
+						}
+					});
+					dialog.setFolderMode(true);
+					dialog.setCanCreateFiles(true);
+					dialog.show();
+				}
+				
+			}
+		});
+		d.show();
 	}
 	
 	public void handleNewFileClick(View v){
 		floorPlanModel.reset();
-	}
-
-
-	@Override
-	public void onFileSelected(Dialog source, File file) {
-		source.dismiss();
-		try {
-			FloorPlanModel.loadFloorPlan(file);
-		} catch (Exception e) {
-			Log.d("DEBUG","Error loading file: "+e);
-			e.printStackTrace();
-		}
-	}
-
-
-	@Override
-	public void onFileSelected(Dialog source, File folder, String name) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public static Context getContext(){
