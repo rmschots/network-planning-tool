@@ -60,7 +60,7 @@ public class FloorPlanModel extends Observable {
 	
 	private static FloorPlanModel model = new FloorPlanModel();
 	
-	private static List<Wall> wallList;
+	private static ArrayList<Wall> wallList;
 	private static List<ConnectionPoint> connectionPointList;
 	private static List<AccessPoint> accessPointList;
 	private static List<DataActivity> dataActivityList;
@@ -131,30 +131,28 @@ public class FloorPlanModel extends Observable {
 	}
 
 	public void addDataObject(DataObject touchDataObject) {
+		Log.d("WALL","ADD");
 		if(touchDataObject.isComplete()){
 			if(touchDataObject instanceof Wall){
 				Wall newWall = (Wall) touchDataObject;
-				Map<Integer, Couple<Point, Wall>> splitWalls = new HashMap<Integer, Couple<Point,Wall>>();
-				// wall is vertical?
-				boolean vertical = newWall.getPoint1().x == newWall.getPoint2().x;
-				for(Wall w : wallList){
-					Point p = Utils.getIntersection(w.getPoint1(), w.getPoint2(), newWall.getPoint1(), newWall.getPoint2());
-					if(p != null){
-						Log.d("DEBUG","SPLIT");
-						splitWalls.put(vertical?p.y:p.x, new Couple<Point, Wall>(p, w));
+				Map<Float, Couple<Point, Wall>> splitWalls = new HashMap<Float, Couple<Point,Wall>>();
+				List<Wall> wallListCopy = new ArrayList<Wall>(wallList);
+				for(Wall w : wallListCopy){
+					Point[] pl = Utils.getIntersection(newWall.getPoint1(), newWall.getPoint2(), w.getPoint1(), w.getPoint2());
+					if(pl.length > 1){
+						wallList.remove(w);
+					}
+					for(Point p : pl){
+						Log.d("WALL","SPLIT");
+						float distance = Utils.pointToPointDistance(newWall.getPoint1(), p);
+						splitWalls.put(distance, new Couple<Point, Wall>(p, w));
 					}
 				}
 				if(!splitWalls.isEmpty()){
-					Integer[] coordArr = splitWalls.keySet().toArray(new Integer[1]);
+					Float[] coordArr = splitWalls.keySet().toArray(new Float[1]);
 					Arrays.sort(coordArr);
-					boolean down;
-					if(vertical){
-						down = newWall.getPoint1().y < newWall.getPoint2().y;
-					}else{
-						down = newWall.getPoint1().x < newWall.getPoint2().x;
-					}
 					
-					for(Integer i : coordArr){
+					for(Float i : coordArr){
 						Point p = splitWalls.get(i).getA();
 						Wall w = splitWalls.get(i).getB();
 						
@@ -165,26 +163,24 @@ public class FloorPlanModel extends Observable {
 						add2.setPoint1(p);
 						add2.setPoint2(w.getPoint2());
 						Wall add3 = (Wall) newWall.getPartialDeepCopy();
-						if(down){
-							add3.setPoint1(newWall.getPoint1());
-							add3.setPoint2(p);
-							newWall.setPoint1(p);
-						}else{
-							Log.d("DEBUG","UP");
-							add3.setPoint1(newWall.getPoint2());
-							add3.setPoint2(p);
-							newWall.setPoint2(p);
-						}
-						wallList.remove(w);
-						if(!add1.getPoint1().equals(add1.getPoint2())){
-							wallList.add(add1);
-						}
-						if(!add2.getPoint1().equals(add2.getPoint2())){
-							wallList.add(add2);
+						
+						add3.setPoint1(newWall.getPoint1());
+						add3.setPoint2(p);
+						newWall.setPoint1(p);
+						
+						if(wallList.contains(w)){
+							wallList.remove(w);
+							if(!add1.getPoint1().equals(add1.getPoint2())){
+								wallList.add(add1);
+							}
+							if(!add2.getPoint1().equals(add2.getPoint2())){
+								wallList.add(add2);
+							}
 						}
 						if(!add3.getPoint1().equals(add3.getPoint2())){
 							wallList.add(add3);
 						}
+						
 						Log.d("DEBUG","add3: "+add3.getPoint1().x + " "+add3.getPoint2().x);
 					}
 					
@@ -230,6 +226,7 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	private void removeDataObjectFromList(DataObject dataobject){
+		Log.d("DEBUG","removeDataObjectFromList");
 		if(dataobject instanceof AccessPoint){
 			accessPointList.remove(dataobject);
 		}else if(dataobject instanceof Wall){
