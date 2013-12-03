@@ -170,18 +170,29 @@ public class FloorPlanModel extends Observable {
 							add3.setPoint2(p);
 							newWall.setPoint1(p);
 						}else{
-							add3.setPoint1(p);
-							add3.setPoint2(newWall.getPoint1());
+							Log.d("DEBUG","UP");
+							add3.setPoint1(newWall.getPoint2());
+							add3.setPoint2(p);
 							newWall.setPoint2(p);
 						}
 						wallList.remove(w);
-						wallList.add(add1);
-						wallList.add(add2);
-						wallList.add(add3);
+						if(!add1.getPoint1().equals(add1.getPoint2())){
+							wallList.add(add1);
+						}
+						if(!add2.getPoint1().equals(add2.getPoint2())){
+							wallList.add(add2);
+						}
+						if(!add3.getPoint1().equals(add3.getPoint2())){
+							wallList.add(add3);
+						}
+						Log.d("DEBUG","add3: "+add3.getPoint1().x + " "+add3.getPoint2().x);
 					}
+					
 				}
-				addDataObjectToList(touchDataObject);
-				undoStack.push(new FloorPlanOperation(Type.ADD, touchDataObject));
+				if(!newWall.getPoint1().equals(newWall.getPoint2())){
+					wallList.add(newWall);
+				}
+				undoStack.push(new FloorPlanOperation(Type.ADD, newWall));
 				redoStack.clear();
 				setChanged();
 				notifyObservers();

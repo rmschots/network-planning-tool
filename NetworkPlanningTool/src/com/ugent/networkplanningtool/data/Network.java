@@ -9,7 +9,6 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum Network {
-	// TODO color
 	NETWORK_A(MainActivity.getContext().getResources().getString(R.string.networkAText),Color.rgb(115, 128, 190)),
 	NETWORK_B(MainActivity.getContext().getResources().getString(R.string.networkBText),Color.rgb(115, 128, 190)),
 	NETWORK_C(MainActivity.getContext().getResources().getString(R.string.networkCText),Color.rgb(115, 128, 190)),
