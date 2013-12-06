@@ -3,13 +3,12 @@
     package="com.ugent.networkplanningtool"
     android:versionCode="1"
     android:versionName="1.0" >
-    
     <uses-feature android:name="android.hardware.touchscreen.multitouch"
                android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
     <application
@@ -24,7 +23,7 @@
             android:screenOrientation="sensorLandscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+				<category android:name="android.intent.category.HOME"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

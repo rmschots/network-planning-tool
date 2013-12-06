@@ -138,7 +138,7 @@ public class FloorPlanModel extends Observable {
 				Map<Float, Couple<Point, Wall>> splitWalls = new HashMap<Float, Couple<Point,Wall>>();
 				List<Wall> wallListCopy = new ArrayList<Wall>(wallList);
 				for(Wall w : wallListCopy){
-					Point[] pl = Utils.getIntersection(newWall.getPoint1(), newWall.getPoint2(), w.getPoint1(), w.getPoint2());
+					Point[] pl = Utils.getIntersectionSpecial(newWall.getPoint1(), newWall.getPoint2(), w.getPoint1(), w.getPoint2(),true);
 					if(pl.length > 1){
 						wallList.remove(w);
 					}
@@ -202,6 +202,8 @@ public class FloorPlanModel extends Observable {
 		}
 		Log.d("DEBUG","size: "+wallList.size());
 	}
+	
+	
 	
 	private void addDataObjectToList(DataObject dataObject){
 		if(dataObject instanceof AccessPoint){
@@ -284,6 +286,37 @@ public class FloorPlanModel extends Observable {
 	
 	public boolean canRedo(){
 		return !redoStack.isEmpty();
+	}
+	
+	public Point getClosestCornerToPoint(Point p){
+		Point closest = null;
+		float distance = Float.POSITIVE_INFINITY;
+		for(Wall w : wallList){
+			float dist = Utils.pointToPointDistance(p, w.getPoint1());
+			if(dist < distance){
+				distance = dist;
+				closest = w.getPoint1();
+			}
+			dist = Utils.pointToPointDistance(p, w.getPoint2());
+			if(dist < distance){
+				distance = dist;
+				closest = w.getPoint2();
+			}
+		}
+		return closest;
+	}
+	
+	public Wall getClosestWallToPoint(Point p){
+		Wall closest = null;
+		float distance = Float.POSITIVE_INFINITY;
+		for(Wall w : wallList){
+			float dist = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), p, true);
+			if(dist < distance){
+				distance = dist;
+				closest = w;
+			}
+		}
+		return distance == Float.POSITIVE_INFINITY?null:closest;
 	}
 
 }

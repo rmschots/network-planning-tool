@@ -113,6 +113,7 @@ public class DrawingView extends View implements Observer{
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		event.setLocation(event.getX()-100,event.getY()-100);
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			drawingModel.setTouchLocation((int)event.getX(0), (int)event.getY(0));

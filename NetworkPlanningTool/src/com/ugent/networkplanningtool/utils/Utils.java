@@ -50,24 +50,23 @@ public class Utils {
 		return (float) Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));  
 	}
 	
-	public static float pointToLineDistance(Point a, Point b, Point p) {
-		float distance = (Math.abs((p.x-a.x)*(b.y-a.y)-(p.y-a.y)*(b.x-a.x))/pointToPointDistance(a,b));
+	public static float pointToLineDistance(Point a, Point b, Point p, boolean upright) {
 		float distAToB = pointToPointDistance(a, b);
 		float distToA = pointToPointDistance(a,p);
 		float distToB = pointToPointDistance(b,p);
 		
-		if(distance > distToA){
-			return Float.POSITIVE_INFINITY;
+		if(distAToB < distToA){
+			return upright?Float.POSITIVE_INFINITY:distToB;
 		}else if(distAToB < distToB){
-			return Float.POSITIVE_INFINITY;
+			return upright?Float.POSITIVE_INFINITY:distToA;
 		}
 		return (Math.abs((p.x-a.x)*(b.y-a.y)-(p.y-a.y)*(b.x-a.x))/pointToPointDistance(a,b));
 	}
 	
-	public static Point[] getIntersection(Point line1point1, Point line1point2, Point line2point1, Point line2point2){
-		Log.d("DEBUG","dist: "+pointToLineDistance(line1point1, line1point2, line2point1));
-		float dist1 = pointToLineDistance(line1point1, line1point2, line2point1);
-		float dist2 = pointToLineDistance(line1point1, line1point2, line2point2);
+	public static Point[] getIntersectionSpecial(Point line1point1, Point line1point2, Point line2point1, Point line2point2, boolean upright){
+		Log.d("DEBUG","dist: "+pointToLineDistance(line1point1, line1point2, line2point1,upright));
+		float dist1 = pointToLineDistance(line1point1, line1point2, line2point1,upright);
+		float dist2 = pointToLineDistance(line1point1, line1point2, line2point2,upright);
 		if(dist1 < 40 || dist2 < 40){
 			if(dist1 < 40 && dist2 < 40){
 				return new Point[]{line2point1,line2point2};
@@ -114,5 +113,21 @@ public class Utils {
 		}
 		return new Point[]{};
 	}
-
+	
+	public static Point pointProjectionOnLine(Point a, Point b, Point p){
+		float a1 = (b.y-a.y)/(float)(b.x-a.x);
+		float b1 = a.y - a1*a.x;
+		float a2 = -1/a1;
+		float b2 = p.y - a2*p.x;
+		float xx = (b2-b1)/(a1-a2);
+		int x = Math.round(xx);
+		int y = Math.round(a2*xx+b2);
+		if(		Math.min(a.x, b.x) <= x
+				&& x <= Math.max(a.x, b.x)
+				&& Math.min(a.y, b.y) <= y
+				&& y <= Math.max(a.y, b.y)){
+			return new Point(x, y);
+		}
+		return null;
+	}
 }

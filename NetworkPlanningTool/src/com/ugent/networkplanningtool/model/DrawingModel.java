@@ -12,6 +12,7 @@ import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
+import com.ugent.networkplanningtool.utils.Utils;
 
 public class DrawingModel extends Observable {
 
@@ -48,7 +49,7 @@ public class DrawingModel extends Observable {
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
 
-	private boolean snapToGrid = true;
+	private boolean snapToGrid = false;
 
 	public DrawingModel(int viewWidth, int viewHeight) {
 		offsetX = 0;
@@ -234,34 +235,51 @@ public class DrawingModel extends Observable {
 	}
 
 	public void setTouchLocation(float x, float y) {
-		Log.d("debug","settouchlocation");
 		if(touchDataObject != null){
 			state = STATE.PLACING;
-			int wallX = getActualLocationX(x);
-			int wallY = getActualLocationY(y);
+			Point wallPoint = new Point(getActualLocationX(x),getActualLocationY(y));
 			if(touchDataObject instanceof Wall){
-				if (snapToGrid) {
-					int rest = wallX % INTERVAL;
-					if (rest < INTERVAL / 2) {
-						wallX = wallX - rest;
-					} else {
-						wallX = wallX + INTERVAL - rest;
-					}
-					rest = wallY % INTERVAL;
-					if (rest < INTERVAL / 2) {
-						wallY = wallY - rest;
-					} else {
-						wallY = wallY + INTERVAL - rest;
+				Point closestCorner = FloorPlanModel.getInstance().getClosestCornerToPoint(wallPoint);
+				if(closestCorner != null && Utils.pointToPointDistance(wallPoint, closestCorner) <= INTERVAL/2){
+					wallPoint = closestCorner;
+				}else{
+					if (snapToGrid) {
+						int rest = wallPoint.x % INTERVAL;
+						if (rest < INTERVAL / 2) {
+							wallPoint.x = wallPoint.x - rest;
+						} else {
+							wallPoint.x = wallPoint.x + INTERVAL - rest;
+						}
+						rest = wallPoint.y % INTERVAL;
+						if (rest < INTERVAL / 2) {
+							wallPoint.y = wallPoint.y - rest;
+						} else {
+							wallPoint.y = wallPoint.y + INTERVAL - rest;
+						}
+					}else{
+						// TODO FIX
+						Wall closestWall = FloorPlanModel.getInstance().getClosestWallToPoint(wallPoint);
+						if(closestWall == null){
+							Log.d("DEBUG","closestWall NULL");
+						}
+						if(closestWall != null && Utils.pointToLineDistance(closestWall.getPoint1(), closestWall.getPoint2(),wallPoint,false) <= INTERVAL/2){
+							Point p = Utils.pointProjectionOnLine(closestWall.getPoint1(), closestWall.getPoint2(), wallPoint);
+							if(p != null){
+								wallPoint = p;
+							}else{
+								Log.e("DEBUG","closestWall NULL");
+							}
+						}
 					}
 				}
-				if(touchDataObject instanceof Wall && ((Wall)touchDataObject).isComplete()){
+				if(((Wall)touchDataObject).isComplete()){
 					Wall wall = (Wall) touchDataObject;
-					wall.setPoint2(wallX, wallY);
+					wall.setPoint2(wallPoint);
 				}else{
-					touchDataObject.setPoint1(wallX, wallY);
+					touchDataObject.setPoint1(wallPoint);
 				}
 			}else{
-				touchDataObject.setPoint1(wallX, wallY);
+				touchDataObject.setPoint1(wallPoint);
 			}
 			setChanged();
 			notifyObservers();

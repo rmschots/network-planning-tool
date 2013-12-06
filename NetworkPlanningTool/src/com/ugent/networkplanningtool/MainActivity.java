@@ -325,7 +325,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		zoomControls.setIsZoomInEnabled(!drawingModel.isZoomInMaxed());
 		zoomControls.setIsZoomOutEnabled(!drawingModel.isZoomOutMaxed());
 		
-		Log.d("DEBUG","UPDATE");
 		undoButton.setEnabled(floorPlanModel.canUndo());
 		redoButton.setEnabled(floorPlanModel.canRedo());
 	}
