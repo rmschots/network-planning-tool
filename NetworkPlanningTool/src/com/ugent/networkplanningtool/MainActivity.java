@@ -8,7 +8,6 @@ import java.util.Observer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -16,13 +15,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
@@ -76,9 +78,23 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private RadioGroup doorThicknessRadioGroup;
 	private RadioGroup windowThicknessRadioGroup;
 	
+	private RadioGroup wallSnapToRadioGroup;
+	private RadioGroup doorSnapToRadioGroup;
+	private RadioGroup windowSnapToRadioGroup;
+	
+	
 	private RadioGroup activityTypeRadioGroup;
 	
 	private RadioGroup connectionTypeRadioGroup;
+	
+	private Spinner networkSignalTypeSpinner;
+	private Spinner networkMhzSpinner;
+	private Spinner networkChannelSpinner;
+	private Spinner networkModelSpinner;
+	private EditText antennaGainEditText;
+	private EditText transmitPowerEditText;
+	private Spinner networkIDSpinner;
+	private EditText elevationEditText;
 	
 	private ZoomControls zoomControls;
 	private ImageButton undoButton;
@@ -115,9 +131,23 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         doorThicknessRadioGroup = (RadioGroup) findViewById(R.id.doorsThicknessRadioGroup);
         windowThicknessRadioGroup = (RadioGroup) findViewById(R.id.windowsThicknessRadioGroup);
         
+        wallSnapToRadioGroup = (RadioGroup) findViewById(R.id.wallsSnapToRadioGroup);
+        doorSnapToRadioGroup = (RadioGroup) findViewById(R.id.doorsSnapToRadioGroup);
+        windowSnapToRadioGroup = (RadioGroup) findViewById(R.id.windowsSnapToRadioGroup);
+        
         activityTypeRadioGroup = (RadioGroup) findViewById(R.id.activityTypeRadioGroup);
         
         connectionTypeRadioGroup = (RadioGroup) findViewById(R.id.connectionTypeRadioGroup);
+        
+        networkSignalTypeSpinner = (Spinner) findViewById(R.id.networkSignalTypeSpinner);
+        networkMhzSpinner = (Spinner) findViewById(R.id.networkMHzSpinner);
+        networkChannelSpinner = (Spinner) findViewById(R.id.networkChannelSpinner);
+        networkModelSpinner = (Spinner) findViewById(R.id.networkModelSpinner);
+        transmitPowerEditText = (EditText) findViewById(R.id.transmitPowerEditText);
+        antennaGainEditText = (EditText) findViewById(R.id.antennaGainEditText);
+        elevationEditText = (EditText) findViewById(R.id.elevationEditText);
+        networkIDSpinner = (Spinner) findViewById(R.id.networkIDSpinner);
+        
         
         mainActive = findViewById(R.id.designButton);
         designActive = findViewById(R.id.wallsButton);
@@ -176,66 +206,44 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         designView.setOnTouchListener(this);
         
-        OnCheckedChangeListener materialListener = new OnCheckedChangeListener() {
+        OnCheckedChangeListener drawCheckedChangedListener = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId){
+				adjustDraw();
+			}
+		};
+		OnItemSelectedListener drawChangedItemListener = new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
+				adjustDraw();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {}
+		};
+		OnCheckedChangeListener snapToListener = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId){
 				RadioButton rb = (RadioButton) findViewById(checkedId);
-				DataObject obj = drawingModel.getTouchDataObject();
-				if(obj instanceof Wall){
-					Wall w = (Wall) obj;
-					w.setMaterial(Material.getMaterialByText(rb.getText().toString()));
-				}else{
-					// should not happen
-				}
+				drawingModel.setSnapToGrid(rb.getText().equals(getResources().getString(R.string.snapToGridText)));
 			}
 		};
-		wallMaterialRadioGroup.setOnCheckedChangeListener(materialListener);
-		doorMaterialRadioGroup.setOnCheckedChangeListener(materialListener);
-		windowMaterialRadioGroup.setOnCheckedChangeListener(materialListener);
-		OnCheckedChangeListener thicknessListener = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId){
-				RadioButton rb = (RadioButton) findViewById(checkedId);
-				DataObject obj = drawingModel.getTouchDataObject();
-				if(obj instanceof Wall){
-					Wall w = (Wall) obj;
-					w.setThickness(Thickness.getThicknessByText(rb.getText().toString()));
-				}else{
-					// should not happen
-				}
-			}
-		};
-		wallThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
-		doorThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
-		windowThicknessRadioGroup.setOnCheckedChangeListener(thicknessListener);
-		OnCheckedChangeListener activityTypeListener = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId){
-				RadioButton rb = (RadioButton) findViewById(checkedId);
-				DataObject obj = drawingModel.getTouchDataObject();
-				if(obj instanceof DataActivity){
-					DataActivity da = (DataActivity) obj;
-					da.setType(ActivityType.getActivityTypeByText(rb.getText().toString()));
-				}else{
-					// should not happen
-				}
-			}
-		};
-		activityTypeRadioGroup.setOnCheckedChangeListener(activityTypeListener);
-		OnCheckedChangeListener connectionTypeListener = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId){
-				RadioButton rb = (RadioButton) findViewById(checkedId);
-				DataObject obj = drawingModel.getTouchDataObject();
-				if(obj instanceof ConnectionPoint){
-					ConnectionPoint cp = (ConnectionPoint) obj;
-					cp.setType(ConnectionPointType.getConnectionPointTypeByText(rb.getText().toString()));
-				}else{
-					// should not happen
-				}
-			}
-		};
-		connectionTypeRadioGroup.setOnCheckedChangeListener(connectionTypeListener);
+		wallMaterialRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		doorMaterialRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		windowMaterialRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		wallThicknessRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		doorThicknessRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		windowThicknessRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		wallSnapToRadioGroup.setOnCheckedChangeListener(snapToListener);
+		doorSnapToRadioGroup.setOnCheckedChangeListener(snapToListener);
+		windowSnapToRadioGroup.setOnCheckedChangeListener(snapToListener);	
+		activityTypeRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		connectionTypeRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
+		networkSignalTypeSpinner.setOnItemSelectedListener(drawChangedItemListener);
+		networkMhzSpinner.setOnItemSelectedListener(drawChangedItemListener);
+        networkChannelSpinner.setOnItemSelectedListener(drawChangedItemListener);
+        networkModelSpinner.setOnItemSelectedListener(drawChangedItemListener);
+        networkIDSpinner.setOnItemSelectedListener(drawChangedItemListener);
     }
 
 
@@ -243,6 +251,32 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		mainActive.setEnabled(true);
 		mainActive = v;
 		onFlipClick(v, mainFlip);
+	}
+	
+	private void adjustDraw(){
+		DataObject dObj = drawingModel.getTouchDataObject();
+		
+		if(dObj instanceof Wall){
+			switch(((Wall)dObj).getWallType()){
+			case DOOR:
+				setDrawWall(WallType.DOOR,doorMaterialRadioGroup,doorThicknessRadioGroup);
+				break;
+			case WALL:
+				setDrawWall(WallType.WALL,wallMaterialRadioGroup,wallThicknessRadioGroup);
+				break;
+			case WINDOW:
+				setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
+				break;
+			}
+		}else if(dObj instanceof AccessPoint){
+			setDrawAccessPoints(networkSignalTypeSpinner, networkMhzSpinner, networkChannelSpinner, networkModelSpinner, transmitPowerEditText, antennaGainEditText, elevationEditText, networkIDSpinner);
+		}else if(dObj instanceof DataActivity){
+			setDrawActivities(activityTypeRadioGroup);
+		}else if(dObj instanceof ConnectionPoint){
+			setDrawConnections(connectionTypeRadioGroup);
+		}else{
+			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
+		}
 	}
 	
 	public void onDesignFlipClick(View v) {
@@ -257,18 +291,14 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		}else if(tag.equals("windows")){
 			setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
 		}else if(tag.equals("accesspoints")){
-			drawingModel.setTouchDataObject(new AccessPoint("", 175, RadioType.WIFI, RadioModel.DLINK, 10, 10, 10, 10, Network.NETWORK_A));
+			setDrawAccessPoints(networkSignalTypeSpinner, networkMhzSpinner, networkChannelSpinner, networkModelSpinner, transmitPowerEditText, antennaGainEditText, elevationEditText, networkIDSpinner);
 		}else if(tag.equals("activities")){
-			drawingModel.setTouchDataObject(new DataActivity(ActivityType.HD_VIDEO));
+			setDrawActivities(activityTypeRadioGroup);
 		}else if(tag.equals("connections")){
-			drawingModel.setTouchDataObject(new ConnectionPoint(ConnectionPointType.POWER));
+			setDrawConnections(connectionTypeRadioGroup);
 		}else{
 			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
 		}
-	}
-	
-	private void setDrawAccessPoints(){
-		// TODO
 	}
 	
 	private void setDrawWall(WallType wallType, RadioGroup materialRadioGroup, RadioGroup thicknessRadiogroup){
@@ -279,8 +309,56 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		if(drawingModel.getTouchDataObject() instanceof Wall){
 			Wall wall = (Wall) drawingModel.getTouchDataObject();
 			wall.setMaterial(material);
+			wall.setThickness(thickness);
 		}else{
 			drawingModel.setTouchDataObject(new Wall(wallType, thickness, material));
+		}
+	}
+	
+	private void setDrawAccessPoints(Spinner radioTypeSpinner, Spinner mhzSpinner, Spinner channelSpinner, Spinner modelSpinner, EditText transmitPowerEditText, EditText antennaGainEditText, EditText elevationEditText, Spinner networkIDSpinner){
+		RadioType rt = RadioType.getRadioTypeByText(radioTypeSpinner.getSelectedItem().toString());
+		int mhz = Integer.parseInt(mhzSpinner.getSelectedItem().toString());
+		int channel = Integer.parseInt(channelSpinner.getSelectedItem().toString());
+		RadioModel rm = RadioModel.getRadioModelByText(modelSpinner.getSelectedItem().toString());
+		int transmitPower = Integer.parseInt(transmitPowerEditText.getText().toString());
+		int antennaGain = Integer.parseInt(antennaGainEditText.getText().toString());
+		int elevation = Integer.parseInt(elevationEditText.getText().toString());
+		Network nw = Network.getNetworkByText(networkIDSpinner.getSelectedItem().toString());
+		if(drawingModel.getTouchDataObject() instanceof AccessPoint){
+			AccessPoint ap = (AccessPoint) drawingModel.getTouchDataObject();
+			ap.setType(rt);
+			ap.setFrequency(mhz);
+			ap.setFrequencyband(channel);
+			ap.setModel(rm);
+			ap.setPower(transmitPower);
+			ap.setGain(antennaGain);
+			ap.setHeight(elevation);
+			ap.setNetwork(nw);
+		}else{
+			drawingModel.setTouchDataObject(new AccessPoint("", elevation, rt, rm, mhz, channel, antennaGain, transmitPower, nw));
+		}
+		
+	}
+	
+	private void setDrawActivities(RadioGroup activityTypeRadioGroup){
+		RadioButton rb = (RadioButton) findViewById(activityTypeRadioGroup.getCheckedRadioButtonId());
+		ActivityType aType = ActivityType.getActivityTypeByText(rb.getText().toString());
+		if(drawingModel.getTouchDataObject() instanceof DataActivity){
+			DataActivity da = (DataActivity) drawingModel.getTouchDataObject();
+			da.setType(aType);
+		}else{
+			drawingModel.setTouchDataObject(new DataActivity(aType));
+		}
+	}
+	
+	private void setDrawConnections(RadioGroup connectionTypeRadioGroup){
+		RadioButton rb = (RadioButton) findViewById(connectionTypeRadioGroup.getCheckedRadioButtonId());
+		ConnectionPointType cType = ConnectionPointType.getConnectionPointTypeByText(rb.getText().toString());
+		if(drawingModel.getTouchDataObject() instanceof ConnectionPoint){
+			ConnectionPoint cp = (ConnectionPoint) drawingModel.getTouchDataObject();
+			cp.setType(cType);
+		}else{
+			drawingModel.setTouchDataObject(new ConnectionPoint(cType));
 		}
 	}
 	

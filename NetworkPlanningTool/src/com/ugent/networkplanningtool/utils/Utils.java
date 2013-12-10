@@ -115,13 +115,23 @@ public class Utils {
 	}
 	
 	public static Point pointProjectionOnLine(Point a, Point b, Point p){
-		float a1 = (b.y-a.y)/(float)(b.x-a.x);
-		float b1 = a.y - a1*a.x;
-		float a2 = -1/a1;
-		float b2 = p.y - a2*p.x;
-		float xx = (b2-b1)/(a1-a2);
-		int x = Math.round(xx);
-		int y = Math.round(a2*xx+b2);
+		int x;
+		int y;
+		if(a.y == b.y){
+			x = p.x;
+			y = a.y;
+		}else if(a.x == b.x){
+			x = a.x;
+			y = p.y;
+		}else{
+			float a1 = (b.y-a.y)/(float)(b.x-a.x);
+			float b1 = a.y - a1*a.x;
+			float a2 = -1/a1;
+			float b2 = p.y - a2*p.x;
+			float xx = (b2-b1)/(a1-a2);
+			x = Math.round(xx);
+			y = Math.round(a2*xx+b2);
+		}
 		if(		Math.min(a.x, b.x) <= x
 				&& x <= Math.max(a.x, b.x)
 				&& Math.min(a.y, b.y) <= y

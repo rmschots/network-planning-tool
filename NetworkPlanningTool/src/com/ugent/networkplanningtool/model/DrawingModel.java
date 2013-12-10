@@ -49,7 +49,7 @@ public class DrawingModel extends Observable {
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
 
-	private boolean snapToGrid = false;
+	private boolean snapToGrid = true;
 
 	public DrawingModel(int viewWidth, int viewHeight) {
 		offsetX = 0;
@@ -321,6 +321,14 @@ public class DrawingModel extends Observable {
 		}
 		setChanged();
 		notifyObservers();
+	}
+
+	public boolean isSnapToGrid() {
+		return snapToGrid;
+	}
+
+	public void setSnapToGrid(boolean snapToGrid) {
+		this.snapToGrid = snapToGrid;
 	}
 	
 }

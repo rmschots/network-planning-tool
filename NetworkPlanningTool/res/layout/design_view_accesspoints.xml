@@ -20,7 +20,8 @@
             android:id="@+id/networkMHzSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:entries="@array/frequencyArray" />
 
         <TextView
             android:id="@+id/mhzText"
@@ -40,7 +41,8 @@
             android:id="@+id/networkChannelSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:entries="@array/channelArray" />
 
         <TextView
             android:id="@+id/networkChannelText"
@@ -82,7 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberSigned" >
+            android:inputType="numberSigned"
+            android:text="0" >
 
             <requestFocus />
         </EditText>
@@ -114,7 +117,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberSigned" />
+            android:inputType="numberSigned"
+            android:text="0" />
 
         <TextView
             android:id="@+id/dbText"
@@ -143,7 +147,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number"
+            android:text="0" />
 
         <TextView
             android:id="@+id/mText"

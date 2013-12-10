@@ -3,6 +3,8 @@ package com.ugent.networkplanningtool.data;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.graphics.Point;
 
 import com.ugent.networkplanningtool.model.DrawingModel;
@@ -50,100 +52,134 @@ public class AccessPoint extends DataObject{
 		this.network = network;
 	}
 
-
-
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 
-
-	/**
-	 * @return the height
-	 */
 	public int getHeight() {
 		return height;
 	}
 
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
-
-	/**
-	 * @return the type
-	 */
 	public RadioType getType() {
 		return type;
 	}
 
+	public void setType(RadioType type) {
+		this.type = type;
+	}
 
-
-	/**
-	 * @return the model
-	 */
 	public RadioModel getModel() {
 		return model;
 	}
 
+	public void setModel(RadioModel model) {
+		this.model = model;
+	}
 
-
-	/**
-	 * @return the frequency
-	 */
 	public int getFrequency() {
 		return frequency;
 	}
 
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
 
-
-	/**
-	 * @return the frequencyband
-	 */
 	public int getFrequencyband() {
 		return frequencyband;
 	}
 
+	public void setFrequencyband(int frequencyband) {
+		this.frequencyband = frequencyband;
+	}
 
-
-	/**
-	 * @return the gain
-	 */
 	public int getGain() {
 		return gain;
 	}
 
+	public void setGain(int gain) {
+		this.gain = gain;
+	}
 
-
-	/**
-	 * @return the power
-	 */
 	public int getPower() {
 		return power;
 	}
 
+	public void setPower(int power) {
+		this.power = power;
+	}
 
-
-	/**
-	 * @return the network
-	 */
 	public Network getNetwork() {
 		return network;
 	}
 
-
+	public void setNetwork(Network network) {
+		this.network = network;
+	}
 
 	@Override
 	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
-		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
-		float circleRadius2 = circleRadius1*5/6;
+		// TODO display gain+power
 		float x = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
 		float y = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
+		float circleRadius;
+		switch(type){
+		case WIFI:
+			circleRadius = drawingModel.getPixelsPerInterval()/4;
+			paint.setColor(getNetwork().getColor());
+			paint.setStyle(Style.FILL);
+			canvas.drawCircle(x, y, circleRadius, paint);
+			paint.setStyle(Style.STROKE);
+			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
+			paint.setColor(Color.BLACK);
+			canvas.drawCircle(x, y, circleRadius, paint);
+			break;
+		case SENSOR:
+			circleRadius = drawingModel.getPixelsPerInterval()/5;
+			paint.setColor(getNetwork().getColor());
+			paint.setStyle(Style.FILL);
+			canvas.drawCircle(x, y, circleRadius, paint);
+			paint.setStyle(Style.STROKE);
+			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
+			paint.setColor(Color.BLACK);
+			canvas.drawCircle(x, y, circleRadius, paint);
+			break;
+		case LTE_FEMTOCELL:
+		case UMTS_FEMTOCELL:
+			float dist1 = drawingModel.getPixelsPerInterval()/3;
+			float dist2 = dist1*4/6;
+			paint.setStyle(Style.FILL);
+			paint.setColor(getNetwork().getColor());
+			Path p = new Path();
+			p.reset();
+			p.moveTo(x-dist1, y);
+			p.lineTo(x-dist2, y-dist2);
+			p.lineTo(x+dist2, y-dist2);
+			
+			p.lineTo(x+dist1, y);
+			p.lineTo(x+dist2, y+dist2);
+			p.lineTo(x-dist2, y+dist2);
+			p.lineTo(x-dist1, y);
+			p.lineTo(x-dist1, y);
+			p.lineTo(x-dist2, y-dist2);
+			
+			canvas.drawPath(p, paint);
+			
+			paint.setStyle(Style.STROKE);
+			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
+			paint.setColor(Color.BLACK);
+			canvas.drawPath(p, paint);
+			break;
+		}
 		
-		paint.setColor(Color.BLACK);
-		canvas.drawCircle(x, y, circleRadius1, paint);
-		paint.setColor(getNetwork().getColor());
-		canvas.drawCircle(x, y, circleRadius2, paint);
+		paint.reset();
 	}
 
 

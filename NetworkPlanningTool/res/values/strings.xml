@@ -71,6 +71,40 @@
         <item>@string/umtsFemtocellText</item>
     </string-array>
     
+    <string name="frequency2400">2400</string>
+    <string name="frequency5000">5000</string>
+    
+    <string-array name="frequencyArray">
+        <item>@string/frequency2400</item>
+        <item>@string/frequency5000</item>
+    </string-array>
+    
+    <string name="channel1">1</string>
+    <string name="channel2">2</string>
+    <string name="channel3">3</string>
+    <string name="channel4">4</string>
+    <string name="channel5">5</string>
+    <string name="channel6">6</string>
+    <string name="channel7">7</string>
+    <string name="channel8">8</string>
+    <string name="channel9">9</string>
+    <string name="channel10">10</string>
+    <string name="channel11">11</string>
+    
+    <string-array name="channelArray">
+        <item>@string/channel1</item>
+        <item>@string/channel2</item>
+        <item>@string/channel3</item>
+        <item>@string/channel4</item>
+        <item>@string/channel5</item>
+        <item>@string/channel6</item>
+        <item>@string/channel7</item>
+        <item>@string/channel8</item>
+        <item>@string/channel9</item>
+        <item>@string/channel10</item>
+        <item>@string/channel11</item>
+    </string-array>
+    
     <string name="hdVideotext">HD video</string>
     <string name="actionGamesText">Action games</string>
     <string name="youtubeText">YouTube</string>
