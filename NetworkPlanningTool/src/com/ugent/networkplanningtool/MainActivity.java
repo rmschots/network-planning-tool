@@ -436,7 +436,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				Log.d("DEBUG",file.getAbsolutePath());
 				source.dismiss();
 				try {
-					FloorPlanModel.loadFloorPlan(file);
+					floorPlanModel.loadFloorPlan(file);
 				} catch (Exception e) {
 					Log.d("DEBUG","Error loading file: "+e);
 					e.printStackTrace();

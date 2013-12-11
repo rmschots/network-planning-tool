@@ -7,6 +7,10 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
 
+import com.ugent.networkplanningtool.MainActivity;
+import com.ugent.networkplanningtool.R;
+import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Thickness;
@@ -15,6 +19,19 @@ import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.utils.Utils;
 
 public class DrawingModel extends Observable {
+	
+	public static enum PlaceResult{
+		SUCCESS(null),
+		CONNECTION_POINT_NOT_ADJACENT_TO_WALL(MainActivity.getContext().getResources().getString(R.string.connectionPointNotAdjacentToWall)),
+		NOTHING_TO_PLACE(MainActivity.getContext().getResources().getString(R.string.nothingToPlace));
+		private String errorMessage;
+		private PlaceResult(String errorMessage){
+			this.errorMessage = errorMessage;
+		}
+		public String getErrorMessage(){
+			return errorMessage;
+		}
+	}
 
 	// states the drawing area can be in
 	private static enum STATE {
@@ -146,7 +163,7 @@ public class DrawingModel extends Observable {
 		notifyObservers();
 	}
 
-	public void place() {
+	public PlaceResult place() {
 		Log.d("debug","place");
 		state = STATE.IDLE;
 		if(touchDataObject != null){
@@ -162,6 +179,23 @@ public class DrawingModel extends Observable {
 				}
 			}else{
 				if(touchDataObject.isComplete()){
+					if(touchDataObject instanceof ConnectionPoint){
+						Wall closestWall = FloorPlanModel.getInstance().getClosestWallToPoint(touchDataObject.getPoint1());
+						if(closestWall != null){
+							float dist = Utils.pointToLineDistance(closestWall.getPoint1(), closestWall.getPoint2(),touchDataObject.getPoint1(),false);
+							if(dist <= INTERVAL/4 && dist != 0){
+								FloorPlanModel.getInstance().addDataObject(touchDataObject);
+								touchDataObject = touchDataObject.getPartialDeepCopy();
+								setChanged();
+								notifyObservers();
+								return PlaceResult.SUCCESS;
+							}
+						}
+						touchDataObject = touchDataObject.getPartialDeepCopy();
+						setChanged();
+						notifyObservers();
+						return PlaceResult.CONNECTION_POINT_NOT_ADJACENT_TO_WALL;
+					}
 					FloorPlanModel.getInstance().addDataObject(touchDataObject);
 					touchDataObject = touchDataObject.getPartialDeepCopy();
 				}else{
@@ -171,10 +205,12 @@ public class DrawingModel extends Observable {
 				}
 				
 			}
-			
 			setChanged();
 			notifyObservers();
-		} // else nothing to place
+			return PlaceResult.SUCCESS;
+		}
+		// else nothing to place
+		return PlaceResult.NOTHING_TO_PLACE;
 	}
 
 	public void setOffsetX(float offsetX) {
@@ -257,11 +293,7 @@ public class DrawingModel extends Observable {
 							wallPoint.y = wallPoint.y + INTERVAL - rest;
 						}
 					}else{
-						// TODO FIX
 						Wall closestWall = FloorPlanModel.getInstance().getClosestWallToPoint(wallPoint);
-						if(closestWall == null){
-							Log.d("DEBUG","closestWall NULL");
-						}
 						if(closestWall != null && Utils.pointToLineDistance(closestWall.getPoint1(), closestWall.getPoint2(),wallPoint,false) <= INTERVAL/2){
 							Point p = Utils.pointProjectionOnLine(closestWall.getPoint1(), closestWall.getPoint2(), wallPoint);
 							if(p != null){

@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ActivityType;
@@ -21,6 +22,7 @@ import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
+import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
 
 public class DrawingView extends View implements Observer{
 
@@ -127,7 +129,10 @@ public class DrawingView extends View implements Observer{
             break;
         case MotionEvent.ACTION_UP:
         	if(drawingModel.isPlacing()){
-        		drawingModel.place();
+        		PlaceResult pr = drawingModel.place();
+        		if(!pr.equals(PlaceResult.SUCCESS)){
+        			Toast.makeText(getContext(), pr.getErrorMessage(), Toast.LENGTH_SHORT).show();
+        		}
         	}
             break;
         case MotionEvent.ACTION_CANCEL:

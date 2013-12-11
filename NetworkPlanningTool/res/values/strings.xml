@@ -146,5 +146,9 @@
     <string name="stopDrawingText">Stop Drawing</string>
     
     <string name="savePlanTitle">Save floorplan</string>
+    
+    <string name="connectionPointNotAdjacentToWall">Could not place connection point. It needs to be adjacent to a wall.</string>
+    <string name="nothingToPlace">There is no object to place.</string>
+    
 
 </resources>

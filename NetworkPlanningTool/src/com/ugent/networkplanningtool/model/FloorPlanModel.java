@@ -10,48 +10,19 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Stack;
 
-
-
-
-
-
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.util.Log;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.ActivityType;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
-import com.ugent.networkplanningtool.data.ConnectionPointType;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
-import com.ugent.networkplanningtool.data.FloorPlanOperation;
-import com.ugent.networkplanningtool.data.FloorPlanOperation.Type;
-import com.ugent.networkplanningtool.data.Material;
-import com.ugent.networkplanningtool.data.Network;
-import com.ugent.networkplanningtool.data.RadioModel;
-import com.ugent.networkplanningtool.data.RadioType;
-import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
-import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.utils.Couple;
 import com.ugent.networkplanningtool.utils.Utils;
@@ -60,22 +31,26 @@ public class FloorPlanModel extends Observable {
 	
 	private static FloorPlanModel model = new FloorPlanModel();
 	
-	private static ArrayList<Wall> wallList;
-	private static List<ConnectionPoint> connectionPointList;
-	private static List<AccessPoint> accessPointList;
-	private static List<DataActivity> dataActivityList;
+	private List<Wall> wallList;
+	private List<ConnectionPoint> connectionPointList;
+	private List<AccessPoint> accessPointList;
+	private List<DataActivity> dataActivityList;
 	
-	private Stack<FloorPlanOperation> undoStack;
-	private Stack<FloorPlanOperation> redoStack;
+	private Stack<FloorPlanModel> undoStack = new Stack<FloorPlanModel>();
+	private Stack<FloorPlanModel> redoStack = new Stack<FloorPlanModel>();
 	
-
+	private FloorPlanModel(ArrayList<Wall> wallList, ArrayList<ConnectionPoint> connectionPointList, ArrayList<AccessPoint> accessPointList, ArrayList<DataActivity> dataActivityList){
+		this.wallList = wallList;
+		this.connectionPointList = connectionPointList;
+		this.accessPointList = accessPointList;
+		this.dataActivityList = dataActivityList;
+	}
+	
 	private FloorPlanModel() {
 		wallList = new ArrayList<Wall>();
 		connectionPointList = new ArrayList<ConnectionPoint>();
 		accessPointList = new ArrayList<AccessPoint>();
 		dataActivityList = new ArrayList<DataActivity>();
-		undoStack = new Stack<FloorPlanOperation>();
-		redoStack = new Stack<FloorPlanOperation>();
 	}
 	
 	public static FloorPlanModel getInstance(){
@@ -97,6 +72,22 @@ public class FloorPlanModel extends Observable {
 	public List<DataActivity> getDataActivityList() {
 		return dataActivityList;
 	}
+	
+	private void setWallList(List<Wall> wallList) {
+		this.wallList = wallList;
+	}
+
+	private void setConnectionPointList(List<ConnectionPoint> connectionPointList) {
+		this.connectionPointList = connectionPointList;
+	}
+
+	private void setAccessPointList(List<AccessPoint> accessPointList) {
+		this.accessPointList = accessPointList;
+	}
+
+	private void setDataActivityList(List<DataActivity> dataActivityList) {
+		this.dataActivityList = dataActivityList;
+	}
 
 	public void reset(){
 		wallList.clear();
@@ -109,7 +100,7 @@ public class FloorPlanModel extends Observable {
 		notifyObservers();
 	}
 	
-	public static void loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException{
+	public void loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException{
 		List<Wall> newWallList = new ArrayList<Wall>();
 		List<ConnectionPoint> newConnectionPointList = new ArrayList<ConnectionPoint>();
 		List<AccessPoint> newAccessPointList = new ArrayList<AccessPoint>();
@@ -126,13 +117,15 @@ public class FloorPlanModel extends Observable {
 		model.notifyObservers();
 	}
 	
-	public static void saveFloorPlan(File file) throws ParserConfigurationException, TransformerException{
+	public void saveFloorPlan(File file) throws ParserConfigurationException, TransformerException{
 		FloorPlanIO.saveFloorPlan(file, wallList, connectionPointList, accessPointList, dataActivityList);
 	}
 
 	public void addDataObject(DataObject touchDataObject) {
 		Log.d("WALL","ADD");
 		if(touchDataObject.isComplete()){
+			pushStateToStack(undoStack);
+			redoStack.clear();
 			if(touchDataObject instanceof Wall){
 				Wall newWall = (Wall) touchDataObject;
 				Map<Float, Couple<Point, Wall>> splitWalls = new HashMap<Float, Couple<Point,Wall>>();
@@ -188,13 +181,11 @@ public class FloorPlanModel extends Observable {
 				if(!newWall.getPoint1().equals(newWall.getPoint2())){
 					wallList.add(newWall);
 				}
-				undoStack.push(new FloorPlanOperation(Type.ADD, newWall));
-				redoStack.clear();
 				setChanged();
 				notifyObservers();
 			}else{
 				addDataObjectToList(touchDataObject);
-				undoStack.push(new FloorPlanOperation(Type.ADD, touchDataObject));
+				pushStateToStack(undoStack);
 				redoStack.clear();
 				setChanged();
 				notifyObservers();
@@ -220,9 +211,9 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	public void removeDataObject(DataObject touchDataObject) {
-		removeDataObjectFromList(touchDataObject);
-		undoStack.push(new FloorPlanOperation(Type.REMOVE, touchDataObject));
+		pushStateToStack(undoStack);
 		redoStack.clear();
+		removeDataObjectFromList(touchDataObject);
 		setChanged();
 		notifyObservers();
 	}
@@ -243,39 +234,15 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	public void undo(){
-		// TODO more advanced
-		FloorPlanOperation operation = undoStack.pop();
-		DataObject dataObject = operation.getDataObject();
-		switch (operation.getType()) {
-		case ADD:
-			removeDataObjectFromList(dataObject);
-			break;
-		case REMOVE:
-			addDataObjectToList(dataObject);
-			break;
-		default:
-			break;
-		}
-		redoStack.push(operation);
+		pushStateToStack(redoStack);
+		restoreStateFromStack(undoStack);
 		setChanged();
 		notifyObservers();
 	}
 	
 	public void redo(){
-		// TODO more advanced
-		FloorPlanOperation operation = redoStack.pop();
-		DataObject dataObject = operation.getDataObject();
-		switch (operation.getType()) {
-		case ADD:
-			addDataObjectToList(dataObject);
-			break;
-		case REMOVE:
-			removeDataObjectFromList(dataObject);
-			break;
-		default:
-			break;
-		}
-		undoStack.push(operation);
+		pushStateToStack(undoStack);
+		restoreStateFromStack(redoStack);
 		setChanged();
 		notifyObservers();
 	}
@@ -319,4 +286,20 @@ public class FloorPlanModel extends Observable {
 		return distance == Float.POSITIVE_INFINITY?null:closest;
 	}
 
+	private void pushStateToStack(Stack<FloorPlanModel> stack){
+		FloorPlanModel fpm = new FloorPlanModel(
+				new ArrayList<Wall>(wallList),
+				new ArrayList<ConnectionPoint>(connectionPointList),
+				new ArrayList<AccessPoint>(accessPointList),
+				new ArrayList<DataActivity>(dataActivityList));
+		stack.push(fpm);
+	}
+	
+	private void restoreStateFromStack(Stack<FloorPlanModel> stack){
+		FloorPlanModel fpm = stack.pop();
+		model.setWallList(fpm.getWallList());
+		model.setDataActivityList(fpm.getDataActivityList());
+		model.setConnectionPointList(fpm.getConnectionPointList());
+		model.setAccessPointList(fpm.getAccessPointList());
+	}
 }
