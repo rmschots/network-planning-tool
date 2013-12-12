@@ -133,10 +133,10 @@ public class FloorPlanModel extends Observable {
 				for(Wall w : wallListCopy){
 					Point[] pl = Utils.getIntersectionSpecial(newWall.getPoint1(), newWall.getPoint2(), w.getPoint1(), w.getPoint2(),true);
 					if(pl.length > 1){
-						wallList.remove(w);
+						//wallList.remove(w);
 					}
 					for(Point p : pl){
-						Log.d("WALL","SPLIT");
+						Log.d("WALL","SPLIT: "+p);
 						float distance = Utils.pointToPointDistance(newWall.getPoint1(), p);
 						splitWalls.put(distance, new Couple<Point, Wall>(p, w));
 					}
@@ -148,35 +148,42 @@ public class FloorPlanModel extends Observable {
 					for(Float i : coordArr){
 						Point p = splitWalls.get(i).getA();
 						Wall w = splitWalls.get(i).getB();
-						
-						Wall add1 = (Wall) w.getPartialDeepCopy();
-						add1.setPoint1(w.getPoint1());
-						add1.setPoint2(p);
-						Wall add2 = (Wall) w.getPartialDeepCopy();
-						add2.setPoint1(p);
-						add2.setPoint2(w.getPoint2());
 						Wall add3 = (Wall) newWall.getPartialDeepCopy();
-						
 						add3.setPoint1(newWall.getPoint1());
 						add3.setPoint2(p);
 						newWall.setPoint1(p);
 						
-						if(wallList.contains(w)){
-							wallList.remove(w);
+						Wall add1 = null;
+						if(!w.getPoint1().equals(p) && !w.getPoint2().equals(p)){
+							if(Utils.pointToPointDistance(newWall.getPoint1(), w.getPoint1()) < Utils.pointToPointDistance(newWall.getPoint1(),  w.getPoint2())){
+								add1 = (Wall) w.getPartialDeepCopy();
+								add1.setPoint1(w.getPoint2());
+								add1.setPoint2(p);
+								w.setPoint2(p);
+								
+							}else{
+								add1 = (Wall) w.getPartialDeepCopy();
+								add1.setPoint1(w.getPoint1());
+								add1.setPoint2(p);
+								w.setPoint1(p);
+							}
+							
 							if(!add1.getPoint1().equals(add1.getPoint2())){
+								Log.d("DEBUG","add1: "+add1.getPoint1() + " "+add1.getPoint2());
 								wallList.add(add1);
 							}
-							if(!add2.getPoint1().equals(add2.getPoint2())){
-								wallList.add(add2);
-							}
 						}
-						if(!add3.getPoint1().equals(add3.getPoint2())){
+						Log.d("DEBUG",""+p);
+							
+						Log.d("DEBUG","w: "+w.getPoint1()+" "+w.getPoint2());
+						if(!add3.getPoint1().equals(add3.getPoint2()) && (add1 == null || !add3.equalsLocation(add1)) && !add3.equalsLocation(w)){
 							wallList.add(add3);
+							Log.d("DEBUG","add3: "+add3.getPoint1() + " "+add3.getPoint2());
 						}
-						
-						Log.d("DEBUG","add3: "+add3.getPoint1().x + " "+add3.getPoint2().x);
 					}
-					
+					/*if(!newWall.getPoint1().equals(newWall.getPoint2()) && !add3.equalsLocation(add1) && !!add3.equalsLocation(w) && !add3.equalsLocation(add1) && !!add3.equalsLocation(w)){
+						wallList.add(newWall);
+					}*/
 				}
 				if(!newWall.getPoint1().equals(newWall.getPoint2())){
 					wallList.add(newWall);
@@ -287,11 +294,27 @@ public class FloorPlanModel extends Observable {
 	}
 
 	private void pushStateToStack(Stack<FloorPlanModel> stack){
+		ArrayList<Wall> wallsClone = new ArrayList<Wall>();
+		for(Wall w : wallList){
+			wallsClone.add(new Wall(w));
+		}
+		ArrayList<ConnectionPoint> connectionPointsClone = new ArrayList<ConnectionPoint>();
+		for(ConnectionPoint cp : connectionPointList){
+			connectionPointsClone.add(new ConnectionPoint(cp));
+		}
+		ArrayList<AccessPoint> accessPointsClone = new ArrayList<AccessPoint>();
+		for(AccessPoint ap : accessPointList){
+			accessPointsClone.add(new AccessPoint(ap));
+		}
+		ArrayList<DataActivity> dataActivitiesClone = new ArrayList<DataActivity>();
+		for(DataActivity da : dataActivityList){
+			dataActivitiesClone.add(new DataActivity(da));
+		}
 		FloorPlanModel fpm = new FloorPlanModel(
-				new ArrayList<Wall>(wallList),
-				new ArrayList<ConnectionPoint>(connectionPointList),
-				new ArrayList<AccessPoint>(accessPointList),
-				new ArrayList<DataActivity>(dataActivityList));
+				wallsClone,
+				connectionPointsClone,
+				accessPointsClone,
+				dataActivitiesClone);
 		stack.push(fpm);
 	}
 	

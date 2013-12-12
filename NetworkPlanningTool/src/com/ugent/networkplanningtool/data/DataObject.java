@@ -3,15 +3,22 @@ package com.ugent.networkplanningtool.data;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.PathEffect;
 import android.graphics.Point;
 
 public abstract class DataObject{
 	
+	protected static PathEffect dottedLineEffect = new DashPathEffect(new float[] {10,5}, 0);
 	private Point point1;
 	
 	public DataObject(){
 		point1 = null;
+	}
+	
+	public DataObject(DataObject dataObject){
+		this.point1 = new Point(dataObject.getPoint1());
 	}
 
 	public DataObject(Point point) {
@@ -42,7 +49,7 @@ public abstract class DataObject{
 		}
 	}
 	
-	public abstract void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint);
+	public abstract void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch);
 	
 	public boolean isComplete(){
 		return point1 != null;

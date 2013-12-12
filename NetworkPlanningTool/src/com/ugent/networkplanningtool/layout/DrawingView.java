@@ -52,14 +52,14 @@ public class DrawingView extends View implements Observer{
 	private void drawAccessPoints(Canvas canvas) {
 		List<AccessPoint> accessPointList = floorPlanModel.getAccessPointList();		
 		for(AccessPoint ap : accessPointList){
-			ap.drawOnCanvas(canvas, drawingModel, paint);
+			ap.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 	}
 
 	private void drawConnectionPoints(Canvas canvas) {
 		List<ConnectionPoint> connectionPointList = floorPlanModel.getConnectionPointList();		
 		for(ConnectionPoint cp : connectionPointList){
-			cp.drawOnCanvas(canvas, drawingModel, paint);
+			cp.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 		
 	}
@@ -67,14 +67,14 @@ public class DrawingView extends View implements Observer{
 	private void drawActivities(Canvas canvas) {
 		List<DataActivity> activityList = floorPlanModel.getDataActivityList();		
 		for(DataActivity cp : activityList){
-			cp.drawOnCanvas(canvas, drawingModel, paint);
+			cp.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 	}
 
 	private void drawWalls(Canvas canvas) {
 		List<Wall> wallList = floorPlanModel.getWallList();
 		for(Wall w : wallList){
-			w.drawOnCanvas(canvas, drawingModel, paint);
+			w.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 	}
 	
@@ -83,10 +83,10 @@ public class DrawingView extends View implements Observer{
 		DataObject tw = drawingModel.getTouchDataObject();
 		if(tw != null){
 			if(tw.isComplete()){
-				tw.drawOnCanvas(canvas, drawingModel, paint);
+				tw.drawOnCanvas(canvas, drawingModel, paint, true);
 			}else{
 				if(tw instanceof Wall && ((Wall)tw).canDraw()){
-					tw.drawOnCanvas(canvas, drawingModel, paint);
+					tw.drawOnCanvas(canvas, drawingModel, paint, true);
 				}
 			}
 			
@@ -115,7 +115,7 @@ public class DrawingView extends View implements Observer{
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		event.setLocation(event.getX()-100,event.getY()-100);
+		event.setLocation(event.getX()-50,event.getY()-50);
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			drawingModel.setTouchLocation((int)event.getX(0), (int)event.getY(0));

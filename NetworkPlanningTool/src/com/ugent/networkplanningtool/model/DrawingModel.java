@@ -41,8 +41,8 @@ public class DrawingModel extends Observable {
 
 	// ground plan dimensions (in units)
 	public static final int INTERVAL = 50;
-	public static final int FLOOR_WIDTH = 4750;
-	public static final int FLOOR_HEIGHT = 3550;
+	public static int FLOOR_WIDTH = 4750;
+	public static int FLOOR_HEIGHT = 3550;
 
 	// maximum allowed zoom (in units)
 	private static final int maxZoomIn = 200;

@@ -60,6 +60,11 @@ public class Utils {
 		}else if(distAToB < distToB){
 			return upright?Float.POSITIVE_INFINITY:distToA;
 		}
+		if(a.x == b.x && a.x == p.x){
+			return 0;
+		}else if(a.y == b.y && a.y == p.y){
+			return 0;
+		}
 		return (Math.abs((p.x-a.x)*(b.y-a.y)-(p.y-a.y)*(b.x-a.x))/pointToPointDistance(a,b));
 	}
 	
@@ -67,15 +72,40 @@ public class Utils {
 		Log.d("DEBUG","dist: "+pointToLineDistance(line1point1, line1point2, line2point1,upright));
 		float dist1 = pointToLineDistance(line1point1, line1point2, line2point1,upright);
 		float dist2 = pointToLineDistance(line1point1, line1point2, line2point2,upright);
+		
+		float dist3 = pointToLineDistance(line2point1, line2point2, line1point1,upright);
+		float dist4 = pointToLineDistance(line2point1, line2point2, line1point2,upright);
+		
 		if(dist1 < 40 || dist2 < 40){
 			if(dist1 < 40 && dist2 < 40){
 				return new Point[]{line2point1,line2point2};
+			}else{
+				Point[] points;
+				if(dist3 == 0 || dist4 == 0){
+					points = new Point[2];
+					if(dist3 == 0){
+						points[1] = line1point1;
+					}
+					if(dist4 == 0){
+						points[1] = line1point2;
+					}
+				}else{
+					points = new Point[1];
+				}
+				if(dist1 < 40){
+					points[0] = line2point1;
+				}else if(dist2 < 40){
+					points[0] = line2point2;
+				}
+				return points;
 			}
-			if(dist1 < 40){
-				return new Point[]{line2point1};
-			}
-			if(dist2 < 40){
-				return new Point[]{line2point2};
+		}else if(dist3 == 0 || dist4 == 0){
+			if(dist3 == 0 && dist4 == 0){
+				return new Point[]{line1point1,line1point2};
+			}else if(dist3 == 0){
+				return new Point[]{line1point1};
+			}else if(dist4 == 0){
+				return new Point[]{line1point2};
 			}
 		}
 		float a1 = (line1point2.y-line1point1.y)/(float)(line1point2.x-line1point1.x);
@@ -96,7 +126,7 @@ public class Utils {
 				y0 =  Math.round(a1*x0+b1);
 			}else{
 				x0 =  Math.round((-b1+b2)/(a1-a2));
-				y0 =  Math.round(a1*x0+b1);
+				y0 =  Math.round(a1*((-b1+b2)/(a1-a2))+b1);
 			}
 			Log.d("DEBUG","x0: "+x0+" y0: "+y0);
 			if(		Math.min(line1point1.x, line1point2.x) <= x0

@@ -2,6 +2,8 @@ package com.ugent.networkplanningtool.data;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
@@ -21,6 +23,19 @@ public class AccessPoint extends DataObject{
 	private int gain;
 	private int power;
 	private Network network;
+	
+	public AccessPoint(AccessPoint accessPoint){
+		super(accessPoint);
+		this.name = new String(accessPoint.name);
+		this.height = accessPoint.height;
+		this.type = accessPoint.type;
+		this.model = accessPoint.model;
+		this.frequency = accessPoint.frequency;
+		this.frequencyband = accessPoint.frequencyband;
+		this.gain = accessPoint.gain;
+		this.power = accessPoint.power;
+		this.network = accessPoint.network;
+	}
 
 	public AccessPoint(String name, int height, RadioType type,
 			RadioModel model, int frequency, int frequencyband, int gain,
@@ -125,7 +140,7 @@ public class AccessPoint extends DataObject{
 	}
 
 	@Override
-	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
+	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
 		// TODO display gain+power
 		float x = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
 		float y = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
@@ -140,6 +155,11 @@ public class AccessPoint extends DataObject{
 			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
 			paint.setColor(Color.BLACK);
 			canvas.drawCircle(x, y, circleRadius, paint);
+			if(touch){
+				paint.setColor(Color.RED);
+				paint.setPathEffect(dottedLineEffect);
+				canvas.drawCircle(x, y, circleRadius, paint);
+			}
 			break;
 		case SENSOR:
 			circleRadius = drawingModel.getPixelsPerInterval()/5;
@@ -150,6 +170,11 @@ public class AccessPoint extends DataObject{
 			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
 			paint.setColor(Color.BLACK);
 			canvas.drawCircle(x, y, circleRadius, paint);
+			if(touch){
+				paint.setColor(Color.RED);
+				paint.setPathEffect(dottedLineEffect);
+				canvas.drawCircle(x, y, circleRadius, paint);
+			}
 			break;
 		case LTE_FEMTOCELL:
 		case UMTS_FEMTOCELL:
@@ -168,14 +193,20 @@ public class AccessPoint extends DataObject{
 			p.lineTo(x-dist2, y+dist2);
 			p.lineTo(x-dist1, y);
 			p.lineTo(x-dist1, y);
-			p.lineTo(x-dist2, y-dist2);
 			
 			canvas.drawPath(p, paint);
+			paint.setStrokeCap(Paint.Cap.ROUND);
 			
 			paint.setStyle(Style.STROKE);
 			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
 			paint.setColor(Color.BLACK);
 			canvas.drawPath(p, paint);
+			if(touch){
+				paint.setStrokeCap(Paint.Cap.BUTT);
+				paint.setColor(Color.RED);
+				paint.setPathEffect(dottedLineEffect);
+				canvas.drawPath(p, paint);
+			}
 			break;
 		}
 		

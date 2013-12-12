@@ -8,11 +8,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
 import android.util.Log;
 
 public class DataActivity extends DataObject{
 	
 	private ActivityType type;
+	
+	public DataActivity(DataActivity da){
+		super(da);
+		this.type = da.type;
+	}
 
 	public DataActivity(ActivityType type) {
 		super();
@@ -43,25 +49,41 @@ public class DataActivity extends DataObject{
 	}
 
 	@Override
-	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
+	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
 		
-		float circleRadius1 = drawingModel.getPixelsPerInterval()/3;
-		float circleRadius2 = circleRadius1/2;
+		float circleRadius = drawingModel.getPixelsPerInterval()/3;
+		float rectHeight = circleRadius/2;
 		
-		float pixelsX1 = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
-		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
-		paint.setColor(Color.BLACK);
-		canvas.drawCircle(pixelsX1, pixelsY1, circleRadius1, paint);
+		float x = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
+		float y = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
+		
 		String textToDraw = getType().getText();
-		int textSize = Utils.determineMaxTextSize(textToDraw, circleRadius2*2*2/3, type.getTextSize());
+		int textSize = Utils.determineMaxTextSize(textToDraw, rectHeight*2*2/3, type.getTextSize());
 		type.setTextSize(textSize);
+		paint.setStyle(Style.FILL);
 		paint.setTextSize(textSize);
-		canvas.drawRect(pixelsX1, pixelsY1-circleRadius2, pixelsX1+circleRadius1+paint.measureText(textToDraw)+circleRadius2/2, pixelsY1+circleRadius2, paint);
+		canvas.drawRect(x, y-rectHeight, x+circleRadius+paint.measureText(textToDraw)+rectHeight/2, y+rectHeight, paint);
+		
+		paint.setStyle(Style.FILL);
 		paint.setColor(getColor());
-		canvas.drawCircle(pixelsX1, pixelsY1, circleRadius2, paint);
+		canvas.drawCircle(x, y, circleRadius, paint);
+		paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/4);
+		paint.setStyle(Style.STROKE);
+		paint.setColor(Color.BLACK);
+		canvas.drawCircle(x, y, circleRadius, paint);
+		
+		paint.setStyle(Style.FILL);
 		paint.setTextAlign(Align.LEFT);
 		paint.setColor(Color.WHITE);
-		canvas.drawText(textToDraw, pixelsX1+circleRadius1, pixelsY1+circleRadius2*2/3-paint.descent()/2, paint);
+		canvas.drawText(textToDraw, x+circleRadius, y+rectHeight*2/3-paint.descent()/2, paint);
+		
+		if(touch){
+			paint.setStyle(Style.STROKE);
+			paint.setColor(Color.RED);
+			paint.setPathEffect(dottedLineEffect);
+			canvas.drawCircle(x, y, circleRadius, paint);
+		}
+		paint.reset();
 	}
 
 	@Override

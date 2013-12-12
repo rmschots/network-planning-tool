@@ -18,11 +18,20 @@ public class Wall extends DataObject{
 	
 	private Material material;
 	
+	public Wall(Wall wall){
+		super(wall);
+		this.point2 = new Point(wall.point2);
+		this.wallType = wall.wallType;
+		this.thickness = wall.thickness;
+		this.material = wall.material;
+	}
+	
 	public Wall(WallType wallType, Thickness thickness, Material material) {
 		super();
 		this.wallType = wallType;
 		this.thickness = thickness;
 		this.material = material;
+		point2 = null;
 	}
 	
 	public Wall(Point point1, WallType wallType, Thickness thickness, Material material) {
@@ -30,6 +39,7 @@ public class Wall extends DataObject{
 		this.wallType = wallType;
 		this.thickness = thickness;
 		this.material = material;
+		point2 = null;
 	}
 
 	public Wall(Point point1, Point point2, WallType wallType, Thickness thickness, Material material){
@@ -126,7 +136,7 @@ public class Wall extends DataObject{
 	}
 
 	@Override
-	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint) {
+	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
 		
 		float pixelsX1 = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
 		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
@@ -140,7 +150,11 @@ public class Wall extends DataObject{
 			canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 			
 			paint.setStrokeWidth(0);
-			paint.setColor(Color.BLACK); 
+			if(touch){
+				paint.setColor(Color.RED);
+			}else{
+				paint.setColor(Color.BLACK);
+			}
 			
 			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
 			canvas.drawRect(pixelsX2-circleRadius, pixelsY2-circleRadius, pixelsX2+circleRadius, pixelsY2+circleRadius, paint);
@@ -149,6 +163,7 @@ public class Wall extends DataObject{
 			paint.setTextSize(20);
 			if(paint.measureText(textToDraw) < drawingModel.getPixelsPerInterval()*2){
 				paint.setTextAlign(Align.CENTER);
+				paint.setColor(Color.BLACK);
 				float textX = (pixelsX2+pixelsX1)/2;
 				float textY = ((pixelsY2+pixelsY1)/2 - ((paint.descent() + paint.ascent()) / 2)) ;;
 				float distanceCM = Utils.pointToPointDistance(getPoint1(), getPoint2());
@@ -157,7 +172,11 @@ public class Wall extends DataObject{
 			
 		}else{
 			paint.setStrokeWidth(0);
-			paint.setColor(Color.BLACK); 
+			if(touch){
+				paint.setColor(Color.RED);
+			}else{
+				paint.setColor(Color.BLACK);
+			}
 			
 			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
 		}
@@ -169,9 +188,7 @@ public class Wall extends DataObject{
 	}
 	
 	public boolean equalsLocation(Wall wall2){
-		if(isComplete() && wall2.isComplete()){
-			return getPoint1().equals(wall2.getPoint1()) && getPoint2().equals(getPoint2());
-		}
-		return false;
+			return (getPoint1().equals(wall2.getPoint1()) && getPoint2().equals(wall2.getPoint2()))
+					|| (getPoint1().equals(wall2.getPoint2()) && getPoint2().equals(wall2.getPoint1()));
 	}
 }
