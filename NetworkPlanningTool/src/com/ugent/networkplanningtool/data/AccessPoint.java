@@ -146,7 +146,7 @@ public class AccessPoint extends DataObject{
 		switch(type){
 		case WIFI:
 			circleRadius = drawingModel.getPixelsPerInterval()/4;
-			paint.setColor(getNetwork().getColor());
+			paint.setColor(network.getColor());
 			paint.setStyle(Style.FILL);
 			canvas.drawCircle(x, y, circleRadius, paint);
 			paint.setStyle(Style.STROKE);
@@ -161,7 +161,7 @@ public class AccessPoint extends DataObject{
 			break;
 		case SENSOR:
 			circleRadius = drawingModel.getPixelsPerInterval()/5;
-			paint.setColor(getNetwork().getColor());
+			paint.setColor(network.getColor());
 			paint.setStyle(Style.FILL);
 			canvas.drawCircle(x, y, circleRadius, paint);
 			paint.setStyle(Style.STROKE);
@@ -179,7 +179,7 @@ public class AccessPoint extends DataObject{
 			float dist1 = drawingModel.getPixelsPerInterval()/3;
 			float dist2 = dist1*4/6;
 			paint.setStyle(Style.FILL);
-			paint.setColor(getNetwork().getColor());
+			paint.setColor(network.getColor());
 			Path p = new Path();
 			p.reset();
 			p.moveTo(x-dist1, y);

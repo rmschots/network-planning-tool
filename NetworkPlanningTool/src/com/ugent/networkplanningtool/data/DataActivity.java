@@ -56,7 +56,7 @@ public class DataActivity extends DataObject{
 		float x = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
 		float y = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
 		
-		String textToDraw = getType().getText();
+		String textToDraw = type.getText();
 		int textSize = Utils.determineMaxTextSize(textToDraw, rectHeight*2*2/3, type.getTextSize());
 		type.setTextSize(textSize);
 		paint.setStyle(Style.FILL);

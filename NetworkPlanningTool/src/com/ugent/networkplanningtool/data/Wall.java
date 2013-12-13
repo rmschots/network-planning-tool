@@ -122,17 +122,17 @@ public class Wall extends DataObject{
 	@Override
 	public boolean isComplete(){
 		return super.isComplete()
-				&& getPoint2() != null
-				&& getMaterial() != null
-				&& getThickness() != null
-				&& getWallType() != null;
+				&& point2 != null
+				&& material != null
+				&& thickness != null
+				&& wallType != null;
 	}
 	
 	public boolean canDraw(){
 		return super.isComplete()
-				&& getMaterial() != null
-				&& getThickness() != null
-				&& getWallType() != null;
+				&& material != null
+				&& thickness != null
+				&& wallType != null;
 	}
 
 	@Override
@@ -142,11 +142,11 @@ public class Wall extends DataObject{
 		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
 		float circleRadius = drawingModel.getPixelsPerInterval()/4;
 		if(isComplete()){
-			float pixelsX2 = convertCoordinateToLocation(drawingModel, true, getPoint2().x);
-			float pixelsY2 = convertCoordinateToLocation(drawingModel, false, getPoint2().y);
+			float pixelsX2 = convertCoordinateToLocation(drawingModel, true, point2.x);
+			float pixelsY2 = convertCoordinateToLocation(drawingModel, false, point2.y);
 			
 			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()*thickness.getNumber()/DrawingModel.INTERVAL);
-			paint.setColor(getMaterial().getColor());
+			paint.setColor(material.getColor());
 			canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 			
 			paint.setStrokeWidth(0);
@@ -159,14 +159,14 @@ public class Wall extends DataObject{
 			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
 			canvas.drawRect(pixelsX2-circleRadius, pixelsY2-circleRadius, pixelsX2+circleRadius, pixelsY2+circleRadius, paint);
 			
-			String textToDraw = Math.round(Utils.pointToPointDistance(getPoint1(), getPoint2()))/100.0+" m";
+			String textToDraw = Math.round(Utils.pointToPointDistance(getPoint1(), point2))/100.0+" m";
 			paint.setTextSize(20);
 			if(paint.measureText(textToDraw) < drawingModel.getPixelsPerInterval()*2){
 				paint.setTextAlign(Align.CENTER);
 				paint.setColor(Color.BLACK);
 				float textX = (pixelsX2+pixelsX1)/2;
 				float textY = ((pixelsY2+pixelsY1)/2 - ((paint.descent() + paint.ascent()) / 2)) ;;
-				float distanceCM = Utils.pointToPointDistance(getPoint1(), getPoint2());
+				float distanceCM = Utils.pointToPointDistance(getPoint1(), point2);
 				canvas.drawText(Math.round(distanceCM)/100.0+" m", textX, textY, paint);
 			}
 			
@@ -188,7 +188,7 @@ public class Wall extends DataObject{
 	}
 	
 	public boolean equalsLocation(Wall wall2){
-			return (getPoint1().equals(wall2.getPoint1()) && getPoint2().equals(wall2.getPoint2()))
-					|| (getPoint1().equals(wall2.getPoint2()) && getPoint2().equals(wall2.getPoint1()));
+			return (getPoint1().equals(wall2.getPoint1()) && point2.equals(wall2.getPoint2()))
+					|| (getPoint1().equals(wall2.point2) && point2.equals(wall2.getPoint1()));
 	}
 }
