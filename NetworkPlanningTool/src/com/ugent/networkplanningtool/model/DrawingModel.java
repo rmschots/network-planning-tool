@@ -1,7 +1,6 @@
 package com.ugent.networkplanningtool.model;
 
 import java.util.Observable;
-import java.util.Stack;
 
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -9,7 +8,6 @@ import android.util.Log;
 
 import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
-import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;

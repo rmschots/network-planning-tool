@@ -3,8 +3,6 @@ package com.ugent.networkplanningtool.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
