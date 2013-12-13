@@ -46,14 +46,14 @@ public class Utils {
 		return size;
 	}
 	  
-	public static float pointToPointDistance(Point p1, Point p2){
-		return (float) Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));  
+	public static double pointToPointDistance(Point p1, Point p2){
+		return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));  
 	}
 	
-	public static float pointToLineDistance(Point a, Point b, Point p, boolean upright) {
-		float distAToB = pointToPointDistance(a, b);
-		float distToA = pointToPointDistance(a,p);
-		float distToB = pointToPointDistance(b,p);
+	public static double pointToLineDistance(Point a, Point b, Point p, boolean upright) {
+		double distAToB = pointToPointDistance(a, b);
+		double distToA = pointToPointDistance(a,p);
+		double distToB = pointToPointDistance(b,p);
 		
 		if(distAToB < distToA){
 			return upright?Float.POSITIVE_INFINITY:distToB;
@@ -70,11 +70,11 @@ public class Utils {
 	
 	public static Point[] getIntersectionSpecial(Point line1point1, Point line1point2, Point line2point1, Point line2point2, boolean upright){
 		Log.d("DEBUG","dist: "+pointToLineDistance(line1point1, line1point2, line2point1,upright));
-		float dist1 = pointToLineDistance(line1point1, line1point2, line2point1,upright);
-		float dist2 = pointToLineDistance(line1point1, line1point2, line2point2,upright);
+		double dist1 = pointToLineDistance(line1point1, line1point2, line2point1,upright);
+		double dist2 = pointToLineDistance(line1point1, line1point2, line2point2,upright);
 		
-		float dist3 = pointToLineDistance(line2point1, line2point2, line1point1,upright);
-		float dist4 = pointToLineDistance(line2point1, line2point2, line1point2,upright);
+		double dist3 = pointToLineDistance(line2point1, line2point2, line1point1,upright);
+		double dist4 = pointToLineDistance(line2point1, line2point2, line1point2,upright);
 		
 		if(dist1 < 40 || dist2 < 40){
 			if(dist1 < 40 && dist2 < 40){

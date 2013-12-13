@@ -180,7 +180,7 @@ public class DrawingModel extends Observable {
 					if(touchDataObject instanceof ConnectionPoint){
 						Wall closestWall = FloorPlanModel.getInstance().getClosestWallToPoint(touchDataObject.getPoint1());
 						if(closestWall != null){
-							float dist = Utils.pointToLineDistance(closestWall.getPoint1(), closestWall.getPoint2(),touchDataObject.getPoint1(),false);
+							double dist = Utils.pointToLineDistance(closestWall.getPoint1(), closestWall.getPoint2(),touchDataObject.getPoint1(),false);
 							if(dist <= INTERVAL/4 && dist != 0){
 								FloorPlanModel.getInstance().addDataObject(touchDataObject);
 								touchDataObject = touchDataObject.getPartialDeepCopy();

@@ -166,7 +166,7 @@ public class Wall extends DataObject{
 				paint.setColor(Color.BLACK);
 				float textX = (pixelsX2+pixelsX1)/2;
 				float textY = ((pixelsY2+pixelsY1)/2 - ((paint.descent() + paint.ascent()) / 2)) ;;
-				float distanceCM = Utils.pointToPointDistance(getPoint1(), point2);
+				double distanceCM = Utils.pointToPointDistance(getPoint1(), point2);
 				canvas.drawText(Math.round(distanceCM)/100.0+" m", textX, textY, paint);
 			}
 			
