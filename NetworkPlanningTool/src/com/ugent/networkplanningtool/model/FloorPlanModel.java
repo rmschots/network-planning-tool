@@ -122,7 +122,6 @@ public class FloorPlanModel extends Observable {
 	}
 
 	public void addDataObject(DataObject touchDataObject) {
-		Log.d("WALL","ADD");
 		if(touchDataObject.isComplete()){
 			pushStateToStack(undoStack);
 			redoStack.clear();
@@ -140,7 +139,6 @@ public class FloorPlanModel extends Observable {
 						}
 					}
 					for(Point p : pl){
-						Log.d("WALL","SPLIT: "+p);
 						double d1 = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), newWall.getPoint1(), false);
 						double distance = Utils.pointToPointDistance(newWall.getPoint1(), p)+(d1*0.00001);
 						while(splitWalls.containsKey(distance)){
@@ -156,8 +154,6 @@ public class FloorPlanModel extends Observable {
 					for(Double i : coordArr){
 						Point p = splitWalls.get(i).getA();
 						Wall w = splitWalls.get(i).getB();
-						Log.d("DEBUG",""+p);
-						Log.d("DEBUG","w: "+w.getPoint1()+" "+w.getPoint2());
 						Wall add3 = (Wall) newWall.getPartialDeepCopy();
 						add3.setPoint1(newWall.getPoint1());
 						add3.setPoint2(p);
@@ -165,7 +161,6 @@ public class FloorPlanModel extends Observable {
 						
 						if(!add3.getPoint1().equals(add3.getPoint2())){
 							wallList.add(add3);
-							Log.d("DEBUG","add3: "+add3.getPoint1() + " "+add3.getPoint2());
 						}
 						
 						Wall add1 = null;
@@ -181,15 +176,12 @@ public class FloorPlanModel extends Observable {
 								add1.setPoint2(p);
 								w.setPoint1(p);
 							}
-							Log.d("DEBUG","newW: "+w.getPoint1()+" "+w.getPoint2());
 							if(!add1.getPoint1().equals(add1.getPoint2()) && !add1.equalsLocation(add3)){
-								Log.d("DEBUG","add1: "+add1.getPoint1() + " "+add1.getPoint2());
 								wallList.add(add1);
 							}
 						}
 						if(w.equalsLocation(add3) || w.getPoint1().equals(w.getPoint2())){
 							wallList.remove(w);
-							Log.d("DEBUG","removeW: "+w.getPoint1() + " "+w.getPoint2());
 						}
 						
 					}
@@ -209,11 +201,6 @@ public class FloorPlanModel extends Observable {
 				setChanged();
 				notifyObservers();
 			}
-		}
-		Log.d("DEBUG","size: "+wallList.size());
-		int i = 0;
-		for(Wall w : wallList){
-			Log.d("DEBUG",""+(++i)+": "+w.getPoint1()+" "+w.getPoint2());
 		}
 	}
 	

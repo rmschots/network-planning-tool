@@ -11,14 +11,14 @@ import android.graphics.Point;
 public abstract class DataObject{
 	
 	protected static PathEffect dottedLineEffect = new DashPathEffect(new float[] {10,5}, 0);
-	private Point point1;
+	protected Point point1;
 	
 	public DataObject(){
 		point1 = null;
 	}
 	
 	public DataObject(DataObject dataObject){
-		this.point1 = new Point(dataObject.getPoint1());
+		this.point1 = new Point(dataObject.point1);
 	}
 
 	public DataObject(Point point) {

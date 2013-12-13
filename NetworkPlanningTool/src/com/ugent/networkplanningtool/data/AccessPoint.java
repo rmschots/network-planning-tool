@@ -140,8 +140,8 @@ public class AccessPoint extends DataObject{
 	@Override
 	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
 		// TODO display gain+power
-		float x = convertCoordinateToLocation(drawingModel, true, getPoint1().x);
-		float y = convertCoordinateToLocation(drawingModel, false, getPoint1().y);
+		float x = convertCoordinateToLocation(drawingModel, true, point1.x);
+		float y = convertCoordinateToLocation(drawingModel, false, point1.y);
 		float circleRadius;
 		switch(type){
 		case WIFI:
