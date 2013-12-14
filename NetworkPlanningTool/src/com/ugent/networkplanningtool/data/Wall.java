@@ -7,9 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.graphics.Point;
-import android.util.Log;
 
 public class Wall extends DataObject{
 	
@@ -195,6 +193,7 @@ public class Wall extends DataObject{
 				canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
 			}
 		}
+		paint.reset();
 	}
 
 	@Override

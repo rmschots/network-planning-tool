@@ -34,7 +34,7 @@ public class DrawingModel extends Observable {
 
 	// states the drawing area can be in
 	public static enum STATE {
-		IDLE, PRE_PLACE, PLACING, SELECTING_INFO, SELECTING_EDIT, SELECTING_REMOVE
+		IDLE, PRE_PLACE, PLACING, SELECTING_INFO, PRE_SELECTING_INFO, SELECTING_EDIT, PRE_SELECTING_EDIT, SELECTING_REMOVE, PRE_SELECTING_REMOVE
 	}
 	private STATE state;
 	
@@ -56,6 +56,7 @@ public class DrawingModel extends Observable {
 
 	private double distanceStart = -1; // in pixels
 	private PointF dragStart = null; // in units
+	private Point touchLocation = null;
 
 	// dimensions of the actual view (in pixels)
 	private int viewWidth;
@@ -88,13 +89,14 @@ public class DrawingModel extends Observable {
 	private double calculateDistance(float x1, float y1, float x2, float y2) {
 		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 	}
-
-	public int getActualLocationX(float x) {
-		return (int) (offsetX + x / pixelsPerInterval * DrawingModel.INTERVAL);
+	
+	public Point getTouchLocation(){
+		return touchLocation;
 	}
-
-	public int getActualLocationY(float y) {
-		return (int) (offsetY + y / pixelsPerInterval * DrawingModel.INTERVAL);
+	
+	public Point getActualTouchLocation(float x, float y){
+		return new Point((int) (offsetX + x / pixelsPerInterval * DrawingModel.INTERVAL),
+				(int) (offsetY + y / pixelsPerInterval * DrawingModel.INTERVAL));
 	}
 
 	public float getActualViewHeight() {
@@ -262,6 +264,8 @@ public class DrawingModel extends Observable {
 				} else {
 					zoomOutMaxed = true;
 					this.pixelsPerInterval = max;
+					setOffsetX(getOffsetX());
+					setOffsetY(getOffsetY());
 				}
 
 			} else {
@@ -278,7 +282,7 @@ public class DrawingModel extends Observable {
 	public void setTouchLocation(float x, float y) {
 		if(touchDataObject != null){
 			state = STATE.PLACING;
-			Point wallPoint = new Point(getActualLocationX(x),getActualLocationY(y));
+			Point wallPoint = getActualTouchLocation(x,y);
 			if(touchDataObject instanceof Wall){
 				Point closestCorner = FloorPlanModel.getInstance().getClosestCornerToPoint(wallPoint);
 				if(closestCorner != null && Utils.pointToPointDistance(wallPoint, closestCorner) <= INTERVAL/2){
@@ -319,6 +323,7 @@ public class DrawingModel extends Observable {
 			}else{
 				touchDataObject.setPoint1(wallPoint);
 			}
+			touchLocation = wallPoint;
 			setChanged();
 			notifyObservers();
 		}
@@ -370,36 +375,53 @@ public class DrawingModel extends Observable {
 	}
 
 	public void setInfoSelectionMode() {
-		Log.d("DEBUG","INFOSELECTION");
-		state = STATE.SELECTING_INFO;
+		Log.d("DEBUG","INFOSELECTION MODE");
+		state = STATE.PRE_SELECTING_INFO;
 		setChanged();
 		notifyObservers();
 	}
 	
 	public void setEditSelectionMode(){
-		Log.d("DEBUG","INFOEDIT");
-		state = STATE.SELECTING_EDIT;
+		Log.d("DEBUG","INFOEDIT MODE");
+		state = STATE.PRE_SELECTING_EDIT;
 		setChanged();
 		notifyObservers();
 	}
 	
 	public void setRemoveSelectionMode(){
-		Log.d("DEBUG","INFOREMOVE");
-		state = STATE.SELECTING_REMOVE;
+		Log.d("DEBUG","INFOREMOVE MODE");
+		state = STATE.PRE_SELECTING_REMOVE;
 		setChanged();
 		notifyObservers();
 	}
 	
 	public void setPlaceMode(){
-		state = STATE.PLACING;
+		state = STATE.PRE_PLACE;
 		setChanged();
 		notifyObservers();
 	}
 
-	public void select(int x, int y) {
-		Point touchPoint = new Point(getActualLocationX(x),getActualLocationY(y));
+	public void startSelect(float x, float y){
+		switch(state){
+		case PRE_SELECTING_EDIT:
+			state = STATE.SELECTING_EDIT;
+			break;
+		case PRE_SELECTING_INFO:
+			state = STATE.SELECTING_INFO;
+			break;
+		case PRE_SELECTING_REMOVE:
+			state = STATE.SELECTING_REMOVE;
+			break;
+		default:
+			break;
+		}
+		select(x,y);
+	}
+	
+	public void select(float x, float y) {
+		touchLocation = getActualTouchLocation(x,y);
 		// get closest
-		Couple<Double,DataObject> closestCouple = FloorPlanModel.getInstance().getClosestDataObjectToPoint(touchPoint);
+		Couple<Double,DataObject> closestCouple = FloorPlanModel.getInstance().getClosestDataObjectToPoint(touchLocation);
 		if(closestCouple==null){
 			touchDataObject = null;
 			return;
@@ -407,6 +429,7 @@ public class DrawingModel extends Observable {
 		double distance = closestCouple.getA();
 		if(distance < 40){
 			touchDataObject = closestCouple.getB();
+			touchLocation = touchDataObject.getPoint1();
 		}else{
 			touchDataObject = null;
 		}
@@ -429,8 +452,19 @@ public class DrawingModel extends Observable {
 	public void deselect(){
 		switch(state){
 		case SELECTING_EDIT:
+			state = STATE.PRE_SELECTING_EDIT;
+			touchDataObject = null;
+			setChanged();
+			notifyObservers();
+			break;
 		case SELECTING_INFO:
+			state = STATE.PRE_SELECTING_INFO;
+			touchDataObject = null;
+			setChanged();
+			notifyObservers();
+			break;
 		case SELECTING_REMOVE:
+			state = STATE.PRE_SELECTING_REMOVE;
 			touchDataObject = null;
 			setChanged();
 			notifyObservers();

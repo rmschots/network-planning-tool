@@ -219,8 +219,6 @@ public class FloorPlanModel extends Observable {
 				notifyObservers();
 			}else{
 				addDataObjectToList(touchDataObject);
-				pushStateToStack(undoStack);
-				redoStack.clear();
 				setChanged();
 				notifyObservers();
 			}

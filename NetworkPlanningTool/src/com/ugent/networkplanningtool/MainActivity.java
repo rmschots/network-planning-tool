@@ -8,6 +8,7 @@ import java.util.Observer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -409,10 +410,12 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		String newCoords = Math.round(drawingModel.getOffsetX()*100)/100+":"+Math.round(drawingModel.getOffsetY()*100)/100;
-		if(newCoords.equals(coordinatesText.getText())){
-			coordinatesText.setText(newCoords);
-		}
+		Point touchLocation = drawingModel.getTouchLocation();
+    	if(touchLocation != null){
+    		coordinatesText.setText(touchLocation.x+":"+touchLocation.y);
+    	}else{
+    		coordinatesText.setText(":");
+    	}
 		
 		//Log.d("DEBUG",""+model.isZoomInMaxed());
 		zoomControls.setIsZoomInEnabled(!drawingModel.isZoomInMaxed());
