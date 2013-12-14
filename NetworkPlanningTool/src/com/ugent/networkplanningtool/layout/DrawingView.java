@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.model.DrawingModel;
+import com.ugent.networkplanningtool.model.DrawingModel.STATE;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
 
@@ -116,21 +118,69 @@ public class DrawingView extends View implements Observer{
 		event.setLocation(event.getX()-50,event.getY()-50);
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
-			drawingModel.setTouchLocation((int)event.getX(0), (int)event.getY(0));
+			switch(drawingModel.getState()){
+			case SELECTING_EDIT:
+			case SELECTING_INFO:
+			case SELECTING_REMOVE:
+				drawingModel.select((int)event.getX(0), (int)event.getY(0));
+				break;
+			default:
+				drawingModel.setTouchLocation((int)event.getX(0), (int)event.getY(0));
+				break;
+			
+			}
 			break;
         case MotionEvent.ACTION_MOVE:
         	if(drawingModel.isMoving()){
         		drawingModel.move((int)event.getX(0), (int)event.getY(0), (int)event.getX(1), (int)event.getY(1));
-        	}else if(drawingModel.isPlacing()){
-        		drawingModel.setTouchLocation((int)event.getX(0), (int)event.getY(0));
+        	}else{
+        		switch(drawingModel.getState()){
+    			case PLACING:
+    				drawingModel.setTouchLocation((int)event.getX(0), (int)event.getY(0));
+    				break;
+    			case SELECTING_EDIT:
+    			case SELECTING_INFO:
+    			case SELECTING_REMOVE:
+    				drawingModel.select((int)event.getX(0), (int)event.getY(0));
+    				break;
+    			default:
+    				break;
+            	
+            	}
         	}
             break;
         case MotionEvent.ACTION_UP:
-        	if(drawingModel.isPlacing()){
-        		PlaceResult pr = drawingModel.place();
+        	switch(drawingModel.getState()){
+			case PLACING:
+				PlaceResult pr = drawingModel.place();
         		if(!pr.equals(PlaceResult.SUCCESS)){
         			Toast.makeText(getContext(), pr.getErrorMessage(), Toast.LENGTH_SHORT).show();
         		}
+				break;
+			case SELECTING_EDIT:
+				DataObject dObj = drawingModel.getSelected();
+        		if(dObj != null){
+        			// TODO edit
+        		}
+        		drawingModel.deselect();
+				break;
+			case SELECTING_INFO:
+				dObj = drawingModel.getSelected();
+        		if(dObj != null){
+        			// TODO info
+        		}
+        		drawingModel.deselect();
+				break;
+			case SELECTING_REMOVE:
+				dObj = drawingModel.getSelected();
+        		if(dObj != null){
+        			floorPlanModel.removeDataObject(dObj);
+        		}
+        		drawingModel.deselect();
+				break;
+			default:
+				break;
+        	
         	}
             break;
         case MotionEvent.ACTION_CANCEL:
@@ -139,7 +189,9 @@ public class DrawingView extends View implements Observer{
         	drawingModel.moveStart((int)event.getX(0),(int)event.getY(0),(int)event.getX(1),(int)event.getY(1));
             break;
         case MotionEvent.ACTION_POINTER_UP:
-        	drawingModel.moveStop();
+        	if(drawingModel.isMoving()){
+        		drawingModel.moveStop();
+        	}
             break;
         default: break;
 		}

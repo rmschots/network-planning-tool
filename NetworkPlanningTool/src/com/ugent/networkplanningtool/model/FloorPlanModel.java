@@ -127,67 +127,90 @@ public class FloorPlanModel extends Observable {
 			redoStack.clear();
 			if(touchDataObject instanceof Wall){
 				Wall newWall = (Wall) touchDataObject;
-				Map<Double, Couple<Point, Wall>> splitWalls = new HashMap<Double, Couple<Point,Wall>>();
+				Map<Double, Point> splitPoints = new HashMap<Double, Point>();
 				List<Wall> wallListCopy = new ArrayList<Wall>(wallList);
 				for(Wall w : wallListCopy){
 					Point[] pl = Utils.getIntersectionSpecial(newWall.getPoint1(), newWall.getPoint2(), w.getPoint1(), w.getPoint2(),true);
-					if(pl.length > 1){
-						Point p1 = pl[0];
-						Point p2 = pl[1];
-						if((w.getPoint1().equals(p1) && w.getPoint2().equals(p2)) || (w.getPoint2().equals(p1) && w.getPoint1().equals(p2))){
-							wallList.remove(w);
+					if(pl.length > 0){
+						Wall add1 = null;
+						if(!pl[0].equals(w.getPoint1())){
+							add1 = (Wall) w.getPartialDeepCopy();
+							add1.setPoint1(w.getPoint1());
+							add1.setPoint2(pl[0]);
+							wallList.add(add1);
 						}
+						Wall add2 = null;
+						if(!pl[0].equals(w.getPoint2())){
+							add2 = (Wall) w.getPartialDeepCopy();
+							add2.setPoint1(pl[0]);
+							add2.setPoint2(w.getPoint2());
+							wallList.add(add2);
+						}
+						if(pl.length > 1){
+							Wall wallToSplit;
+							if(add1 != null){
+								Log.d("DEBUG","ptlDist1: "+Utils.pointToLineDistance(add1.getPoint1(), add1.getPoint2(), pl[1], true));
+							}
+							if(add1 != null && Utils.pointToLineDistance(add1.getPoint1(), add1.getPoint2(), pl[1], true) < 3){
+								wallToSplit = add1;
+							}else{
+								Log.d("DEBUG","ptlDist2: "+Utils.pointToLineDistance(add2.getPoint1(), add2.getPoint2(), pl[1], true));
+								wallToSplit = add2;
+							}
+							Wall add3 = null;
+							if(!pl[1].equals(wallToSplit.getPoint1())){
+								add3 = (Wall) wallToSplit.getPartialDeepCopy();
+								add3.setPoint1(wallToSplit.getPoint1());
+								add3.setPoint2(pl[1]);
+								wallList.add(add3);
+							}
+							Wall add4 = null;
+							if(!pl[1].equals(wallToSplit.getPoint2())){
+								add4 = (Wall) wallToSplit.getPartialDeepCopy();
+								add4.setPoint1(pl[1]);
+								add4.setPoint2(wallToSplit.getPoint2());
+								wallList.add(add4);
+							}
+							wallList.remove(wallToSplit);
+						}
+						wallList.remove(w);
 					}
 					for(Point p : pl){
 						double d1 = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), newWall.getPoint1(), false);
 						double distance = Utils.pointToPointDistance(newWall.getPoint1(), p)+(d1*0.00001);
-						while(splitWalls.containsKey(distance)){
+						while(splitPoints.containsKey(distance) && !splitPoints.get(distance).equals(p)){
 							distance+=0.00000000001;
 						}
-						splitWalls.put(distance, new Couple<Point, Wall>(p, w));
+						splitPoints.put(distance, p);
 					}
 				}
-				if(!splitWalls.isEmpty()){
-					Double[] coordArr = splitWalls.keySet().toArray(new Double[1]);
+				if(!splitPoints.isEmpty()){
+					Double[] coordArr = splitPoints.keySet().toArray(new Double[1]);
 					Arrays.sort(coordArr);
-					
 					for(Double i : coordArr){
-						Point p = splitWalls.get(i).getA();
-						Wall w = splitWalls.get(i).getB();
-						Wall add3 = (Wall) newWall.getPartialDeepCopy();
-						add3.setPoint1(newWall.getPoint1());
-						add3.setPoint2(p);
+						Point p = splitPoints.get(i);
+						Wall add = (Wall) newWall.getPartialDeepCopy();
+						add.setPoint1(newWall.getPoint1());
+						add.setPoint2(p);
 						newWall.setPoint1(p);
 						
-						if(!add3.getPoint1().equals(add3.getPoint2())){
-							wallList.add(add3);
-						}
-						
-						Wall add1 = null;
-						if(!w.getPoint1().equals(p) && !w.getPoint2().equals(p)){
-							if(Utils.pointToPointDistance(newWall.getPoint2(), w.getPoint1()) < Utils.pointToPointDistance(newWall.getPoint2(),  w.getPoint2())){
-								add1 = (Wall) w.getPartialDeepCopy();
-								add1.setPoint1(w.getPoint2());
-								add1.setPoint2(p);
-								w.setPoint2(p);
-							}else{
-								add1 = (Wall) w.getPartialDeepCopy();
-								add1.setPoint1(w.getPoint1());
-								add1.setPoint2(p);
-								w.setPoint1(p);
-							}
-							if(!add1.getPoint1().equals(add1.getPoint2()) && !add1.equalsLocation(add3)){
-								wallList.add(add1);
+						wallListCopy = new ArrayList<Wall>(wallList);
+						for(Wall w : wallListCopy){
+							if(w.equalsLocation(add)){
+								wallList.remove(w);
 							}
 						}
-						if(w.equalsLocation(add3) || w.getPoint1().equals(w.getPoint2())){
-							wallList.remove(w);
+						if(!add.getPoint1().equals(add.getPoint2())){
+							wallList.add(add);
 						}
 						
 					}
-					/*if(!newWall.getPoint1().equals(newWall.getPoint2()) && !add3.equalsLocation(add1) && !!add3.equalsLocation(w) && !add3.equalsLocation(add1) && !!add3.equalsLocation(w)){
-						wallList.add(newWall);
-					}*/
+				}
+				wallListCopy = new ArrayList<Wall>(wallList);
+				for(Wall w : wallListCopy){
+					if(w.equalsLocation(newWall)){
+						wallList.remove(w);
+					}
 				}
 				if(!newWall.getPoint1().equals(newWall.getPoint2())){
 					wallList.add(newWall);
@@ -201,6 +224,11 @@ public class FloorPlanModel extends Observable {
 				setChanged();
 				notifyObservers();
 			}
+		}
+		Log.d("DEBUG","size: "+wallList.size());
+		int i = 0;
+		for(Wall w : wallList){
+			Log.d("DEBUG",""+(i++)+": "+w.getPoint1()+" "+w.getPoint2());
 		}
 	}
 	
@@ -283,17 +311,20 @@ public class FloorPlanModel extends Observable {
 		return closest;
 	}
 	
-	public Wall getClosestWallToPoint(Point p){
+	public Couple<Double,Wall> getClosestWallToPoint(Point p, boolean upright){
 		Wall closest = null;
 		double distance = Double.POSITIVE_INFINITY;
 		for(Wall w : wallList){
-			double dist = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), p, true);
+			double dist = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), p, upright);
 			if(dist < distance){
 				distance = dist;
 				closest = w;
 			}
 		}
-		return distance == Float.POSITIVE_INFINITY?null:closest;
+		if(distance == Double.POSITIVE_INFINITY){
+			return null;
+		}
+		return new Couple<Double, Wall>(distance, closest);
 	}
 
 	private void pushStateToStack(Stack<FloorPlanModel> stack){
@@ -327,5 +358,38 @@ public class FloorPlanModel extends Observable {
 		model.setDataActivityList(fpm.getDataActivityList());
 		model.setConnectionPointList(fpm.getConnectionPointList());
 		model.setAccessPointList(fpm.getAccessPointList());
+	}
+
+	public Couple<Double, DataObject> getClosestDataObjectToPoint(Point touchPoint) {
+		Couple<Double, Wall> couple = getClosestWallToPoint(touchPoint, false);
+		double minDist = couple==null?Double.POSITIVE_INFINITY:couple.getA();
+		Log.d("DEBUG","mindist: "+minDist);
+		DataObject closest = couple==null?null:couple.getB();
+		for(DataObject dObj : accessPointList){
+			double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+			if(dist < minDist){
+				minDist = dist;
+				closest = dObj;
+			}
+		}
+		for(DataObject dObj : dataActivityList){
+			double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+			if(dist < minDist){
+				minDist = dist;
+				closest = dObj;
+			}
+		}
+		for(DataObject dObj : connectionPointList){
+			double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+			if(dist < minDist){
+				minDist = dist;
+				closest = dObj;
+			}
+		}
+		
+		if(minDist==Double.POSITIVE_INFINITY){
+			return null;
+		}
+		return new Couple<Double, DataObject>(minDist, closest);
 	}
 }

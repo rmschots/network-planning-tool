@@ -7,7 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
 import android.graphics.Point;
+import android.util.Log;
 
 public class Wall extends DataObject{
 	
@@ -137,7 +139,7 @@ public class Wall extends DataObject{
 
 	@Override
 	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
-		
+		paint.reset();
 		float pixelsX1 = convertCoordinateToLocation(drawingModel, true, point1.x);
 		float pixelsY1 = convertCoordinateToLocation(drawingModel, false, point1.y);
 		float circleRadius = drawingModel.getPixelsPerInterval()/4;
@@ -145,19 +147,31 @@ public class Wall extends DataObject{
 			float pixelsX2 = convertCoordinateToLocation(drawingModel, true, point2.x);
 			float pixelsY2 = convertCoordinateToLocation(drawingModel, false, point2.y);
 			
+			
+			
 			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()*thickness.getNumber()/DrawingModel.INTERVAL);
 			paint.setColor(material.getColor());
 			canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 			
-			paint.setStrokeWidth(0);
 			if(touch){
-				paint.setColor(Color.RED);
-			}else{
-				paint.setColor(Color.BLACK);
+				paint.setStrokeWidth(paint.getStrokeWidth()/2);
+				paint.setColor(Color.argb(100, 255, 255, 255));
+				
+				canvas.drawLine(pixelsX1, pixelsY1, pixelsX2, pixelsY2, paint);
 			}
+			
+			paint.reset();
+			paint.setStrokeWidth(0);
+			paint.setColor(Color.BLACK);
 			
 			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
 			canvas.drawRect(pixelsX2-circleRadius, pixelsY2-circleRadius, pixelsX2+circleRadius, pixelsY2+circleRadius, paint);
+			
+			if(touch){
+				paint.setColor(Color.argb(100, 255, 255, 255));
+				canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
+				canvas.drawRect(pixelsX2-circleRadius, pixelsY2-circleRadius, pixelsX2+circleRadius, pixelsY2+circleRadius, paint);
+			}
 			
 			String textToDraw = Math.round(Utils.pointToPointDistance(point1, point2))/100.0+" m";
 			paint.setTextSize(20);
@@ -171,14 +185,15 @@ public class Wall extends DataObject{
 			}
 			
 		}else{
+			paint.reset();
 			paint.setStrokeWidth(0);
-			if(touch){
-				paint.setColor(Color.RED);
-			}else{
-				paint.setColor(Color.BLACK);
-			}
+			paint.setColor(Color.BLACK);
 			
 			canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
+			if(touch){
+				paint.setColor(Color.argb(100, 255, 255, 255));
+				canvas.drawRect(pixelsX1-circleRadius, pixelsY1-circleRadius, pixelsX1+circleRadius, pixelsY1+circleRadius, paint);
+			}
 		}
 	}
 

@@ -259,6 +259,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		if(dObj instanceof Wall){
 			switch(((Wall)dObj).getWallType()){
 			case DOOR:
+				Log.d("DEBUG","adjust door");
 				setDrawWall(WallType.DOOR,doorMaterialRadioGroup,doorThicknessRadioGroup);
 				break;
 			case WALL:
@@ -296,8 +297,14 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			setDrawActivities(activityTypeRadioGroup);
 		}else if(tag.equals("connections")){
 			setDrawConnections(connectionTypeRadioGroup);
+		}else if(tag.equals("eraser")){
+			drawingModel.setRemoveSelectionMode();
+		}else if(tag.equals("edit")){
+			drawingModel.setEditSelectionMode();
+		}else if(tag.equals("info")){
+			drawingModel.setInfoSelectionMode();
 		}else{
-			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
+			Log.e("DEBUG","LOLWUTUTRYNTODO?");
 		}
 	}
 	
@@ -308,9 +315,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		Thickness thickness = Thickness.getThicknessByText(rb.getText().toString());
 		if(drawingModel.getTouchDataObject() instanceof Wall){
 			Wall wall = (Wall) drawingModel.getTouchDataObject();
+			wall.setWallType(wallType);
 			wall.setMaterial(material);
 			wall.setThickness(thickness);
 		}else{
+			drawingModel.setPlaceMode();
 			drawingModel.setTouchDataObject(new Wall(wallType, thickness, material));
 		}
 	}
@@ -335,6 +344,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			ap.setHeight(elevation);
 			ap.setNetwork(nw);
 		}else{
+			drawingModel.setPlaceMode();
 			drawingModel.setTouchDataObject(new AccessPoint("", elevation, rt, rm, mhz, channel, antennaGain, transmitPower, nw));
 		}
 		
@@ -347,6 +357,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			DataActivity da = (DataActivity) drawingModel.getTouchDataObject();
 			da.setType(aType);
 		}else{
+			drawingModel.setPlaceMode();
 			drawingModel.setTouchDataObject(new DataActivity(aType));
 		}
 	}
@@ -358,6 +369,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			ConnectionPoint cp = (ConnectionPoint) drawingModel.getTouchDataObject();
 			cp.setType(cType);
 		}else{
+			drawingModel.setPlaceMode();
 			drawingModel.setTouchDataObject(new ConnectionPoint(cType));
 		}
 	}
@@ -366,18 +378,21 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		parametersActive.setEnabled(true);
 		parametersActive = v;
 		onFlipClick(v, parametersFlip);
+		drawingModel.setIdle();
 	}
 	
 	public void onToolsFlipClick(View v) {
 		toolsActive.setEnabled(true);
 		toolsActive = v;
 		onFlipClick(v, toolsFlip);
+		drawingModel.setIdle();
 	}
 	
 	public void onResultsFlipClick(View v) {
 		resultsActive.setEnabled(true);
 		resultsActive = v;
 		onFlipClick(v, resultsFlip);
+		drawingModel.setIdle();
 	}
 	
 	private View onFlipClick(View v, ViewFlipper vf){

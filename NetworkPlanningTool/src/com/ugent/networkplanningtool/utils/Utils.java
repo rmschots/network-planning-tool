@@ -8,7 +8,6 @@ import org.w3c.dom.Node;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Utils {
 	
@@ -69,7 +68,6 @@ public class Utils {
 	}
 	
 	public static Point[] getIntersectionSpecial(Point line1point1, Point line1point2, Point line2point1, Point line2point2, boolean upright){
-		Log.d("DEBUG","dist: "+pointToLineDistance(line1point1, line1point2, line2point1,upright));
 		double dist1 = pointToLineDistance(line1point1, line1point2, line2point1,upright);
 		double dist2 = pointToLineDistance(line1point1, line1point2, line2point2,upright);
 		
@@ -81,12 +79,12 @@ public class Utils {
 				return new Point[]{line2point1,line2point2};
 			}else{
 				Point[] points;
-				if(dist3 == 0 || dist4 == 0){
+				if(dist3 < 3 || dist4 < 3){
 					points = new Point[2];
-					if(dist3 == 0){
+					if(dist3 < 3){
 						points[1] = line1point1;
 					}
-					if(dist4 == 0){
+					if(dist4 < 3){
 						points[1] = line1point2;
 					}
 				}else{
@@ -99,12 +97,12 @@ public class Utils {
 				}
 				return points;
 			}
-		}else if(dist3 == 0 || dist4 == 0){
-			if(dist3 == 0 && dist4 == 0){
+		}else if(dist3 < 3 || dist4 < 3){
+			if(dist3 < 3 && dist4 < 3){
 				return new Point[]{line1point1,line1point2};
-			}else if(dist3 == 0){
+			}else if(dist3 < 3){
 				return new Point[]{line1point1};
-			}else if(dist4 == 0){
+			}else if(dist4 < 3){
 				return new Point[]{line1point2};
 			}
 		}
@@ -112,8 +110,6 @@ public class Utils {
 		float b1 = line1point1.y - a1*line1point1.x;
 		float a2 = (line2point2.y-line2point1.y)/(float)(line2point2.x-line2point1.x);
 		float b2 = line2point1.y - a2*line2point1.x;
-		Log.d("DEBUG","x1: "+line1point1.x+" y1: "+line1point1.y+" x2: "+line1point2.x+" y2: "+line1point2.y);
-		Log.d("DEBUG","a1: "+a1+" b1: "+b1+" a2: "+a2+" b2: "+b2);
 		
 		if(a1 != a2){
 			int x0;
@@ -128,7 +124,6 @@ public class Utils {
 				x0 =  Math.round((-b1+b2)/(a1-a2));
 				y0 =  Math.round(a1*((-b1+b2)/(a1-a2))+b1);
 			}
-			Log.d("DEBUG","x0: "+x0+" y0: "+y0);
 			if(		Math.min(line1point1.x, line1point2.x) <= x0
 					&& x0 <= Math.max(line1point1.x, line1point2.x)
 					&& Math.min(line2point1.x, line2point2.x) <= x0
