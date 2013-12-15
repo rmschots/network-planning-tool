@@ -7,10 +7,10 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum RadioType {
-	WIFI(MainActivity.getContext().getResources().getString(R.string.wifiText)),
-	SENSOR(MainActivity.getContext().getResources().getString(R.string.sensorText)),
-	LTE_FEMTOCELL(MainActivity.getContext().getResources().getString(R.string.lteFemtocellText)),
-	UMTS_FEMTOCELL(MainActivity.getContext().getResources().getString(R.string.umtsFemtocellText));
+	WIFI(MainActivity.getInstance().getResources().getString(R.string.wifiText)),
+	SENSOR(MainActivity.getInstance().getResources().getString(R.string.sensorText)),
+	LTE_FEMTOCELL(MainActivity.getInstance().getResources().getString(R.string.lteFemtocellText)),
+	UMTS_FEMTOCELL(MainActivity.getInstance().getResources().getString(R.string.umtsFemtocellText));
 
 	private String text;
 	

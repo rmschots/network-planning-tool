@@ -7,11 +7,11 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum ActivityType {
-	HD_VIDEO(MainActivity.getContext().getResources().getString(R.string.hdVideotext)),
-	ACTION_GAMES(MainActivity.getContext().getResources().getString(R.string.actionGamesText)),
-	YOUTUBE(MainActivity.getContext().getResources().getString(R.string.youtubeText)),
-	SURFING(MainActivity.getContext().getResources().getString(R.string.surfingText)),
-	NO_COVERAGE(MainActivity.getContext().getResources().getString(R.string.noCoverageText));
+	HD_VIDEO(MainActivity.getInstance().getResources().getString(R.string.hdVideotext)),
+	ACTION_GAMES(MainActivity.getInstance().getResources().getString(R.string.actionGamesText)),
+	YOUTUBE(MainActivity.getInstance().getResources().getString(R.string.youtubeText)),
+	SURFING(MainActivity.getInstance().getResources().getString(R.string.surfingText)),
+	NO_COVERAGE(MainActivity.getInstance().getResources().getString(R.string.noCoverageText));
 
 	private String text;
 	private int textSize = 0;

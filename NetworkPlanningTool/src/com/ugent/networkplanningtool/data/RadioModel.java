@@ -7,11 +7,11 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum RadioModel {
-	DLINK(MainActivity.getContext().getResources().getString(R.string.dlinkText)),
-	CUSTOM(MainActivity.getContext().getResources().getString(R.string.customText)),
-	CC2420(MainActivity.getContext().getResources().getString(R.string.cc2420Text)),
-	JN516x(MainActivity.getContext().getResources().getString(R.string.jn516xtext)),
-	HUAWEI(MainActivity.getContext().getResources().getString(R.string.huaweiText));
+	DLINK(MainActivity.getInstance().getResources().getString(R.string.dlinkText)),
+	CUSTOM(MainActivity.getInstance().getResources().getString(R.string.customText)),
+	CC2420(MainActivity.getInstance().getResources().getString(R.string.cc2420Text)),
+	JN516x(MainActivity.getInstance().getResources().getString(R.string.jn516xtext)),
+	HUAWEI(MainActivity.getInstance().getResources().getString(R.string.huaweiText));
 
 	private String text;
 	

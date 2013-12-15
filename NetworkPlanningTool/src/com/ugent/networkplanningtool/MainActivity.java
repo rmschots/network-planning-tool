@@ -52,7 +52,7 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 
 public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
-	private static Context mContext;
+	private static MainActivity mContext;
 	
 	private DrawingView designView;
 	private TextView locationText;
@@ -407,6 +407,15 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		}
 		return null;
 	}
+	
+	public View getEditView(String tag){
+		for(int i = 0; i < designFlip.getChildCount(); i ++){
+			if(designFlip.getChildAt(i).getTag().equals(tag)){
+				return designFlip.getChildAt(i);
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
@@ -527,7 +536,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		floorPlanModel.reset();
 	}
 	
-	public static Context getContext(){
+	public static MainActivity getInstance(){
         return mContext;
     }
 	

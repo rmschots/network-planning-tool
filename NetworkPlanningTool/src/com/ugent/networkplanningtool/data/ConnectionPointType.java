@@ -9,8 +9,8 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum ConnectionPointType {
-	DATA(MainActivity.getContext().getResources().getString(R.string.dataConnectionPointText),Color.rgb(116, 172, 36)),
-	POWER(MainActivity.getContext().getResources().getString(R.string.powerConnectionPointText),Color.rgb(114, 15, 24));
+	DATA(MainActivity.getInstance().getResources().getString(R.string.dataConnectionPointText),Color.rgb(116, 172, 36)),
+	POWER(MainActivity.getInstance().getResources().getString(R.string.powerConnectionPointText),Color.rgb(114, 15, 24));
 
 	private String text;
 	private int color;

@@ -7,8 +7,8 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum Thickness {
-	THICK(MainActivity.getContext().getResources().getString(R.string.thickText),30),
-	THIN(MainActivity.getContext().getResources().getString(R.string.thinText),10);
+	THICK(MainActivity.getInstance().getResources().getString(R.string.thickText),30),
+	THIN(MainActivity.getInstance().getResources().getString(R.string.thinText),10);
 	
 	private String text;
 	private int number;

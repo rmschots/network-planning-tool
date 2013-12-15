@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ugent.networkplanningtool.MainActivity;
+import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
@@ -161,6 +164,9 @@ public class DrawingView extends View implements Observer{
 				DataObject dObj = drawingModel.getSelected();
         		if(dObj != null){
         			// TODO edit
+        			Dialog d = new Dialog(getContext());
+        			d.setContentView(MainActivity.getInstance().getEditView("doors"));
+        			d.show();
         		}
         		drawingModel.deselect();
 				break;
@@ -194,10 +200,6 @@ public class DrawingView extends View implements Observer{
         		switch(drawingModel.getState()){
 				case PLACING:
 					drawingModel.setPlaceMode();
-					break;
-				case SELECTING_EDIT:
-				case SELECTING_INFO:
-				case SELECTING_REMOVE:
 					break;
 				default:
 					break;

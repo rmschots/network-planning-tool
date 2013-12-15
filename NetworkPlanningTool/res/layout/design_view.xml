@@ -113,6 +113,14 @@
         android:layout_height="wrap_content"
         android:measureAllChildren="false" >
 
+        <com.ugent.networkplanningtool.layout.dataobject.WallView
+            android:id="@+id/wallView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="doors" >
+
+        </com.ugent.networkplanningtool.layout.dataobject.WallView>
+
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

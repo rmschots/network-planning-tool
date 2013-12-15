@@ -21,8 +21,8 @@ public class DrawingModel extends Observable {
 	
 	public static enum PlaceResult{
 		SUCCESS(null),
-		CONNECTION_POINT_NOT_ADJACENT_TO_WALL(MainActivity.getContext().getResources().getString(R.string.connectionPointNotAdjacentToWall)),
-		NOTHING_TO_PLACE(MainActivity.getContext().getResources().getString(R.string.nothingToPlace));
+		CONNECTION_POINT_NOT_ADJACENT_TO_WALL(MainActivity.getInstance().getResources().getString(R.string.connectionPointNotAdjacentToWall)),
+		NOTHING_TO_PLACE(MainActivity.getInstance().getResources().getString(R.string.nothingToPlace));
 		private String errorMessage;
 		private PlaceResult(String errorMessage){
 			this.errorMessage = errorMessage;
