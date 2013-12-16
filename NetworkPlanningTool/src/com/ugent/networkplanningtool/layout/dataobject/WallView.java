@@ -14,6 +14,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -26,13 +27,16 @@ public class WallView extends LinearLayout {
 	private RadioGroup materialsRadioGroup;
 	private RadioGroup thicknessRadioGroup;
 	private RadioGroup snapToRadioGroup;
+	private Button stopDrawingButton;
+	
+	private boolean draw;
 	
 	private DrawingModel drawingModel;
 
 	public WallView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WallView);
-		boolean draw = a.getBoolean(R.styleable.WallView_draw, false);
+		draw = a.getBoolean(R.styleable.WallView_draw, false);
 		a.recycle();
 		
 		LayoutInflater inflater = (LayoutInflater) context
@@ -42,6 +46,7 @@ public class WallView extends LinearLayout {
 		materialsRadioGroup = (RadioGroup) findViewById(R.id.materialRadioGroup);
 		thicknessRadioGroup = (RadioGroup) findViewById(R.id.thicknessRadioGroup);
 		snapToRadioGroup = (RadioGroup) findViewById(R.id.snapToRadioGroup);
+		stopDrawingButton = (Button) findViewById(R.id.stopDrawingButton);
 		
 		Object tag = getTag();
 		if(tag != null){
@@ -56,13 +61,6 @@ public class WallView extends LinearLayout {
 				initComponents(R.array.windowMaterials);
 			}
 		}
-		
-		if(draw){
-			Button stopDrawButton = new Button(context);
-			stopDrawButton.setText(R.string.stopDrawingText);
-			addView(stopDrawButton);
-		}
-		
 	}
 	
 	private void initComponents(int materialsArrayId){
@@ -131,6 +129,7 @@ public class WallView extends LinearLayout {
 				}
 			};
 			snapToRadioGroup.setOnCheckedChangeListener(listener);
+			stopDrawingButton.setVisibility(draw?View.VISIBLE:View.GONE);
 		}
 	}
 	
