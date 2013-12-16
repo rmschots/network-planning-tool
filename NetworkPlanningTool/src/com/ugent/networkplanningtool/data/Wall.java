@@ -1,5 +1,6 @@
 package com.ugent.networkplanningtool.data;
 
+import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
@@ -20,6 +21,7 @@ public class Wall extends DataObject{
 	
 	public Wall(Wall wall){
 		super(wall);
+		DATA_OBJECT_TYPE = DataObjectType.WALL;
 		this.point2 = new Point(wall.point2);
 		this.wallType = wall.wallType;
 		this.thickness = wall.thickness;
@@ -28,6 +30,7 @@ public class Wall extends DataObject{
 	
 	public Wall(WallType wallType, Thickness thickness, Material material) {
 		super();
+		DATA_OBJECT_TYPE = DataObjectType.WALL;
 		this.wallType = wallType;
 		this.thickness = thickness;
 		this.material = material;
@@ -36,6 +39,7 @@ public class Wall extends DataObject{
 	
 	public Wall(Point point1, WallType wallType, Thickness thickness, Material material) {
 		super(point1);
+		DATA_OBJECT_TYPE = DataObjectType.WALL;
 		this.wallType = wallType;
 		this.thickness = thickness;
 		this.material = material;
@@ -44,6 +48,7 @@ public class Wall extends DataObject{
 
 	public Wall(Point point1, Point point2, WallType wallType, Thickness thickness, Material material){
 		this(point1, wallType, thickness, material);
+		DATA_OBJECT_TYPE = DataObjectType.WALL;
 		this.point2 = point2;
 	}
 
@@ -122,14 +127,13 @@ public class Wall extends DataObject{
 	@Override
 	public boolean isComplete(){
 		return super.isComplete()
-				&& point2 != null
-				&& material != null
-				&& thickness != null
-				&& wallType != null;
+				&& canDraw()
+				&& point2 != null;
 	}
 	
+	@Override
 	public boolean canDraw(){
-		return super.isComplete()
+		return super.canDraw()
 				&& material != null
 				&& thickness != null
 				&& wallType != null;

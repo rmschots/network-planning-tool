@@ -10,6 +10,15 @@ import android.graphics.Point;
 
 public abstract class DataObject{
 	
+	public static enum DataObjectType{
+		WALL,
+		ACCESS_POINT,
+		DATA_ACTIVITY,
+		CONNECTION_POINT;
+	}
+	
+	public DataObjectType DATA_OBJECT_TYPE;
+	
 	protected static PathEffect dottedLineEffect = new DashPathEffect(new float[] {10,5}, 0);
 	protected Point point1;
 	
@@ -52,6 +61,10 @@ public abstract class DataObject{
 	public abstract void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch);
 	
 	public boolean isComplete(){
+		return canDraw();
+	}
+	
+	public boolean canDraw(){
 		return point1 != null;
 	}
 	

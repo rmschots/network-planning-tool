@@ -21,6 +21,10 @@
     <string name="toolsText">3. Run a prediction tool</string>
     <string name="resultsText">4. Review results</string>
     
+    <string name="drawDataObjectText">draw</string>
+    <string name="infoDataObjectText">info</string>
+    <string name="editDataObjectText">edit</string>
+    
     <string name="materialText">Material</string>
     <string name="brickText">Brick</string>
     <string name="layeredDrywallText">Layered Drywall</string>
@@ -66,9 +70,15 @@
         <item>@string/snapToWallsText</item>
     </string-array>
     
-    <string name="wallText">wall</string>
-    <string name="doorText">door</string>
-    <string name="windowText">window</string>
+    <string name="wallText">Wall</string>
+    <string name="doorText">Door</string>
+    <string name="windowText">Window</string>
+    <string name="accessPointText">Access Point</string>
+    <string name="connectionPointText">Connection Point</string>
+    <string name="dataActivityText">Data Activity</string>
+    <string name="eraserText">Eraser</string>
+    <string name="editText">Edit</string>
+    <string name="infoText">Info</string>
     
     <string name="dlinkText">DLink</string>
     <string name="customText">Custom</string>
@@ -107,13 +117,25 @@
         <item>@string/umtsFemtocellText</item>
     </string-array>
     
+    <string name="frequency2100">2100</string>
     <string name="frequency2400">2400</string>
-    <string name="frequency5000">5000</string>
+    <string name="frequency2600">2600</string>
     
     <string-array name="frequencyArray">
         <item>@string/frequency2400</item>
-        <item>@string/frequency5000</item>
     </string-array>
+    
+    <string name="frequencyBand1">1</string>
+    <string name="frequencyBand2">2</string>
+    <string name="frequencyBand3">3</string>
+    <string name="frequencyBand4">4</string>
+    <string name="frequencyBand5">5</string>
+    <string name="frequencyBand6">6</string>
+    <string name="frequencyBand7">7</string>
+    <string name="frequencyBand8">8</string>
+    <string name="frequencyBand9">9</string>
+    <string name="frequencyBand10">10</string>
+    <string name="frequencyBand11">11</string>
     
     <string name="channel1">1</string>
     <string name="channel2">2</string>
@@ -172,8 +194,17 @@
     <string name="dataConnectionPointText">Data</string>
     <string name="powerConnectionPointText">Power</string>
     
-    
     <string name="stopDrawingText">Stop Drawing</string>
+    
+    <string name="eraserInfoText">Click on a wall, intersection or accesspoint to erase it.</string>
+    <string name="quickEraseText">Quick Erase</string>
+    <string name="eraseAccessPointsText">Erase Access Points</string>
+    <string name="eraseActivitiesText">Erase Activities</string>
+    <string name="eraseConnectionPointsText">Erase Connection Points</string>
+    
+    <string name="editObjectText">Click on an object to edit it.</string>
+    
+    <string name="infoInfoText">Click on an object to get its properties.</string>
     
     <string name="savePlanTitle">Save floorplan</string>
     

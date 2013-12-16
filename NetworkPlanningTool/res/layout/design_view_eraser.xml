@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="eraser" >
+    android:tag="@string/eraserText" >
 
     <TextView
         android:id="@+id/eraserInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eraser Info"
+        android:text="@string/eraserText"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="Click on a wall, intersection or accesspoint to erase it."
+        android:text="@string/eraserInfoText"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -33,13 +33,20 @@
         style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Erase accesspoints" />
+        android:text="@string/eraseAccessPointsText" />
 
     <Button
         android:id="@+id/eraseActivitiesButton"
         style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Erase activities" />
+        android:text="@string/eraseActivitiesText" />
+
+    <Button
+        android:id="@+id/eraseConnectionPointsButton"
+        style="@style/MyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eraseConnectionPointsText" />
 
 </LinearLayout>

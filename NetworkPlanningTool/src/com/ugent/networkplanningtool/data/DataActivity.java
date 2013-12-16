@@ -1,5 +1,6 @@
 package com.ugent.networkplanningtool.data;
 
+import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
@@ -16,16 +17,19 @@ public class DataActivity extends DataObject{
 	
 	public DataActivity(DataActivity da){
 		super(da);
+		DATA_OBJECT_TYPE = DataObjectType.DATA_ACTIVITY;
 		this.type = da.type;
 	}
 
 	public DataActivity(ActivityType type) {
 		super();
+		DATA_OBJECT_TYPE = DataObjectType.DATA_ACTIVITY;
 		this.type = type;
 	}
 	
 	public DataActivity(Point point, ActivityType type) {
 		super(point);
+		DATA_OBJECT_TYPE = DataObjectType.DATA_ACTIVITY;
 		this.type = type;
 	}
 
@@ -83,6 +87,18 @@ public class DataActivity extends DataObject{
 			canvas.drawCircle(x, y, circleRadius, paint);
 		}
 		paint.reset();
+	}
+	
+	@Override
+	public boolean isComplete(){
+		return super.isComplete()
+				&& canDraw();
+	}
+	
+	@Override
+	public boolean canDraw(){
+		return super.canDraw()
+				&& type != null;
 	}
 
 	@Override

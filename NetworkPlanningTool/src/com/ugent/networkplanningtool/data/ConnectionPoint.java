@@ -1,5 +1,6 @@
 package com.ugent.networkplanningtool.data;
 
+import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 import android.graphics.Canvas;
@@ -14,16 +15,19 @@ public class ConnectionPoint extends DataObject{
 	
 	public ConnectionPoint(ConnectionPoint cp){
 		super(cp);
+		DATA_OBJECT_TYPE = DataObjectType.CONNECTION_POINT;
 		this.type = cp.type;
 	}
 	
 	public ConnectionPoint(ConnectionPointType type) {
 		super();
+		DATA_OBJECT_TYPE = DataObjectType.CONNECTION_POINT;
 		this.type = type;
 	}
 
 	public ConnectionPoint(Point point, ConnectionPointType type) {
 		super(point);
+		DATA_OBJECT_TYPE = DataObjectType.CONNECTION_POINT;
 		this.type = type;
 	}
 
@@ -55,6 +59,18 @@ public class ConnectionPoint extends DataObject{
 		if(type != null){
 			this.type = type;
 		}
+	}
+	
+	@Override
+	public boolean isComplete(){
+		return super.isComplete()
+				&& canDraw();
+	}
+	
+	@Override
+	public boolean canDraw(){
+		return super.canDraw()
+				&& type != null;
 	}
 
 	@Override

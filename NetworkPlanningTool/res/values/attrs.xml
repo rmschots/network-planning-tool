@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="WallView">
+    <declare-styleable name="DataObjectView">
 
-		<attr name="draw" format="boolean"/>
+		<attr name="draw" format="string"/>
 
 	</declare-styleable>
 </resources>

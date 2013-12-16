@@ -4,6 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="info" >
+    android:tag="@string/infoText" >
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/infoText" />
+
+    <TextView
+        android:id="@+id/infoInfoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="@string/infoInfoText"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

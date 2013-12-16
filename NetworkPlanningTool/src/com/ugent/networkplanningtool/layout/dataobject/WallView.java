@@ -6,57 +6,67 @@ import com.ugent.networkplanningtool.data.SnapTo;
 import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
+import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.UniqueIdGenerator;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 
-public class WallView extends LinearLayout {
+public class WallView extends DataObjectView {
 	
 	private WallType wallType;
 	private RadioGroup materialsRadioGroup;
 	private RadioGroup thicknessRadioGroup;
+	private TextView snapToText;
 	private RadioGroup snapToRadioGroup;
 	private Button stopDrawingButton;
 	
-	private boolean draw;
+	private Object tag;
 	
 	private DrawingModel drawingModel;
+	
+	public WallView(Context context, ViewType type, DrawingModel drawingModel){
+		super(context, type);
+		this.drawingModel = drawingModel;
+		this.tag = ((Wall)drawingModel.getTouchDataObject()).getWallType().getText();
+		init();
+		loadData();
+	}
 
 	public WallView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WallView);
-		draw = a.getBoolean(R.styleable.WallView_draw, false);
-		a.recycle();
-		
-		LayoutInflater inflater = (LayoutInflater) context
+		tag = getTag();
+		init();
+	}
+	
+	private void init(){
+		LayoutInflater inflater = (LayoutInflater) getContext()
 		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.design_view_wall, this, true);
 		
 		materialsRadioGroup = (RadioGroup) findViewById(R.id.materialRadioGroup);
 		thicknessRadioGroup = (RadioGroup) findViewById(R.id.thicknessRadioGroup);
+		snapToText = (TextView) findViewById(R.id.snapToText);
 		snapToRadioGroup = (RadioGroup) findViewById(R.id.snapToRadioGroup);
 		stopDrawingButton = (Button) findViewById(R.id.stopDrawingButton);
 		
-		Object tag = getTag();
 		if(tag != null){
-			if(tag.equals("doors")){
+			if(tag.equals(getResources().getString(R.string.doorText))){
 				wallType = WallType.DOOR;
 				initComponents(R.array.doorMaterials);
-			}else if(tag.equals("walls")){
+			}else if(tag.equals(getResources().getString(R.string.wallText))){
 				wallType = WallType.WALL;
 				initComponents(R.array.wallMaterials);
-			}else if(tag.equals("windows")){
+			}else if(tag.equals(getResources().getString(R.string.windowText))){
 				wallType = WallType.WINDOW;
 				initComponents(R.array.windowMaterials);
 			}
@@ -73,20 +83,12 @@ public class WallView extends LinearLayout {
 			    button.setTag(Material.getMaterialByText(material));
 			    button.setId(UniqueIdGenerator.generateViewId());
 			    materialsRadioGroup.addView(button);
+			    if(type.equals(ViewType.INFO)){
+			    	button.setEnabled(false);
+			    }
 			}
 			button = (RadioButton) materialsRadioGroup.getChildAt(0);
-			//button.setBackgroundColor((Material.getMaterialByText(button.getText().toString())).getColor());
 			button.setChecked(true);
-			OnCheckedChangeListener listener = new OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(RadioGroup group, int checkedId){
-					if(drawingModel != null){
-						RadioButton rb = (RadioButton) findViewById(checkedId);
-						((Wall)drawingModel.getTouchDataObject()).setMaterial((Material) rb.getTag());
-					}
-				}
-			};
-			materialsRadioGroup.setOnCheckedChangeListener(listener);
 			
 			String[] thicknessess = getResources().getStringArray(R.array.thicknessArray);
 			for(String thickness : thicknessess) {
@@ -95,19 +97,12 @@ public class WallView extends LinearLayout {
 			    button.setTag(Thickness.getThicknessByText(thickness));
 			    button.setId(UniqueIdGenerator.generateViewId());
 			    thicknessRadioGroup.addView(button);
+			    if(type.equals(ViewType.INFO)){
+			    	button.setEnabled(false);
+			    }
 			}
 			button = (RadioButton) thicknessRadioGroup.getChildAt(0);
 			button.setChecked(true);
-			listener = new OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(RadioGroup group, int checkedId){
-					if(drawingModel != null){
-						RadioButton rb = (RadioButton) findViewById(checkedId);
-						((Wall)drawingModel.getTouchDataObject()).setThickness((Thickness) rb.getTag());
-					}
-				}
-			};
-			thicknessRadioGroup.setOnCheckedChangeListener(listener);
 			
 			String[] snaptos = getResources().getStringArray(R.array.snapToArray);
 			for(String snapto : snaptos) {
@@ -116,20 +111,35 @@ public class WallView extends LinearLayout {
 			    button.setTag(SnapTo.getSnapToByText(snapto));
 			    button.setId(UniqueIdGenerator.generateViewId());
 			    snapToRadioGroup.addView(button);
+			    if(type.equals(ViewType.INFO)){
+			    	button.setEnabled(false);
+			    }
 			}
-			button = (RadioButton) snapToRadioGroup.getChildAt(0);
-			button.setChecked(true);
-			listener = new OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(RadioGroup group, int checkedId){
-					if(drawingModel != null){
-						RadioButton rb = (RadioButton) findViewById(checkedId);
-						drawingModel.setSnapToGrid((SnapTo)rb.getTag());
+			
+			if(type.equals(ViewType.DRAW)){
+				button = (RadioButton) snapToRadioGroup.getChildAt(0);
+				button.setChecked(true);
+			}else{
+				snapToText.setVisibility(View.GONE);
+				snapToRadioGroup.setVisibility(View.GONE);
+			}
+			
+			if(type.equals(ViewType.INFO)){
+				materialsRadioGroup.setEnabled(false);
+				thicknessRadioGroup.setEnabled(false);
+			}else{
+				OnCheckedChangeListener listener = new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId){
+						updateDrawingModel();
 					}
-				}
-			};
-			snapToRadioGroup.setOnCheckedChangeListener(listener);
-			stopDrawingButton.setVisibility(draw?View.VISIBLE:View.GONE);
+				};
+				materialsRadioGroup.setOnCheckedChangeListener(listener);
+				thicknessRadioGroup.setOnCheckedChangeListener(listener);
+				snapToRadioGroup.setOnCheckedChangeListener(listener);
+			}
+			
+			stopDrawingButton.setVisibility(type.equals(ViewType.DRAW)?View.VISIBLE:View.GONE);
 		}
 	}
 	
@@ -167,7 +177,8 @@ public class WallView extends LinearLayout {
 		WallType wallType = getWallType();
 		Material material = getSelectedMaterial();
 		Thickness thickness = getSelectedThickness();
-		if(drawingModel.getTouchDataObject() instanceof Wall){
+		if(drawingModel.getTouchDataObject() != null
+				&& drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObjectType.WALL)){
 			Wall wall = (Wall) drawingModel.getTouchDataObject();
 			wall.setWallType(wallType);
 			wall.setMaterial(material);
@@ -175,8 +186,26 @@ public class WallView extends LinearLayout {
 		}else{
 			drawingModel.setPlaceMode(new Wall(wallType, thickness, material));
 		}
-		drawingModel.setSnapToGrid(getSnapTo());
-		Log.d("DEBUG","updateDrawingModel "+drawingModel.getTouchDataObject());
+		if(type.equals(ViewType.DRAW)){
+			drawingModel.setSnapToGrid(getSnapTo());
+		}
 	}
 
+	private void loadData() {
+		Wall wall = (Wall)drawingModel.getSelected();
+		for(int i = 0; i < materialsRadioGroup.getChildCount(); i++){
+			RadioButton rb = (RadioButton) materialsRadioGroup.getChildAt(i);
+			if(rb.getTag().equals(wall.getMaterial())){
+				rb.setChecked(true);
+				break;
+			}
+		}
+		for(int i = 0; i < thicknessRadioGroup.getChildCount(); i++){
+			RadioButton rb = (RadioButton) thicknessRadioGroup.getChildAt(i);
+			if(rb.getTag().equals(wall.getThickness())){
+				rb.setChecked(true);
+				break;
+			}
+		}
+	}
 }

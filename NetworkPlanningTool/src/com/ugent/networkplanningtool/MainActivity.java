@@ -7,47 +7,29 @@ import java.util.Observer;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.view.WindowCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
-import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.ActivityType;
-import com.ugent.networkplanningtool.data.ConnectionPoint;
-import com.ugent.networkplanningtool.data.ConnectionPointType;
-import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.DataObject;
-import com.ugent.networkplanningtool.data.Material;
-import com.ugent.networkplanningtool.data.Network;
-import com.ugent.networkplanningtool.data.RadioModel;
-import com.ugent.networkplanningtool.data.RadioType;
-import com.ugent.networkplanningtool.data.Thickness;
-import com.ugent.networkplanningtool.data.Wall;
-import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
+import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
+import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
+import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
 import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
@@ -77,19 +59,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private WallView wallView;
 	private WallView doorView;
 	private WallView windowView;
+	private AccessPointView accessPointView;
+	private DataActivityView dataActivityView;
+	private ConnectionPointView connectionPointView;
 	
-	private RadioGroup activityTypeRadioGroup;
-	
-	private RadioGroup connectionTypeRadioGroup;
-	
-	private Spinner networkSignalTypeSpinner;
-	private Spinner networkMhzSpinner;
-	private Spinner networkChannelSpinner;
-	private Spinner networkModelSpinner;
-	private EditText antennaGainEditText;
-	private EditText transmitPowerEditText;
-	private Spinner networkIDSpinner;
-	private EditText elevationEditText;
+	private Button eraseAccessPointsButton;
+	private Button eraseDataActivitiesButton;
+	private Button eraseConnectionPointsButton;
 	
 	private ZoomControls zoomControls;
 	private ImageButton undoButton;
@@ -122,19 +98,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         wallView = (WallView) findViewById(R.id.wallViewWall);
         doorView = (WallView) findViewById(R.id.wallViewDoor);
         windowView = (WallView) findViewById(R.id.wallViewWindow);
+        accessPointView = (AccessPointView) findViewById(R.id.accessPointView);
+        dataActivityView = (DataActivityView) findViewById(R.id.dataActivityView);
+        connectionPointView = (ConnectionPointView) findViewById(R.id.connectionPointView);
         
-        activityTypeRadioGroup = (RadioGroup) findViewById(R.id.activityTypeRadioGroup);
-        
-        connectionTypeRadioGroup = (RadioGroup) findViewById(R.id.connectionTypeRadioGroup);
-        
-        networkSignalTypeSpinner = (Spinner) findViewById(R.id.networkSignalTypeSpinner);
-        networkMhzSpinner = (Spinner) findViewById(R.id.networkMHzSpinner);
-        networkChannelSpinner = (Spinner) findViewById(R.id.networkChannelSpinner);
-        networkModelSpinner = (Spinner) findViewById(R.id.networkModelSpinner);
-        transmitPowerEditText = (EditText) findViewById(R.id.transmitPowerEditText);
-        antennaGainEditText = (EditText) findViewById(R.id.antennaGainEditText);
-        elevationEditText = (EditText) findViewById(R.id.elevationEditText);
-        networkIDSpinner = (Spinner) findViewById(R.id.networkIDSpinner);
+        eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
+        eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
+        eraseConnectionPointsButton = (Button) findViewById(R.id.eraseConnectionPointsButton);
         
         
         mainActive = findViewById(R.id.designButton);
@@ -151,6 +121,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         wallView.setDrawingModel(drawingModel);
         doorView.setDrawingModel(drawingModel);
         windowView.setDrawingModel(drawingModel);
+        accessPointView.setDrawingModel(drawingModel);
+        dataActivityView.setDrawingModel(drawingModel);
+        connectionPointView.setDrawingModel(drawingModel);
         
         onMainFlipClick(mainActive);
         onDesignFlipClick(designActive);
@@ -179,12 +152,30 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				Log.d("DEBUG","undo");
 			}
 		});
-        
         redoButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				floorPlanModel.redo();
 				Log.d("DEBUG","redo");
+			}
+		});
+        
+        eraseAccessPointsButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				floorPlanModel.deleteAllAccessPoints();
+			}
+		});
+        eraseDataActivitiesButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				floorPlanModel.deleteAllDataActivities();
+			}
+		});
+        eraseConnectionPointsButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				floorPlanModel.deleteAllConnectionPoints();
 			}
 		});
         
@@ -195,28 +186,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         floorPlanModel.addObserver(this);
         
         designView.setOnTouchListener(this);
-        
-        OnCheckedChangeListener drawCheckedChangedListener = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId){
-				adjustDraw();
-			}
-		};
-		OnItemSelectedListener drawChangedItemListener = new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
-				adjustDraw();
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {}
-		};
-		activityTypeRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		connectionTypeRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		networkSignalTypeSpinner.setOnItemSelectedListener(drawChangedItemListener);
-		networkMhzSpinner.setOnItemSelectedListener(drawChangedItemListener);
-        networkChannelSpinner.setOnItemSelectedListener(drawChangedItemListener);
-        networkModelSpinner.setOnItemSelectedListener(drawChangedItemListener);
-        networkIDSpinner.setOnItemSelectedListener(drawChangedItemListener);
     }
 
 
@@ -226,107 +195,32 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		onFlipClick(v, mainFlip);
 	}
 	
-	private void adjustDraw(){
-		DataObject dObj = drawingModel.getTouchDataObject();
-		
-		if(dObj instanceof Wall){
-			switch(((Wall)dObj).getWallType()){
-			case DOOR:
-				doorView.updateDrawingModel();
-				break;
-			case WALL:
-				wallView.updateDrawingModel();
-				break;
-			case WINDOW:
-				windowView.updateDrawingModel();
-				break;
-			}
-		}else if(dObj instanceof AccessPoint){
-			setDrawAccessPoints(networkSignalTypeSpinner, networkMhzSpinner, networkChannelSpinner, networkModelSpinner, transmitPowerEditText, antennaGainEditText, elevationEditText, networkIDSpinner);
-		}else if(dObj instanceof DataActivity){
-			setDrawActivities(activityTypeRadioGroup);
-		}else if(dObj instanceof ConnectionPoint){
-			setDrawConnections(connectionTypeRadioGroup);
-		}else{
-			Log.e("DEBUG","LOLWUTUTRYNTODRAW?");
-		}
-	}
-	
 	public void onDesignFlipClick(View v) {
 		designActive.setEnabled(true);
 		designActive = v;
 		View flippedView = onFlipClick(v, designFlip);
 		Object tag = flippedView.getTag();
-		if(tag.equals("walls")){
+		Log.d("DEBUG","FLIP: "+tag);
+		if(tag.equals(getResources().getString(R.string.wallText))){
 			wallView.updateDrawingModel();
-		}else if(tag.equals("doors")){
+		}else if(tag.equals(getResources().getString(R.string.doorText))){
 			doorView.updateDrawingModel();
-		}else if(tag.equals("windows")){
+		}else if(tag.equals(getResources().getString(R.string.windowText))){
 			windowView.updateDrawingModel();
-		}else if(tag.equals("accesspoints")){
-			setDrawAccessPoints(networkSignalTypeSpinner, networkMhzSpinner, networkChannelSpinner, networkModelSpinner, transmitPowerEditText, antennaGainEditText, elevationEditText, networkIDSpinner);
-		}else if(tag.equals("activities")){
-			setDrawActivities(activityTypeRadioGroup);
-		}else if(tag.equals("connections")){
-			setDrawConnections(connectionTypeRadioGroup);
-		}else if(tag.equals("eraser")){
+		}else if(tag.equals(getResources().getString(R.string.accessPointText))){
+			accessPointView.updateDrawingModel();
+		}else if(tag.equals(getResources().getString(R.string.dataActivityText))){
+			dataActivityView.updateDrawingModel();
+		}else if(tag.equals(getResources().getString(R.string.connectionPointText))){
+			connectionPointView.updateDrawingModel();
+		}else if(tag.equals(getResources().getString(R.string.eraserText))){
 			drawingModel.setRemoveSelectionMode();
-		}else if(tag.equals("edit")){
+		}else if(tag.equals(getResources().getString(R.string.editText))){
 			drawingModel.setEditSelectionMode();
-		}else if(tag.equals("info")){
+		}else if(tag.equals(getResources().getString(R.string.infoText))){
 			drawingModel.setInfoSelectionMode();
 		}else{
 			Log.e("DEBUG","LOLWUTUTRYNTODO?");
-		}
-	}
-	
-	private void setDrawAccessPoints(Spinner radioTypeSpinner, Spinner mhzSpinner, Spinner channelSpinner, Spinner modelSpinner, EditText transmitPowerEditText, EditText antennaGainEditText, EditText elevationEditText, Spinner networkIDSpinner){
-		RadioType rt = RadioType.getRadioTypeByText(radioTypeSpinner.getSelectedItem().toString());
-		int mhz = Integer.parseInt(mhzSpinner.getSelectedItem().toString());
-		int channel = Integer.parseInt(channelSpinner.getSelectedItem().toString());
-		RadioModel rm = RadioModel.getRadioModelByText(modelSpinner.getSelectedItem().toString());
-		int transmitPower = Integer.parseInt(transmitPowerEditText.getText().toString());
-		int antennaGain = Integer.parseInt(antennaGainEditText.getText().toString());
-		int elevation = Integer.parseInt(elevationEditText.getText().toString());
-		Network nw = Network.getNetworkByText(networkIDSpinner.getSelectedItem().toString());
-		if(drawingModel.getTouchDataObject() instanceof AccessPoint){
-			AccessPoint ap = (AccessPoint) drawingModel.getTouchDataObject();
-			ap.setType(rt);
-			ap.setFrequency(mhz);
-			ap.setFrequencyband(channel);
-			ap.setModel(rm);
-			ap.setPower(transmitPower);
-			ap.setGain(antennaGain);
-			ap.setHeight(elevation);
-			ap.setNetwork(nw);
-		}else{
-			drawingModel.setPlaceMode();
-			drawingModel.setTouchDataObject(new AccessPoint("", elevation, rt, rm, mhz, channel, antennaGain, transmitPower, nw));
-		}
-		
-	}
-	
-	private void setDrawActivities(RadioGroup activityTypeRadioGroup){
-		RadioButton rb = (RadioButton) findViewById(activityTypeRadioGroup.getCheckedRadioButtonId());
-		ActivityType aType = ActivityType.getActivityTypeByText(rb.getText().toString());
-		if(drawingModel.getTouchDataObject() instanceof DataActivity){
-			DataActivity da = (DataActivity) drawingModel.getTouchDataObject();
-			da.setType(aType);
-		}else{
-			drawingModel.setPlaceMode();
-			drawingModel.setTouchDataObject(new DataActivity(aType));
-		}
-	}
-	
-	private void setDrawConnections(RadioGroup connectionTypeRadioGroup){
-		RadioButton rb = (RadioButton) findViewById(connectionTypeRadioGroup.getCheckedRadioButtonId());
-		ConnectionPointType cType = ConnectionPointType.getConnectionPointTypeByText(rb.getText().toString());
-		if(drawingModel.getTouchDataObject() instanceof ConnectionPoint){
-			ConnectionPoint cp = (ConnectionPoint) drawingModel.getTouchDataObject();
-			cp.setType(cType);
-		}else{
-			drawingModel.setPlaceMode();
-			drawingModel.setTouchDataObject(new ConnectionPoint(cType));
 		}
 	}
 	

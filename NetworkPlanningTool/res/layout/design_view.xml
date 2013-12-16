@@ -22,7 +22,7 @@
                 android:contentDescription="@string/wallText"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/wall"
-                android:tag="walls" />
+                android:tag="@string/wallText" />
 
             <ImageButton
                 android:id="@+id/doorsButton"
@@ -31,7 +31,7 @@
                 android:contentDescription="@string/doorText"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/door"
-                android:tag="doors" />
+                android:tag="@string/doorText" />
 
             <ImageButton
                 android:id="@+id/windowsButton"
@@ -40,7 +40,7 @@
                 android:contentDescription="@string/windowText"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/window"
-                android:tag="windows" />
+                android:tag="@string/windowText" />
 
         </TableRow>
 
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/accesspoint2"
-                android:tag="accesspoints" />
+                android:tag="@string/accessPointText" />
 
             <ImageButton
                 android:id="@+id/activitiesButton"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/activities"
-                android:tag="activities" />
+                android:tag="@string/dataActivityText" />
 
             <ImageButton
                 android:id="@+id/connectionsButton"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/connections"
-                android:tag="connections" />
+                android:tag="@string/connectionPointText" />
 
         </TableRow>
 
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/eraser3"
-                android:tag="eraser" />
+                android:tag="@string/eraserText" />
 
             <ImageButton
                 android:id="@+id/editButton"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/edit"
-                android:tag="edit" />
+                android:tag="@string/editText" />
 
             <ImageButton
                 android:id="@+id/infoButton"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDesignFlipClick"
                 android:src="@drawable/info2"
-                android:tag="info" />
+                android:tag="@string/infoText" />
 
         </TableRow>
     </TableLayout>
@@ -117,8 +117,8 @@
             android:id="@+id/wallViewWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:draw="true"
-            android:tag="walls" >
+            android:tag="@string/wallText"
+            app:draw="@string/drawDataObjectText" >
 
         </com.ugent.networkplanningtool.layout.dataobject.WallView>
 
@@ -126,47 +126,59 @@
             android:id="@+id/wallViewDoor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:draw="true"
-            android:tag="doors" >
+            android:tag="@string/doorText"
+            app:draw="@string/drawDataObjectText" >
+
         </com.ugent.networkplanningtool.layout.dataobject.WallView>
 
         <com.ugent.networkplanningtool.layout.dataobject.WallView
             android:id="@+id/wallViewWindow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:draw="true"
-            android:tag="windows" >
+            android:tag="@string/windowText"
+            app:draw="@string/drawDataObjectText" >
+
         </com.ugent.networkplanningtool.layout.dataobject.WallView>
 
-        <include
+        <com.ugent.networkplanningtool.layout.dataobject.AccessPointView
+            android:id="@+id/accessPointView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_accesspoints" />
+            android:tag="@string/accessPointText"
+            app:draw="@string/drawDataObjectText" >
+        </com.ugent.networkplanningtool.layout.dataobject.AccessPointView>
+
+        <com.ugent.networkplanningtool.layout.dataobject.DataActivityView
+            android:id="@+id/dataActivityView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="@string/dataActivityText"
+            app:draw="@string/drawDataObjectText" />
+
+        <com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView
+            android:id="@+id/connectionPointView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="@string/connectionPointText"
+            app:draw="@string/drawDataObjectText" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_activities" />
+            layout="@layout/design_view_eraser"
+            android:tag="@string/eraserText" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_connections" />
+            layout="@layout/design_view_edit"
+            android:tag="@string/editText" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_eraser" />
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/design_view_edit" />
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/design_view_info" />
+            layout="@layout/design_view_info"
+            android:tag="@string/infoText" />
 
     </ViewFlipper>
 

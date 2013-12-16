@@ -291,6 +291,36 @@ public class FloorPlanModel extends Observable {
 		return !redoStack.isEmpty();
 	}
 	
+	public void deleteAllAccessPoints(){
+		if(!accessPointList.isEmpty()){
+			pushStateToStack(undoStack);
+			redoStack.clear();
+			accessPointList.clear();
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
+	public void deleteAllDataActivities(){
+		if(!dataActivityList.isEmpty()){
+			pushStateToStack(undoStack);
+			redoStack.clear();
+			dataActivityList.clear();
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
+	public void deleteAllConnectionPoints(){
+		if(!connectionPointList.isEmpty()){
+			pushStateToStack(undoStack);
+			redoStack.clear();
+			connectionPointList.clear();
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
 	public Point getClosestCornerToPoint(Point p){
 		Point closest = null;
 		double distance = Double.POSITIVE_INFINITY;

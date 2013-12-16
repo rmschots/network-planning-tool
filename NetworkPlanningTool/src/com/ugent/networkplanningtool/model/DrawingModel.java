@@ -382,6 +382,7 @@ public class DrawingModel extends Observable {
 	public void setInfoSelectionMode() {
 		Log.d("DEBUG","INFOSELECTION MODE");
 		state = STATE.PRE_SELECTING_INFO;
+		touchDataObject = null;
 		setChanged();
 		notifyObservers();
 	}
@@ -389,6 +390,7 @@ public class DrawingModel extends Observable {
 	public void setEditSelectionMode(){
 		Log.d("DEBUG","INFOEDIT MODE");
 		state = STATE.PRE_SELECTING_EDIT;
+		touchDataObject = null;
 		setChanged();
 		notifyObservers();
 	}
@@ -396,6 +398,7 @@ public class DrawingModel extends Observable {
 	public void setRemoveSelectionMode(){
 		Log.d("DEBUG","INFOREMOVE MODE");
 		state = STATE.PRE_SELECTING_REMOVE;
+		touchDataObject = null;
 		setChanged();
 		notifyObservers();
 	}
@@ -462,6 +465,7 @@ public class DrawingModel extends Observable {
 	}
 	
 	public void deselect(){
+		Log.d("DEBUG","DESELECT");
 		switch(state){
 		case SELECTING_EDIT:
 			state = STATE.PRE_SELECTING_EDIT;

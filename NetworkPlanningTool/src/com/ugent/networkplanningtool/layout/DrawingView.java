@@ -4,36 +4,45 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Wall;
+import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
+import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
+import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
+import com.ugent.networkplanningtool.layout.dataobject.DataObjectView;
+import com.ugent.networkplanningtool.layout.dataobject.DataObjectView.ViewType;
+import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
-import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
+import com.ugent.networkplanningtool.model.FloorPlanModel;
 
 public class DrawingView extends View implements Observer{
 
 	private Paint paint = new Paint();
 	
 	private DrawingModel drawingModel = null;
-	private FloorPlanModel floorPlanModel = FloorPlanModel.getInstance();
 
 	public DrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		floorPlanModel.addObserver(this);
+		FloorPlanModel.getInstance().addObserver(this);
 	}
 
 	@Override
@@ -50,14 +59,14 @@ public class DrawingView extends View implements Observer{
 	}
 	
 	private void drawAccessPoints(Canvas canvas) {
-		List<AccessPoint> accessPointList = floorPlanModel.getAccessPointList();		
+		List<AccessPoint> accessPointList = FloorPlanModel.getInstance().getAccessPointList();		
 		for(AccessPoint ap : accessPointList){
 			ap.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 	}
 
 	private void drawConnectionPoints(Canvas canvas) {
-		List<ConnectionPoint> connectionPointList = floorPlanModel.getConnectionPointList();		
+		List<ConnectionPoint> connectionPointList = FloorPlanModel.getInstance().getConnectionPointList();		
 		for(ConnectionPoint cp : connectionPointList){
 			cp.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
@@ -65,31 +74,23 @@ public class DrawingView extends View implements Observer{
 	}
 
 	private void drawActivities(Canvas canvas) {
-		List<DataActivity> activityList = floorPlanModel.getDataActivityList();		
+		List<DataActivity> activityList = FloorPlanModel.getInstance().getDataActivityList();		
 		for(DataActivity cp : activityList){
 			cp.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 	}
 
 	private void drawWalls(Canvas canvas) {
-		List<Wall> wallList = floorPlanModel.getWallList();
+		List<Wall> wallList = FloorPlanModel.getInstance().getWallList();
 		for(Wall w : wallList){
 			w.drawOnCanvas(canvas, drawingModel, paint, false);
 		}
 	}
 	
 	private void drawTouch(Canvas canvas) {
-		// TODO beter systeem
 		DataObject tw = drawingModel.getTouchDataObject();
-		if(tw != null){
-			if(tw.isComplete()){
-				tw.drawOnCanvas(canvas, drawingModel, paint, true);
-			}else{
-				if(tw instanceof Wall && ((Wall)tw).canDraw()){
-					tw.drawOnCanvas(canvas, drawingModel, paint, true);
-				}
-			}
-			
+		if(tw != null && tw.canDraw()){
+			tw.drawOnCanvas(canvas, drawingModel, paint, true);
 		}
 	}
 
@@ -120,6 +121,7 @@ public class DrawingView extends View implements Observer{
 		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
+			Log.d("DEBUG","ACION: "+drawingModel.getState());
 			switch(drawingModel.getState()){
 			case PRE_SELECTING_EDIT:
 			case PRE_SELECTING_INFO:
@@ -162,24 +164,74 @@ public class DrawingView extends View implements Observer{
 			case SELECTING_EDIT:
 				DataObject dObj = drawingModel.getSelected();
         		if(dObj != null){
-        			// TODO edit
-        			Dialog d = new Dialog(getContext());
-        			d.setContentView(MainActivity.getInstance().getEditView("doors"));
+        			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        			alert.setTitle("Edit");
+        			DataObjectView view = null;
+        			switch (dObj.DATA_OBJECT_TYPE) {
+					case ACCESS_POINT:
+						view = new AccessPointView(getContext(), ViewType.EDIT, drawingModel);
+						break;
+					case CONNECTION_POINT:
+						view = new ConnectionPointView(getContext(), ViewType.EDIT, drawingModel);
+						break;
+					case DATA_ACTIVITY:
+						view = new DataActivityView(getContext(), ViewType.EDIT, drawingModel);
+						break;
+					case WALL:
+						view = new WallView(getContext(), ViewType.EDIT, drawingModel);
+						break;
+					default:
+						break;
+					}
+        			alert.setView(view);
+        			alert.setOnDismissListener(new OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialog) {
+							drawingModel.deselect();
+						}
+					});
+        			alert.setPositiveButton(android.R.string.ok, null);
+        			AlertDialog d = alert.create();
+        			d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         			d.show();
+        		}else{
+        			drawingModel.deselect();
         		}
-        		drawingModel.deselect();
 				break;
 			case SELECTING_INFO:
 				dObj = drawingModel.getSelected();
         		if(dObj != null){
-        			// TODO info
+        			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        			alert.setTitle("Info");
+        			DataObjectView view = null;
+        			switch (dObj.DATA_OBJECT_TYPE) {
+					case ACCESS_POINT:
+						view = new AccessPointView(getContext(), ViewType.INFO, drawingModel);
+						break;
+					case CONNECTION_POINT:
+						view = new ConnectionPointView(getContext(), ViewType.INFO, drawingModel);
+						break;
+					case DATA_ACTIVITY:
+						view = new DataActivityView(getContext(), ViewType.INFO, drawingModel);
+						break;
+					case WALL:
+						view = new WallView(getContext(), ViewType.INFO, drawingModel);
+						break;
+					default:
+						break;
+					}
+        			alert.setView(view);
+        			alert.setPositiveButton(android.R.string.ok, null);
+        			AlertDialog d = alert.create();
+        			d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        			d.show();
         		}
         		drawingModel.deselect();
 				break;
 			case SELECTING_REMOVE:
 				dObj = drawingModel.getSelected();
         		if(dObj != null){
-        			floorPlanModel.removeDataObject(dObj);
+        			FloorPlanModel.getInstance().removeDataObject(dObj);
         		}
         		drawingModel.deselect();
 				break;

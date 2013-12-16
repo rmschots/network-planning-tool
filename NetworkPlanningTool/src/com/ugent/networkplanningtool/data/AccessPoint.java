@@ -16,14 +16,15 @@ public class AccessPoint extends DataObject{
 	
 	private RadioType type;
 	private RadioModel model;
-	private int frequency;
-	private int frequencyband;
+	private Frequency frequency;
+	private FrequencyBand frequencyband;
 	private int gain;
 	private int power;
 	private Network network;
 	
 	public AccessPoint(AccessPoint accessPoint){
 		super(accessPoint);
+		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
 		this.name = new String(accessPoint.name);
 		this.height = accessPoint.height;
 		this.type = accessPoint.type;
@@ -36,9 +37,10 @@ public class AccessPoint extends DataObject{
 	}
 
 	public AccessPoint(String name, int height, RadioType type,
-			RadioModel model, int frequency, int frequencyband, int gain,
+			RadioModel model, Frequency frequency, FrequencyBand frequencyband, int gain,
 			int power, Network network) {
 		super();
+		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
 		this.name = name;
 		this.height = height;
 		this.type = type;
@@ -51,9 +53,10 @@ public class AccessPoint extends DataObject{
 	}
 	
 	public AccessPoint(Point point, String name, int height, RadioType type,
-			RadioModel model, int frequency, int frequencyband, int gain,
+			RadioModel model, Frequency frequency, FrequencyBand frequencyband, int gain,
 			int power, Network network) {
 		super(point);
+		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
 		this.name = name;
 		this.height = height;
 		this.type = type;
@@ -97,19 +100,19 @@ public class AccessPoint extends DataObject{
 		this.model = model;
 	}
 
-	public int getFrequency() {
+	public Frequency getFrequency() {
 		return frequency;
 	}
 
-	public void setFrequency(int frequency) {
+	public void setFrequency(Frequency frequency) {
 		this.frequency = frequency;
 	}
 
-	public int getFrequencyband() {
+	public FrequencyBand getFrequencyband() {
 		return frequencyband;
 	}
 
-	public void setFrequencyband(int frequencyband) {
+	public void setFrequencyband(FrequencyBand frequencyband) {
 		this.frequencyband = frequencyband;
 	}
 
@@ -135,6 +138,20 @@ public class AccessPoint extends DataObject{
 
 	public void setNetwork(Network network) {
 		this.network = network;
+	}
+	
+	@Override
+	public boolean isComplete(){
+		return super.isComplete()
+				&& canDraw();
+	}
+	
+	@Override
+	public boolean canDraw(){
+		return super.canDraw()
+				&& name != null
+				&& type != null
+				&& model != null;
 	}
 
 	@Override
