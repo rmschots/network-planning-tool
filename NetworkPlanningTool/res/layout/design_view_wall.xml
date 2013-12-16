@@ -14,7 +14,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/doorsMaterialRadioGroup"
+        android:id="@+id/materialRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -28,7 +28,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/doorsThicknessRadioGroup"
+        android:id="@+id/thicknessRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -42,7 +42,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/doorsSnapToRadioGroup"
+        android:id="@+id/snapToRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 

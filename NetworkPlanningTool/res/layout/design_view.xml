@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="design" >
+    android:tag="design" xmlns:app="http://schemas.android.com/apk/res/com.ugent.networkplanningtool">
 
     <TableLayout
         android:id="@+id/tableLayout1"
@@ -114,27 +114,29 @@
         android:measureAllChildren="false" >
 
         <com.ugent.networkplanningtool.layout.dataobject.WallView
-            android:id="@+id/wallView1"
+            android:id="@+id/wallViewWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="doors" >
+            app:draw="true"
+            android:tag="walls" >
 
         </com.ugent.networkplanningtool.layout.dataobject.WallView>
 
-        <include
+        <com.ugent.networkplanningtool.layout.dataobject.WallView
+            android:id="@+id/wallViewDoor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_walls" />
+            app:draw="true"
+            android:tag="doors" >
+        </com.ugent.networkplanningtool.layout.dataobject.WallView>
 
-        <include
+        <com.ugent.networkplanningtool.layout.dataobject.WallView
+            android:id="@+id/wallViewWindow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/design_view_doors" />
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/design_view_windows" />
+            app:draw="true"
+            android:tag="windows" >
+        </com.ugent.networkplanningtool.layout.dataobject.WallView>
 
         <include
             android:layout_width="match_parent"

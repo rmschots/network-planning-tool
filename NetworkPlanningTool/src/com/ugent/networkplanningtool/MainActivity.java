@@ -11,6 +11,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.view.WindowCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +48,7 @@ import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
+import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
@@ -72,17 +74,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private ViewFlipper toolsFlip;
 	private ViewFlipper resultsFlip;
 	
-	private RadioGroup wallMaterialRadioGroup;
-	private RadioGroup doorMaterialRadioGroup;
-	private RadioGroup windowMaterialRadioGroup;
-	private RadioGroup wallThicknessRadioGroup;
-	private RadioGroup doorThicknessRadioGroup;
-	private RadioGroup windowThicknessRadioGroup;
-	
-	private RadioGroup wallSnapToRadioGroup;
-	private RadioGroup doorSnapToRadioGroup;
-	private RadioGroup windowSnapToRadioGroup;
-	
+	private WallView wallView;
+	private WallView doorView;
+	private WallView windowView;
 	
 	private RadioGroup activityTypeRadioGroup;
 	
@@ -125,16 +119,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         toolsFlip = (ViewFlipper)findViewById(R.id.toolsFlipper);
         resultsFlip = (ViewFlipper)findViewById(R.id.resultsFlipper);
         
-        wallMaterialRadioGroup = (RadioGroup) findViewById(R.id.wallsMaterialRadioGroup);
-        doorMaterialRadioGroup = (RadioGroup) findViewById(R.id.doorsMaterialRadioGroup);
-        windowMaterialRadioGroup = (RadioGroup) findViewById(R.id.windowsMaterialRadioGroup);
-        wallThicknessRadioGroup = (RadioGroup) findViewById(R.id.wallsThicknessRadioGroup);
-        doorThicknessRadioGroup = (RadioGroup) findViewById(R.id.doorsThicknessRadioGroup);
-        windowThicknessRadioGroup = (RadioGroup) findViewById(R.id.windowsThicknessRadioGroup);
-        
-        wallSnapToRadioGroup = (RadioGroup) findViewById(R.id.wallsSnapToRadioGroup);
-        doorSnapToRadioGroup = (RadioGroup) findViewById(R.id.doorsSnapToRadioGroup);
-        windowSnapToRadioGroup = (RadioGroup) findViewById(R.id.windowsSnapToRadioGroup);
+        wallView = (WallView) findViewById(R.id.wallViewWall);
+        doorView = (WallView) findViewById(R.id.wallViewDoor);
+        windowView = (WallView) findViewById(R.id.wallViewWindow);
         
         activityTypeRadioGroup = (RadioGroup) findViewById(R.id.activityTypeRadioGroup);
         
@@ -160,6 +147,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         undoButton = (ImageButton) findViewById(R.id.undoButton);
         redoButton = (ImageButton) findViewById(R.id.redoButton);
+        
+        wallView.setDrawingModel(drawingModel);
+        doorView.setDrawingModel(drawingModel);
+        windowView.setDrawingModel(drawingModel);
         
         onMainFlipClick(mainActive);
         onDesignFlipClick(designActive);
@@ -197,8 +188,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			}
 		});
         
-        
-        
         designView.setModel(drawingModel);
         hScrollBar.setModel(drawingModel);
         vScrollBar.setModel(drawingModel);
@@ -218,26 +207,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
 				adjustDraw();
 			}
-
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {}
 		};
-		OnCheckedChangeListener snapToListener = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId){
-				RadioButton rb = (RadioButton) findViewById(checkedId);
-				drawingModel.setSnapToGrid(rb.getText().equals(getResources().getString(R.string.snapToGridText)));
-			}
-		};
-		wallMaterialRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		doorMaterialRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		windowMaterialRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		wallThicknessRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		doorThicknessRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		windowThicknessRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
-		wallSnapToRadioGroup.setOnCheckedChangeListener(snapToListener);
-		doorSnapToRadioGroup.setOnCheckedChangeListener(snapToListener);
-		windowSnapToRadioGroup.setOnCheckedChangeListener(snapToListener);	
 		activityTypeRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
 		connectionTypeRadioGroup.setOnCheckedChangeListener(drawCheckedChangedListener);
 		networkSignalTypeSpinner.setOnItemSelectedListener(drawChangedItemListener);
@@ -260,14 +232,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		if(dObj instanceof Wall){
 			switch(((Wall)dObj).getWallType()){
 			case DOOR:
-				Log.d("DEBUG","adjust door");
-				setDrawWall(WallType.DOOR,doorMaterialRadioGroup,doorThicknessRadioGroup);
+				doorView.updateDrawingModel();
 				break;
 			case WALL:
-				setDrawWall(WallType.WALL,wallMaterialRadioGroup,wallThicknessRadioGroup);
+				wallView.updateDrawingModel();
 				break;
 			case WINDOW:
-				setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
+				windowView.updateDrawingModel();
 				break;
 			}
 		}else if(dObj instanceof AccessPoint){
@@ -287,11 +258,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		View flippedView = onFlipClick(v, designFlip);
 		Object tag = flippedView.getTag();
 		if(tag.equals("walls")){
-			setDrawWall(WallType.WALL,wallMaterialRadioGroup,wallThicknessRadioGroup);
+			wallView.updateDrawingModel();
 		}else if(tag.equals("doors")){
-			setDrawWall(WallType.DOOR,doorMaterialRadioGroup,doorThicknessRadioGroup);
+			doorView.updateDrawingModel();
 		}else if(tag.equals("windows")){
-			setDrawWall(WallType.WINDOW,windowMaterialRadioGroup,windowThicknessRadioGroup);
+			windowView.updateDrawingModel();
 		}else if(tag.equals("accesspoints")){
 			setDrawAccessPoints(networkSignalTypeSpinner, networkMhzSpinner, networkChannelSpinner, networkModelSpinner, transmitPowerEditText, antennaGainEditText, elevationEditText, networkIDSpinner);
 		}else if(tag.equals("activities")){
@@ -306,22 +277,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			drawingModel.setInfoSelectionMode();
 		}else{
 			Log.e("DEBUG","LOLWUTUTRYNTODO?");
-		}
-	}
-	
-	private void setDrawWall(WallType wallType, RadioGroup materialRadioGroup, RadioGroup thicknessRadiogroup){
-		RadioButton rb = (RadioButton) findViewById(materialRadioGroup.getCheckedRadioButtonId());
-		Material material = Material.getMaterialByText(rb.getText().toString());
-		rb = (RadioButton) findViewById(thicknessRadiogroup.getCheckedRadioButtonId());
-		Thickness thickness = Thickness.getThicknessByText(rb.getText().toString());
-		if(drawingModel.getTouchDataObject() instanceof Wall){
-			Wall wall = (Wall) drawingModel.getTouchDataObject();
-			wall.setWallType(wallType);
-			wall.setMaterial(material);
-			wall.setThickness(thickness);
-		}else{
-			drawingModel.setPlaceMode();
-			drawingModel.setTouchDataObject(new Wall(wallType, thickness, material));
 		}
 	}
 	

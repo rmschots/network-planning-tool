@@ -30,6 +30,42 @@
     <string name="metalText">Metal</string>
     <string name="zeroDbText">0db</string>
     
+    <string-array name="wallMaterials">
+        <item>@string/brickText</item>
+        <item>@string/layeredDrywallText</item>
+        <item>@string/concreteText</item>
+        <item>@string/woodText</item>
+        <item>@string/glassText</item>
+        <item>@string/metalText</item>
+        <item>@string/zeroDbText</item>
+    </string-array>
+    
+    <string-array name="doorMaterials">
+        <item>@string/glassText</item>
+        <item>@string/woodText</item>
+    </string-array>
+    
+    <string-array name="windowMaterials">
+        <item>@string/glassText</item>
+    </string-array>
+    
+    <string name="thinText">Thin</string>
+    <string name="thickText">Thick</string>
+    
+    <string-array name="thicknessArray">
+        <item>@string/thinText</item>
+        <item>@string/thickText</item>
+    </string-array>
+    
+    <string name="snapToText">Snap to</string>
+    <string name="snapToWallsText">Walls</string>
+    <string name="snapToGridText">Grid</string>
+    
+    <string-array name="snapToArray">
+        <item>@string/snapToGridText</item>
+        <item>@string/snapToWallsText</item>
+    </string-array>
+    
     <string name="wallText">wall</string>
     <string name="doorText">door</string>
     <string name="windowText">window</string>
@@ -132,12 +168,6 @@
     </string-array>
     
     <string name="thicknessText">Thickness</string>
-    <string name="thinText">Thin</string>
-    <string name="thickText">Thick</string>
-    
-    <string name="snapToText">Snap to</string>
-    <string name="snapToWallsText">Walls</string>
-    <string name="snapToGridText">Grid</string>
     
     <string name="dataConnectionPointText">Data</string>
     <string name="powerConnectionPointText">Power</string>

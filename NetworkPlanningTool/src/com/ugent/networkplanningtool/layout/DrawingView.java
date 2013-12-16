@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ugent.networkplanningtool.MainActivity;
-import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;

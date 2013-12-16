@@ -11,6 +11,7 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.Material;
+import com.ugent.networkplanningtool.data.SnapTo;
 import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
@@ -68,7 +69,7 @@ public class DrawingModel extends Observable {
 	private boolean zoomInMaxed;
 	private boolean zoomOutMaxed;
 
-	private boolean snapToGrid = true;
+	private SnapTo snapTo = SnapTo.GRID;
 
 	public DrawingModel(int viewWidth, int viewHeight) {
 		offsetX = 0;
@@ -288,7 +289,8 @@ public class DrawingModel extends Observable {
 				if(closestCorner != null && Utils.pointToPointDistance(wallPoint, closestCorner) <= INTERVAL/2){
 					wallPoint = closestCorner;
 				}else{
-					if (snapToGrid) {
+					switch (snapTo) {
+					case GRID:
 						int rest = wallPoint.x % INTERVAL;
 						if (rest < INTERVAL / 2) {
 							wallPoint.x = wallPoint.x - rest;
@@ -301,7 +303,8 @@ public class DrawingModel extends Observable {
 						} else {
 							wallPoint.y = wallPoint.y + INTERVAL - rest;
 						}
-					}else{
+						break;
+					case WALLS:
 						Couple <Double,Wall> closestWallCouple = FloorPlanModel.getInstance().getClosestWallToPoint(wallPoint,false);
 						if(closestWallCouple != null && closestWallCouple.getA() <= INTERVAL/2){
 							Wall closestWall = closestWallCouple.getB();
@@ -312,6 +315,8 @@ public class DrawingModel extends Observable {
 								Log.e("DEBUG","closestWall NULL");
 							}
 						}
+					default:
+						break;
 					}
 				}
 				if(((Wall)touchDataObject).isComplete()){
@@ -366,12 +371,12 @@ public class DrawingModel extends Observable {
 		notifyObservers();
 	}
 
-	public boolean isSnapToGrid() {
-		return snapToGrid;
+	public SnapTo isSnapToGrid() {
+		return snapTo;
 	}
 
-	public void setSnapToGrid(boolean snapToGrid) {
-		this.snapToGrid = snapToGrid;
+	public void setSnapToGrid(SnapTo snapToGrid) {
+		this.snapTo = snapToGrid;
 	}
 
 	public void setInfoSelectionMode() {
@@ -397,6 +402,13 @@ public class DrawingModel extends Observable {
 	
 	public void setPlaceMode(){
 		state = STATE.PRE_PLACE;
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void setPlaceMode(DataObject dataObject){
+		state = STATE.PRE_PLACE;
+		setTouchDataObject(dataObject);
 		setChanged();
 		notifyObservers();
 	}
