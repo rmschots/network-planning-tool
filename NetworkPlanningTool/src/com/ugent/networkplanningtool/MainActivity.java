@@ -1,20 +1,29 @@
 package com.ugent.networkplanningtool;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,6 +35,7 @@ import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
 import com.ugent.networkplanningtool.layout.DrawingView;
+import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
@@ -336,6 +346,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				String fileName = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
 				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
 					Log.d("DEBUG","3: "+Environment.getExternalStorageDirectory().getAbsolutePath());
+					if(!fileName.toLowerCase().endsWith(".xml")){
+						fileName+=".xml";
+					}
 					File f = new File(Environment.getExternalStorageDirectory(),fileName);
 					if(!f.exists()){
 						try {
@@ -358,6 +371,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 						e.printStackTrace();
 					}
 				}else{
+					// TODO
 					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
 					dialog.addListener(new OnFileSelectedListener() {
 						
@@ -391,5 +405,83 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	public void handleStopDrawing(View view){
 		drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
+	}
+	
+	public void handleScreenshot(View v){
+			FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
+			dialog.addListener(new OnFileSelectedListener() {
+				
+				@Override
+				public void onFileSelected(Dialog source, File folder, String name) {
+					try{
+						saveScreenshot(folder);
+						source.dismiss();
+					} catch (FileNotFoundException e) {
+					Log.d("DEBUG","failed saving screenshot: "+e);
+					}
+				}
+				
+				@Override
+				public void onFileSelected(Dialog source, File file) {
+					try{
+						saveScreenshot(file);
+						source.dismiss();
+					} catch (FileNotFoundException e) {
+					Log.d("DEBUG","failed saving screenshot: "+e);
+					}
+				}
+			});
+			dialog.setFolderMode(true);
+			dialog.setShowOnlySelectable(true);
+			dialog.setCanCreateFiles(true);
+			dialog.show();
+			
+		
+	}
+	
+	public void saveScreenshot(File file) throws FileNotFoundException{
+		Bitmap b = designView.getDrawingCache();
+		b.compress(CompressFormat.PNG, 100, new FileOutputStream(file+"/test.png"));
+	}
+	
+	public void handleImportImage(View v){
+		
+		final ImportImage iiDialog = new ImportImage(this);
+		iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		iiDialog.show();
+		iiDialog.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				if(iiDialog.isCompleted()){
+					Log.d("DEBUG","IN ORDE ENZO");
+				}
+			}
+		});
+		
+		/*final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("file/*");
+		startActivity(intent);
+		/*FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
+		dialog.addListener(new OnFileSelectedListener() {
+			
+			@Override
+			public void onFileSelected(Dialog source, File folder, String name) {
+			}
+			
+			@Override
+			public void onFileSelected(Dialog source, File file) {
+				Log.d("DEBUG",file.getAbsolutePath());
+				source.dismiss();
+				try {
+					floorPlanModel.loadFloorPlan(file);
+				} catch (Exception e) {
+					Log.d("DEBUG","Error loading file: "+e);
+					e.printStackTrace();
+				}
+			}
+		});
+		// dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
+		dialog.show();*/
 	}
 }

@@ -40,6 +40,7 @@
                 android:id="@+id/attachButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:onClick="handleImportImage"
                 android:src="@drawable/attach" />
 
             <ZoomControls
@@ -63,6 +64,7 @@
                 android:id="@+id/screenshotButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:onClick="handleScreenshot"
                 android:src="@drawable/screenshot" />
 
             <ImageButton
@@ -202,7 +204,7 @@
     </ScrollView>
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/importImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/HorizontalScrollView1"

@@ -43,6 +43,7 @@ public class DrawingView extends View implements Observer{
 	public DrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		FloorPlanModel.getInstance().addObserver(this);
+		setDrawingCacheEnabled(true);
 	}
 
 	@Override
