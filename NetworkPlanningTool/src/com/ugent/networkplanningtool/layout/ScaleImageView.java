@@ -12,24 +12,37 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 public class ScaleImageView extends ImageView{
 	
+	public static enum Mode{
+		PRE_MOVE,
+		DRAG,
+		ZOOM,
+		SELECT
+	}
 	
-	private double maxZoomIn = 2.0;
-	private double maxZoomOut = 0.25;
 	private Paint paint = new Paint();
-	
-	private double scale = 1;
 	
 	private Point coord1 = null;
 	private Point coord2 = null;
 	
-	private Bitmap bm;
+	private Matrix matrix = new Matrix();
+	private Matrix savedMatrix = new Matrix();
+	private PointF startPoint = new PointF();
+	private PointF midPoint = new PointF();
+	private float oldDist = 1f;
+	private Mode mode = Mode.PRE_MOVE;
+	
+	float[] values = new float[9];
 
 	public ScaleImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -44,7 +57,6 @@ public class ScaleImageView extends ImageView{
 	}
 	
 	public void setBitmap(Bitmap bm){
-		this.bm = bm;
 		setImageBitmap(bm);
 	}
 
@@ -52,34 +64,89 @@ public class ScaleImageView extends ImageView{
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		if(coord1 != null){
+			matrix.getValues(values);
+			int x1 = (int) (coord1.x*values[0]+values[2]);
+			int y1 = (int) (coord1.y*values[4]+values[5]);
 			paint.setColor(Color.BLACK);
-			canvas.drawCircle(coord1.x, coord1.y, 10, paint);
+			canvas.drawCircle(x1, y1, 10, paint);
 			if(coord2 != null){
+				int x2 = (int) (coord2.x*values[0]+values[2]);
+				int y2 = (int) (coord2.y*values[4]+values[5]);
 				paint.setStrokeWidth(3);
-				canvas.drawCircle(coord2.x, coord2.y, 10, paint);
-				canvas.drawLine(coord1.x, coord1.y, coord2.x, coord2.y, paint);
+				canvas.drawCircle(x2, y2, 10, paint);
+				canvas.drawLine(x1, y1, x2, y2, paint);
 			}
 		}
 		
 	}
-
-
-
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getAction() & MotionEvent.ACTION_MASK){
-		case MotionEvent.ACTION_DOWN:
-			if(coord2 == null && coord1 != null){
-				coord2 = new Point((int)event.getX(), (int)event.getY());
-			}else{
-				coord1 = new Point((int)event.getX(), (int)event.getY());
-				coord2 = null;
+		if(mode == Mode.SELECT){
+			matrix.getValues(values);
+			float relativeX = (event.getX() - values[2]) / values[0];
+			float relativeY = (event.getY() - values[5]) / values[4];
+			Log.d("DEBUG",relativeX+" "+relativeY);
+			switch (event.getAction() & MotionEvent.ACTION_MASK){
+			case MotionEvent.ACTION_DOWN:
+				if(coord2 == null && coord1 != null){
+					coord2 = new Point((int)relativeX, (int)relativeY);
+				}else{
+					coord1 = new Point((int)relativeX, (int)relativeY);
+					coord2 = null;
+				}
+				break;
 			}
-			break;
+			invalidate();
+		}else{
+			System.out.println("matrix=" + savedMatrix.toString());
+			switch (event.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+				savedMatrix.set(matrix);
+				startPoint.set(event.getX(), event.getY());
+				mode = Mode.DRAG;
+				break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				oldDist = spacing(event);
+				if (oldDist > 10f) {
+					savedMatrix.set(matrix);
+					midPoint(midPoint, event);
+					mode = Mode.ZOOM;
+				}
+				break;
+			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_POINTER_UP:
+				mode = Mode.PRE_MOVE;
+				break;
+			case MotionEvent.ACTION_MOVE:
+				if (mode == Mode.DRAG) {
+					matrix.set(savedMatrix);
+					matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
+				} else if (mode == Mode.ZOOM) {
+					float newDist = spacing(event);
+					if (newDist > 10f) {
+						matrix.set(savedMatrix);
+						float scale = newDist / oldDist;
+						matrix.postScale(scale, scale, midPoint.x, midPoint.y);
+					}
+				}
+				break;
+			}
+			setImageMatrix(matrix);
 		}
-		invalidate();
-		Log.d("DEBUG","coord: "+coord1);
 		return true;
+	}
+	
+	private float spacing(MotionEvent event) {
+		float x = event.getX(0) - event.getX(1);
+		float y = event.getY(0) - event.getY(1);
+		return FloatMath.sqrt(x * x + y * y);
+	}
+	
+	private void midPoint(PointF point, MotionEvent event) {
+		float x = event.getX(0) + event.getX(1);
+		float y = event.getY(0) + event.getY(1);
+		point.set(x / 2, y / 2);
 	}
 
 	public Point getCoord1() {
@@ -91,48 +158,16 @@ public class ScaleImageView extends ImageView{
 	}
 	
 	public void zoomIn(){
-		double oldScale = scale;
-		if(scale*2 < maxZoomIn){
-			scale*=2;
-		}else{
-			scale = maxZoomIn;
-		}
-		try{
-			Bitmap b = Bitmap.createScaledBitmap(bm, (int) (bm.getWidth()*scale), (int) (bm.getHeight()*scale), false);
-			setImageBitmap(b);
-		}catch(OutOfMemoryError ex){
-			Log.d("DEBUG","ERROR");
-			scale/=2;
-		}
-		
-		if(oldScale != scale){
-			double diff = scale/oldScale;
-			coord1.x*=diff;
-			coord1.y*=diff;
-			coord2.x*=diff;
-			coord2.y*=diff;
-		}
+		matrix.postScale(2, 2, getWidth()/2, getHeight()/2);
+		setImageMatrix(matrix);
 	}
 	
 	public void zoomOut(){
-		double oldScale = scale;
-		if(scale/2 > maxZoomOut){
-			scale/=2;
-		}else{
-			scale = maxZoomOut;
-		}
-		Bitmap b = Bitmap.createScaledBitmap(bm, (int) (bm.getWidth()*scale), (int) (bm.getHeight()*scale), false);
-		setImageBitmap(b);
-		if(oldScale != scale){
-			double diff = scale/oldScale;
-			coord1.x*=diff;
-			coord1.y*=diff;
-			coord2.x*=diff;
-			coord2.y*=diff;
-		}
+		matrix.postScale(0.5f, 0.5f, getWidth()/2, getHeight()/2);
+		setImageMatrix(matrix);
 	}
 	
-	public double getImageScale(){
-		return Math.sqrt(Math.pow((coord1.x-coord2.x), 2) + Math.pow((coord1.y-coord2.y), 2))/scale;
+	public void setMode(Mode mode){
+		this.mode = mode;
 	}
 }

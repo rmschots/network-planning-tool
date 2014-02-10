@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.ugent.networkplanningtool.R;
 
@@ -26,6 +27,9 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 	
 	private double distance;
 	private double scale;
+	
+	private Button moveButton;
+	private Button selectButton;
 	
 	private ImageButton zoomInButton;
 	private ImageButton zoomOutButton;
@@ -47,7 +51,8 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.import_image, ll);
         
-        
+        moveButton = (Button) ll.findViewById(R.id.moveButton);
+        selectButton = (Button) ll.findViewById(R.id.selectButton);
         
         zoomInButton = (ImageButton) ll.findViewById(R.id.zoomInButton);
         zoomOutButton = (ImageButton) ll.findViewById(R.id.zoomOutButton);
@@ -56,7 +61,11 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
         coord2Tv = (TextView) ll.findViewById(R.id.coord2TextView);
         scaleTv = (TextView) ll.findViewById(R.id.scaleTextView);
         distanceEt = (EditText) ll.findViewById(R.id.distanceEditText);
+        distance = Double.parseDouble(distanceEt.getText().toString());
         distanceEt.setOnKeyListener(this);
+        
+        moveButton.setOnClickListener(this);
+        selectButton.setOnClickListener(this);
         
         zoomInButton.setOnClickListener(this);
         zoomOutButton.setOnClickListener(this);
@@ -90,6 +99,14 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 			dismiss();
 		}else if(v == cancelButton){
 			dismiss();
+		}else if(v == moveButton){
+			moveButton.setEnabled(false);
+			selectButton.setEnabled(true);
+			iv.setMode(ScaleImageView.Mode.PRE_MOVE);
+		}else if(v == selectButton){
+			selectButton.setEnabled(false);
+			moveButton.setEnabled(true);
+			iv.setMode(ScaleImageView.Mode.SELECT);
 		}
 	}
 	
@@ -104,8 +121,17 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 		Point c2 = iv.getCoord2();
 		coord1Tv.setText(c1==null?"not set":c1.x+" "+c1.y);
 		coord2Tv.setText(c2==null?"not set":c2.x+" "+c2.y);
+		updateScale(c1, c2);
+	}
+	
+	private void updateScale(Point c1, Point c2){
 		if(c2!=null){
-			scaleTv.setText(""+iv.getImageScale());
+			scale = Math.sqrt(Math.pow((c1.x-c2.x), 2) + Math.pow((c1.y-c2.y), 2))/distance;
+			scaleTv.setText(String.format("%.6f", scale));
+			okButton.setEnabled(true);
+		}else{
+			okButton.setEnabled(false);
+			scaleTv.setText("\"?\"");
 		}
 	}
 
@@ -113,14 +139,15 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		try{
 			distance = Double.parseDouble(distanceEt.getText().toString());
+			updateScale(iv.getCoord1(), iv.getCoord2());
 		}catch(NumberFormatException ex){
-			// fail allowed, when user is not done typing
+			okButton.setEnabled(false);
+			scaleTv.setText("\"?\"");
 		}
 		return false;
 	}
 
 	public double getScale() {
-		
 		return scale;
 	}
 	

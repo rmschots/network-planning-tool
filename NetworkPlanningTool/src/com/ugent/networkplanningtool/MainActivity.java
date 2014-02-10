@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -446,22 +447,19 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	public void handleImportImage(View v){
 		
-		final ImportImage iiDialog = new ImportImage(this);
-		iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		iiDialog.show();
-		iiDialog.setOnDismissListener(new OnDismissListener() {
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				if(iiDialog.isCompleted()){
-					Log.d("DEBUG","IN ORDE ENZO");
-				}
-			}
-		});
+//		final ImportImage iiDialog = new ImportImage(this);
+//		iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+//		iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//		iiDialog.show();
+//		iiDialog.setOnDismissListener(new OnDismissListener() {
+//			@Override
+//			public void onDismiss(DialogInterface dialog) {
+//				if(iiDialog.isCompleted()){
+//					Log.d("DEBUG","IN ORDE ENZO");
+//				}
+//			}
+//		});
 		
-		/*final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("file/*");
-		startActivity(intent);
 		/*FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
 		dialog.addListener(new OnFileSelectedListener() {
 			
@@ -483,5 +481,17 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		});
 		// dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
 		dialog.show();*/
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+	    switch (requestCode) {
+	        case 1: {
+	            if (resultCode==RESULT_OK && data!=null && data.getData()!=null) {
+	                String theFolderPath = data.getData().getPath();
+	            }
+	            break;
+	        }
+	    }
 	}
 }

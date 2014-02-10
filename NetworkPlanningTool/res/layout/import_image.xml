@@ -7,7 +7,17 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp" >
 
-    <HorizontalScrollView
+    <com.ugent.networkplanningtool.layout.ScaleImageView
+        android:id="@+id/importImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/okCancelLinear"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/scrollView2"
+        android:scaleType="matrix" />
+
+    <!-- <HorizontalScrollView
         android:id="@+id/horizontalScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,14 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadeScrollbars="false" >
-
-            <com.ugent.networkplanningtool.layout.ScaleImageView
-                android:id="@+id/importImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/window" />
         </ScrollView>
-    </HorizontalScrollView>
+    </HorizontalScrollView> -->
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -45,19 +49,46 @@
             android:layout_height="490dp" >
 
             <LinearLayout
+                android:id="@+id/modeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@+id/importInfoText" >
+
+                <Button
+                    android:id="@+id/moveButton"
+                    style="@style/MyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:enabled="false"
+                    android:text="move"
+                    android:textColor="@color/toggle_text_color" />
+
+                <Button
+                    android:id="@+id/selectButton"
+                    style="@style/MyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="select"
+                    android:textColor="@color/toggle_text_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/zoomLinearButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/importInfoText" >
+                android:layout_alignRight="@+id/importInfoText"
+                android:layout_below="@+id/modeLayout" >
 
                 <ImageButton
                     android:id="@+id/zoomInButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:onClick="handleZoomIn"
                     android:src="@drawable/zoomin" />
 
                 <ImageButton
@@ -65,7 +96,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:onClick="handleZoomOut"
                     android:src="@drawable/zoomout" />
             </LinearLayout>
 
@@ -184,6 +214,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:enabled="false"
             android:text="ok" />
 
         <Button
