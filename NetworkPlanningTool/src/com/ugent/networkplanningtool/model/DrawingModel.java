@@ -2,6 +2,7 @@ package com.ugent.networkplanningtool.model;
 
 import java.util.Observable;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
@@ -70,6 +71,9 @@ public class DrawingModel extends Observable {
 	private boolean zoomOutMaxed;
 
 	private SnapTo snapTo = SnapTo.GRID;
+	
+	private Bitmap backgroundImage;
+	private double backgroundScale;
 
 	public DrawingModel(int viewWidth, int viewHeight) {
 		offsetX = 0;
@@ -502,5 +506,20 @@ public class DrawingModel extends Observable {
 	
 	public boolean isMoving(){
 		return moving;
+	}
+	
+	public void setBackground(Bitmap bgImg, double bgScale){
+		this.backgroundImage = bgImg;
+		this.backgroundScale = bgScale;
+		setChanged();
+		notifyObservers();
+	}
+	
+	public Bitmap getBackgroundImage(){
+		return backgroundImage;
+	}
+	
+	public double getBackgroundScale(){
+		return backgroundScale;
 	}
 }

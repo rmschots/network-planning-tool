@@ -4,13 +4,16 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -49,6 +52,7 @@ public class DrawingView extends View implements Observer{
 	@Override
 	protected void onDraw(Canvas canvas) {
 		if(drawingModel != null){
+			drawBackground(canvas);
 			drawGrid(canvas);
 			drawWalls(canvas);
 			drawActivities(canvas);
@@ -57,6 +61,23 @@ public class DrawingView extends View implements Observer{
 			drawTouch(canvas);
 		}
 		super.onDraw(canvas);
+	}
+	
+	private void drawBackground(Canvas canvas) {
+		if(drawingModel.getBackgroundImage() != null){
+			Bitmap bgImg = drawingModel.getBackgroundImage();
+			double scale = drawingModel.getBackgroundScale();
+			Matrix m = new Matrix();
+			double newScale = drawingModel.getPixelsPerInterval()/(scale*DrawingModel.INTERVAL*2);
+			m.postScale((float)newScale, (float)newScale);
+			float offsetX = drawingModel.getOffsetX();
+			float offsetY = drawingModel.getOffsetY();
+			
+			float offsetXpx = offsetX*drawingModel.getPixelsPerInterval()/DrawingModel.INTERVAL;
+			float offsetYpx = offsetY*drawingModel.getPixelsPerInterval()/DrawingModel.INTERVAL;
+			m.postTranslate(-offsetXpx, -offsetYpx);
+			canvas.drawBitmap(bgImg, m, paint);
+		}
 	}
 	
 	private void drawAccessPoints(Canvas canvas) {

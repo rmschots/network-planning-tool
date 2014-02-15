@@ -14,6 +14,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -409,6 +410,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleScreenshot(View v){
+		// TODO savedialog van save floorplan
 			FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
 			dialog.addListener(new OnFileSelectedListener() {
 				
@@ -446,21 +448,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleImportImage(View v){
-		
-//		final ImportImage iiDialog = new ImportImage(this);
-//		iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//		iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//		iiDialog.show();
-//		iiDialog.setOnDismissListener(new OnDismissListener() {
-//			@Override
-//			public void onDismiss(DialogInterface dialog) {
-//				if(iiDialog.isCompleted()){
-//					Log.d("DEBUG","IN ORDE ENZO");
-//				}
-//			}
-//		});
-		
-		/*FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
+		FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
 		dialog.addListener(new OnFileSelectedListener() {
 			
 			@Override
@@ -469,29 +457,28 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			
 			@Override
 			public void onFileSelected(Dialog source, File file) {
-				Log.d("DEBUG",file.getAbsolutePath());
 				source.dismiss();
-				try {
-					floorPlanModel.loadFloorPlan(file);
-				} catch (Exception e) {
-					Log.d("DEBUG","Error loading file: "+e);
-					e.printStackTrace();
-				}
+				
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+				final Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+				
+				final ImportImage iiDialog = new ImportImage(MainActivity.this);
+				iiDialog.setImage(bitmap);
+				iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+				iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+				iiDialog.show();
+				iiDialog.setOnDismissListener(new OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						if(iiDialog.isCompleted()){
+							drawingModel.setBackground(bitmap, iiDialog.getScale());
+						}
+					}
+				});
 			}
 		});
-		// dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
-		dialog.show();*/
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-	    switch (requestCode) {
-	        case 1: {
-	            if (resultCode==RESULT_OK && data!=null && data.getData()!=null) {
-	                String theFolderPath = data.getData().getPath();
-	            }
-	            break;
-	        }
-	    }
+		dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
+		dialog.show();
 	}
 }

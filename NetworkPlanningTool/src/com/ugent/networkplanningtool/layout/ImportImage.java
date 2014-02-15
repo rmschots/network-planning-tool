@@ -126,7 +126,7 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 	
 	private void updateScale(Point c1, Point c2){
 		if(c2!=null){
-			scale = Math.sqrt(Math.pow((c1.x-c2.x), 2) + Math.pow((c1.y-c2.y), 2))/distance;
+			scale = Math.sqrt(Math.pow((c1.x-c2.x), 2) + Math.pow((c1.y-c2.y), 2))/(distance*100);
 			scaleTv.setText(String.format("%.6f", scale));
 			okButton.setEnabled(true);
 		}else{

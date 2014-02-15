@@ -13,12 +13,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 
 public class ScaleImageView extends ImageView{
@@ -46,14 +43,10 @@ public class ScaleImageView extends ImageView{
 
 	public ScaleImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setBitmap(BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.vl));
 	}
 	
 	public ScaleImageView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		setBitmap(BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.vl));
 	}
 	
 	public void setBitmap(Bitmap bm){
@@ -86,7 +79,6 @@ public class ScaleImageView extends ImageView{
 			matrix.getValues(values);
 			float relativeX = (event.getX() - values[2]) / values[0];
 			float relativeY = (event.getY() - values[5]) / values[4];
-			Log.d("DEBUG",relativeX+" "+relativeY);
 			switch (event.getAction() & MotionEvent.ACTION_MASK){
 			case MotionEvent.ACTION_DOWN:
 				if(coord2 == null && coord1 != null){
@@ -99,7 +91,6 @@ public class ScaleImageView extends ImageView{
 			}
 			invalidate();
 		}else{
-			System.out.println("matrix=" + savedMatrix.toString());
 			switch (event.getAction() & MotionEvent.ACTION_MASK) {
 			case MotionEvent.ACTION_DOWN:
 				savedMatrix.set(matrix);
