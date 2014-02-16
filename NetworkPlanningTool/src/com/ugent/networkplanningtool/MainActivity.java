@@ -7,25 +7,26 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.ksoap2.serialization.SoapObject;
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,6 +37,8 @@ import android.widget.ZoomControls;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
+import com.ugent.networkplanningtool.io.ImageIO;
+import com.ugent.networkplanningtool.io.SoapShit;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
@@ -198,6 +201,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         floorPlanModel.addObserver(this);
         
         designView.setOnTouchListener(this);
+        
+        new SoapShit().execute();
     }
 
 
@@ -287,7 +292,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     		coordinatesText.setText(":");
     	}
 		
-		//Log.d("DEBUG",""+model.isZoomInMaxed());
 		zoomControls.setIsZoomInEnabled(!drawingModel.isZoomInMaxed());
 		zoomControls.setIsZoomOutEnabled(!drawingModel.isZoomOutMaxed());
 		
@@ -331,26 +335,28 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				}
 			}
 		});
-		// dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
+		dialog.setFilter(".*xml|.*XML");
 		dialog.show();
 		
 	}
 	
 	public void handleSaveClick(View v){
+		// TODO gemeenschappelijke delen screenshot & xml eruit halen.
 		final Dialog d = new Dialog(this);
 		d.setTitle(R.string.savePlanTitle);
-		d.setContentView(R.layout.save_floorplan);
+		d.setContentView(R.layout.save_name);
 		Button saveButton = (Button)d.findViewById(R.id.saveButton);
 		saveButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				d.dismiss();
-				String fileName = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
+				String fnTemp = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
+				if(!fnTemp.toLowerCase().endsWith(".png")){
+					fnTemp+=".png";
+				}
+				final String fileName = fnTemp;
+				
 				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
-					Log.d("DEBUG","3: "+Environment.getExternalStorageDirectory().getAbsolutePath());
-					if(!fileName.toLowerCase().endsWith(".xml")){
-						fileName+=".xml";
-					}
 					File f = new File(Environment.getExternalStorageDirectory(),fileName);
 					if(!f.exists()){
 						try {
@@ -361,40 +367,44 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 							Log.e("DEBUG","cannot create new file");
 						}
 					}
-					try {
-						floorPlanModel.saveFloorPlan(f);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						String StackTrace = "";
-						for(StackTraceElement s : e.getStackTrace()){
-							StackTrace+=" "+s.toString();
-						}
-						Log.d("DEBUG","error saving to "+f.getAbsolutePath()+" "+StackTrace);
-						e.printStackTrace();
-					}
+					saveTofile(f);
 				}else{
-					// TODO
 					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
 					dialog.addListener(new OnFileSelectedListener() {
-						
 						@Override
-						public void onFileSelected(Dialog source, File folder, String name) {
-							Log.d("DEBUG","1111");
-						}
+						public void onFileSelected(Dialog source, File folder, String name) {}
 						
 						@Override
 						public void onFileSelected(Dialog source, File file) {
-							Log.d("DEBUG","2222");
+							source.dismiss();
+							File f = new File(file, fileName);
+							saveTofile(f);
 						}
 					});
 					dialog.setFolderMode(true);
+					dialog.setShowOnlySelectable(true);
 					dialog.setCanCreateFiles(true);
 					dialog.show();
 				}
 				
+				
 			}
 		});
 		d.show();
+	}
+	
+	public void saveTofile(File f){
+		try {
+			floorPlanModel.saveFloorPlan(f);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			String StackTrace = "";
+			for(StackTraceElement s : e.getStackTrace()){
+				StackTrace+=" "+s.toString();
+			}
+			Log.d("DEBUG","error saving to "+f.getAbsolutePath()+" "+StackTrace);
+			e.printStackTrace();
+		}
 	}
 	
 	public void handleNewFileClick(View v){
@@ -410,41 +420,72 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleScreenshot(View v){
-		// TODO savedialog van save floorplan
-			FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
-			dialog.addListener(new OnFileSelectedListener() {
+		
+		final Dialog d = new Dialog(this);
+		d.setTitle(R.string.saveScreenshot);
+		d.setContentView(R.layout.save_name);
+		Button saveButton = (Button)d.findViewById(R.id.saveButton);
+		saveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				d.dismiss();
+				String fnTemp = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
+				if(!fnTemp.toLowerCase().endsWith(".png")){
+					fnTemp+=".png";
+				}
+				final String fileName = fnTemp;
 				
-				@Override
-				public void onFileSelected(Dialog source, File folder, String name) {
-					try{
-						saveScreenshot(folder);
-						source.dismiss();
-					} catch (FileNotFoundException e) {
-					Log.d("DEBUG","failed saving screenshot: "+e);
+				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
+					
+					File f = new File(Environment.getExternalStorageDirectory(),fileName);
+					if(!f.exists()){
+						try {
+							f.createNewFile();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							Log.e("DEBUG","cannot create new file");
+						}
 					}
+					try {
+						ImageIO.saveImage(designView.getDrawingCache(), f);
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
+					dialog.addListener(new OnFileSelectedListener() {
+						
+						@Override
+						public void onFileSelected(Dialog source, File folder, String name) {
+						}
+						
+						@Override
+						public void onFileSelected(Dialog source, File file) {
+							source.dismiss();
+							File f = new File(file, fileName);
+							try {
+								ImageIO.saveImage(designView.getDrawingCache(), f);
+								Log.d("DEBUG","JJJJJGKLDHNGKPFJKSDBGKLJMSNDBJFKPBGNKSJDNG");
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+					dialog.setFolderMode(true);
+					dialog.setShowOnlySelectable(true);
+					dialog.setCanCreateFiles(true);
+					dialog.show();
 				}
 				
-				@Override
-				public void onFileSelected(Dialog source, File file) {
-					try{
-						saveScreenshot(file);
-						source.dismiss();
-					} catch (FileNotFoundException e) {
-					Log.d("DEBUG","failed saving screenshot: "+e);
-					}
-				}
-			});
-			dialog.setFolderMode(true);
-			dialog.setShowOnlySelectable(true);
-			dialog.setCanCreateFiles(true);
-			dialog.show();
+				
+			}
+		});
+		d.show();
 			
 		
-	}
-	
-	public void saveScreenshot(File file) throws FileNotFoundException{
-		Bitmap b = designView.getDrawingCache();
-		b.compress(CompressFormat.PNG, 100, new FileOutputStream(file+"/test.png"));
 	}
 	
 	public void handleImportImage(View v){
@@ -479,6 +520,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			}
 		});
 		dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
+		dialog.setShowOnlySelectable(true);
 		dialog.show();
 	}
 }
