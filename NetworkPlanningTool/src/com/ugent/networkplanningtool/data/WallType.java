@@ -7,9 +7,9 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 
 public enum WallType {
-	WALL(MainActivity.getInstance().getResources().getString(R.string.wallText)),
-	DOOR(MainActivity.getInstance().getResources().getString(R.string.doorText)),
-	WINDOW(MainActivity.getInstance().getResources().getString(R.string.windowText));
+	WALL(MainActivity.getInstance().getResources().getString(R.string.wallText).toLowerCase()),
+	DOOR(MainActivity.getInstance().getResources().getString(R.string.doorText).toLowerCase()),
+	WINDOW(MainActivity.getInstance().getResources().getString(R.string.windowText).toLowerCase());
 
 	private String text;
 	

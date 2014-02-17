@@ -116,10 +116,6 @@ public class FloorPlanModel extends Observable {
         model.setChanged();
 		model.notifyObservers();
 	}
-	
-	public void saveFloorPlan(File file) throws ParserConfigurationException, TransformerException{
-		FloorPlanIO.saveFloorPlan(file, wallList, connectionPointList, accessPointList, dataActivityList);
-	}
 
 	public void addDataObject(DataObject touchDataObject) {
 		if(touchDataObject.isComplete()){

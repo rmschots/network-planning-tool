@@ -2,20 +2,15 @@ package com.ugent.networkplanningtool;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-
-import org.ksoap2.serialization.SoapObject;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -37,6 +32,7 @@ import android.widget.ZoomControls;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
+import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.io.ImageIO;
 import com.ugent.networkplanningtool.io.SoapShit;
 import com.ugent.networkplanningtool.layout.DrawingView;
@@ -202,7 +198,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         designView.setOnTouchListener(this);
         
-        new SoapShit().execute();
+        
     }
 
 
@@ -351,8 +347,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			public void onClick(View v) {
 				d.dismiss();
 				String fnTemp = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
-				if(!fnTemp.toLowerCase().endsWith(".png")){
-					fnTemp+=".png";
+				if(!fnTemp.toLowerCase().endsWith(".xml")){
+					fnTemp+=".xml";
 				}
 				final String fileName = fnTemp;
 				
@@ -395,7 +391,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	public void saveTofile(File f){
 		try {
-			floorPlanModel.saveFloorPlan(f);
+			FloorPlanIO.saveFloorPlan(f, floorPlanModel);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			String StackTrace = "";
@@ -408,7 +404,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleNewFileClick(View v){
-		floorPlanModel.reset();
+		//floorPlanModel.reset();
+		new SoapShit().execute();
 	}
 	
 	public static MainActivity getInstance(){

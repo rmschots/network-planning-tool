@@ -2,6 +2,7 @@ package com.ugent.networkplanningtool.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -37,6 +38,7 @@ import com.ugent.networkplanningtool.data.RadioType;
 import com.ugent.networkplanningtool.data.Thickness;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.WallType;
+import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
 public class FloorPlanIO {
@@ -59,6 +61,9 @@ public class FloorPlanIO {
         	Thickness thickness = Thickness.getThicknessByNumber(Integer.parseInt(attributes.getNamedItem("thickness").getTextContent()));
         	
         	Material material = Material.getMaterialByText(Utils.getChildrenWithName(wallNode, "material").get(0).getAttributes().getNamedItem("name").getTextContent());
+        	Wall w = new Wall(new Point(wallX1, wallY1), new Point(wallX2, wallY2), wallType, thickness, material);
+        	
+        	Log.d("ZZZZZ",""+w.getMaterial()+" "+w.getThickness()+" "+w.getWallType());
         	wallList.add(new Wall(new Point(wallX1, wallY1), new Point(wallX2, wallY2), wallType, thickness, material));
         }
         // parse connectionPoints
@@ -109,7 +114,35 @@ public class FloorPlanIO {
         }
 	}
 	
-	public static void saveFloorPlan(File file, List<Wall> wallList, List<ConnectionPoint> connectionPointList, List<AccessPoint> accessPointList, List<DataActivity> dataActivityList) throws ParserConfigurationException, TransformerException{
+	public static void saveFloorPlan(File file, FloorPlanModel fpm) throws ParserConfigurationException, TransformerException{
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		StreamResult result = new StreamResult(file);
+		DOMSource source = new DOMSource(getDocument(fpm));
+		transformer.transform(source, result);
+		Log.i("DEBUG","File saved");
+	}
+	
+	public static String getXMLAsString(FloorPlanModel fpm)
+	{
+	    try
+	    {
+	       DOMSource domSource = new DOMSource(getDocument(fpm));
+	       StringWriter writer = new StringWriter();
+	       StreamResult result = new StreamResult(writer);
+	       TransformerFactory tf = TransformerFactory.newInstance();
+	       Transformer transformer = tf.newTransformer();
+	       transformer.transform(domSource, result);
+	       return writer.toString();
+	    }
+	    catch(Exception ex)
+	    {
+	       ex.printStackTrace();
+	       return null;
+	    }
+	}
+	
+	public static Document getDocument(FloorPlanModel fpm) throws ParserConfigurationException, TransformerException{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
  
@@ -124,7 +157,7 @@ public class FloorPlanIO {
 		Element extraWallsElement = doc.createElement("extraWalls");
 		levelElement.appendChild(extraWallsElement);
 		
-		for(Wall wall: wallList){
+		for(Wall wall: fpm.getWallList()){
 			Element wallElement = doc.createElement("wall");
 			extraWallsElement.appendChild(wallElement);
 			wallElement.setAttribute("x1", ""+wall.getPoint1().x);
@@ -138,7 +171,7 @@ public class FloorPlanIO {
 			wallElement.appendChild(materialElement);
 		}
 		
-		for(ConnectionPoint cp : connectionPointList){
+		for(ConnectionPoint cp : fpm.getConnectionPointList()){
 			Element cpElement;
 			if(cp.getType().equals(ConnectionPointType.DATA)){
 				cpElement= doc.createElement("dataconnpoint");
@@ -149,7 +182,7 @@ public class FloorPlanIO {
 			cpElement.setAttribute("x", ""+cp.getPoint1().x);
 			cpElement.setAttribute("y", ""+cp.getPoint1().y);
 		}
-		for(AccessPoint ap : accessPointList){
+		for(AccessPoint ap : fpm.getAccessPointList()){
 			Element apElement = doc.createElement("accesspoint");
 			levelElement.appendChild(apElement);
 			apElement.setAttribute("x", ""+ap.getPoint1().x);
@@ -166,18 +199,13 @@ public class FloorPlanIO {
 			radioElement.setAttribute("network", ap.getNetwork().getText());
 			apElement.appendChild(radioElement);
 		}
-		for(DataActivity da : dataActivityList){
+		for(DataActivity da : fpm.getDataActivityList()){
 			Element apElement = doc.createElement("activity");
 			levelElement.appendChild(apElement);
 			apElement.setAttribute("x", ""+da.getPoint1().x);
 			apElement.setAttribute("y", ""+da.getPoint1().y);
 			apElement.setAttribute("type", da.getType().getText());
 		}
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource source = new DOMSource(doc);
-		StreamResult result = new StreamResult(file);
-		transformer.transform(source, result);
-		Log.i("DEBUG","File saved");
+		return doc;
 	}
 }

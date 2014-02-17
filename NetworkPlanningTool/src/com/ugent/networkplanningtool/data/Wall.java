@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
+import android.util.Log;
 
 public class Wall extends DataObject{
 	
