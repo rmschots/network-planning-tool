@@ -95,8 +95,8 @@ public class FloorPlanIO {
         	NamedNodeMap attributeList = Utils.getChildrenWithName(accessPoint, "radio").get(0).getAttributes();
         	RadioType type = RadioType.getRadioTypeByText(attributeList.getNamedItem("type").getTextContent());
         	RadioModel model = RadioModel.getRadioModelByText(attributeList.getNamedItem("model").getTextContent());
-        	Frequency freq = Frequency.getFrequencyByText(attributeList.getNamedItem("frequency").getTextContent());
-        	FrequencyBand freqBand = FrequencyBand.getFrequencyBandByText(attributeList.getNamedItem("frequencyband").getTextContent());
+        	Frequency freq = Frequency.getFrequencyByText(attributeList.getNamedItem("frequencyband").getTextContent());
+        	FrequencyBand freqBand = FrequencyBand.getFreqBandByNumber(Integer.parseInt(attributeList.getNamedItem("frequency").getTextContent()));
         	int gain = Integer.parseInt(attributeList.getNamedItem("gain").getTextContent());
         	int power = Integer.parseInt(attributeList.getNamedItem("power").getTextContent());
         	Network network = Network.getNetworkByText(attributeList.getNamedItem("network").getTextContent());
@@ -152,6 +152,8 @@ public class FloorPlanIO {
 		doc.appendChild(rootElement);
 		
 		Element levelElement = doc.createElement("level");
+		levelElement.setAttribute("number", "0");
+		levelElement.setAttribute("name", "");
 		rootElement.appendChild(levelElement);
 		
 		Element extraWallsElement = doc.createElement("extraWalls");
@@ -184,6 +186,7 @@ public class FloorPlanIO {
 		}
 		for(AccessPoint ap : fpm.getAccessPointList()){
 			Element apElement = doc.createElement("accesspoint");
+			apElement.setAttribute("level", "0");
 			levelElement.appendChild(apElement);
 			apElement.setAttribute("x", ""+ap.getPoint1().x);
 			apElement.setAttribute("y", ""+ap.getPoint1().y);
@@ -192,8 +195,8 @@ public class FloorPlanIO {
 			Element radioElement = doc.createElement("radio");
 			radioElement.setAttribute("type", ap.getType().getText());
 			radioElement.setAttribute("model", ap.getModel().getText());
-			radioElement.setAttribute("frequency", ""+ap.getFrequency());
-			radioElement.setAttribute("frequencyband", ""+ap.getFrequencyband());
+			radioElement.setAttribute("frequency", ""+ap.getFrequency().getText());
+			radioElement.setAttribute("frequencyband", ""+ap.getFrequencyband().getNumber());
 			radioElement.setAttribute("gain", ""+ap.getGain());
 			radioElement.setAttribute("power", ""+ap.getPower());
 			radioElement.setAttribute("network", ap.getNetwork().getText());
