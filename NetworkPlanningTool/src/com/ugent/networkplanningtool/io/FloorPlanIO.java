@@ -29,8 +29,8 @@ import com.ugent.networkplanningtool.data.ActivityType;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.ConnectionPointType;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.Frequency;
 import com.ugent.networkplanningtool.data.FrequencyBand;
+import com.ugent.networkplanningtool.data.Frequency;
 import com.ugent.networkplanningtool.data.Material;
 import com.ugent.networkplanningtool.data.Network;
 import com.ugent.networkplanningtool.data.RadioModel;
@@ -95,12 +95,14 @@ public class FloorPlanIO {
         	NamedNodeMap attributeList = Utils.getChildrenWithName(accessPoint, "radio").get(0).getAttributes();
         	RadioType type = RadioType.getRadioTypeByText(attributeList.getNamedItem("type").getTextContent());
         	RadioModel model = RadioModel.getRadioModelByText(attributeList.getNamedItem("model").getTextContent());
-        	Frequency freq = Frequency.getFrequencyByText(attributeList.getNamedItem("frequencyband").getTextContent());
-        	FrequencyBand freqBand = FrequencyBand.getFreqBandByNumber(Integer.parseInt(attributeList.getNamedItem("frequency").getTextContent()));
+        	FrequencyBand freqBand = FrequencyBand.getFrequencyBandByText(attributeList.getNamedItem("frequencyband").getTextContent());
+        	Frequency freq = Frequency.getFreqByNumber(Integer.parseInt(attributeList.getNamedItem("frequency").getTextContent()));
         	int gain = Integer.parseInt(attributeList.getNamedItem("gain").getTextContent());
         	int power = Integer.parseInt(attributeList.getNamedItem("power").getTextContent());
         	Network network = Network.getNetworkByText(attributeList.getNamedItem("network").getTextContent());
-        	accessPointList.add(new AccessPoint(new Point(x, y),name,height,type,model, freq, freqBand,gain,power,network));
+        	AccessPoint ap = new AccessPoint(new Point(x, y),name,height,type,model, freqBand, freq, gain,power,network);
+        	accessPointList.add(ap);
+        	System.out.println(ap);
         }
         // parse dataActivities
         NodeList dataActivities = doc.getElementsByTagName("activity");
@@ -195,8 +197,8 @@ public class FloorPlanIO {
 			Element radioElement = doc.createElement("radio");
 			radioElement.setAttribute("type", ap.getType().getText());
 			radioElement.setAttribute("model", ap.getModel().getText());
-			radioElement.setAttribute("frequency", ""+ap.getFrequency().getText());
-			radioElement.setAttribute("frequencyband", ""+ap.getFrequencyband().getNumber());
+			radioElement.setAttribute("frequency", ""+ap.getFrequency().getNumber());
+			radioElement.setAttribute("frequencyband", ""+ap.getFrequencyband().getText());
 			radioElement.setAttribute("gain", ""+ap.getGain());
 			radioElement.setAttribute("power", ""+ap.getPower());
 			radioElement.setAttribute("network", ap.getNetwork().getText());

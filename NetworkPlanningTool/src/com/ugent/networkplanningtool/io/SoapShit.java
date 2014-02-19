@@ -1,8 +1,14 @@
 package com.ugent.networkplanningtool.io;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.AttributeInfo;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -10,30 +16,36 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.transport.Transport;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.FrequencyBand;
+import com.ugent.networkplanningtool.data.Frequency;
+import com.ugent.networkplanningtool.data.Network;
+import com.ugent.networkplanningtool.data.OptimizeResult;
+import com.ugent.networkplanningtool.data.RadioModel;
+import com.ugent.networkplanningtool.data.RadioType;
 import com.ugent.networkplanningtool.io.marshal.MarshalDouble;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
+import com.ugent.networkplanningtool.model.OptimizeResultModel;
 
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class SoapShit extends AsyncTask<String, Void, SoapObject>{
+public class SoapShit extends AsyncTask<String, Void, SoapObject> {
 	private static final String METHOD_NAME = "optimize";
 	private static final String SOAP_ACTION = "http://wicaweb2.intec.ugent.be:80/DeusService/Deus/optimize";
 	private static final String NAMESPACE = "http://web.deus.wica.intec.ugent.be/";
 	private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
-	//you can get these values from the wsdl file
-	
-	public static SoapObject soap() throws IOException, XmlPullParserException {		
-		//String s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><plan><level name=\"\" number=\"0\"><extraWalls><wall x1=\"400\" y1=\"200\" x2=\"400\" y2=\"800\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"1100\" y1=\"200\" x2=\"1700\" y2=\"200\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"1700\" y1=\"500\" x2=\"1700\" y2=\"800\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"1700\" y1=\"200\" x2=\"1700\" y2=\"500\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"1100\" y1=\"500\" x2=\"1350\" y2=\"500\" type=\"wall\" thickness=\"30\"><material name=\"Concrete\"/></wall><wall x1=\"1350\" y1=\"500\" x2=\"1450\" y2=\"500\" type=\"door\" thickness=\"10\"><material name=\"Wood\"/></wall><wall x1=\"1450\" y1=\"500\" x2=\"1700\" y2=\"500\" type=\"wall\" thickness=\"30\"><material name=\"Concrete\"/></wall><wall x1=\"1100\" y1=\"200\" x2=\"1100\" y2=\"300\" type=\"wall\" thickness=\"10\"><material name=\"Brick\"/></wall><wall x1=\"1100\" y1=\"400\" x2=\"1100\" y2=\"300\" type=\"door\" thickness=\"30\"><material name=\"Glass\"/></wall><wall x1=\"1100\" y1=\"500\" x2=\"1100\" y2=\"400\" type=\"wall\" thickness=\"10\"><material name=\"Brick\"/></wall><wall x1=\"400\" y1=\"800\" x2=\"1350\" y2=\"800\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"1350\" y1=\"800\" x2=\"1450\" y2=\"800\" type=\"window\" thickness=\"10\"><material name=\"Glass\"/></wall><wall x1=\"1450\" y1=\"800\" x2=\"1700\" y2=\"800\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"400\" y1=\"200\" x2=\"600\" y2=\"200\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall><wall x1=\"600\" y1=\"200\" x2=\"700\" y2=\"200\" type=\"window\" thickness=\"30\"><material name=\"Glass\"/></wall><wall x1=\"700\" y1=\"200\" x2=\"1100\" y2=\"200\" type=\"wall\" thickness=\"10\"><material name=\"Layered Drywall\"/></wall></extraWalls><dataconnpoint x=\"1573\" y=\"495\"/><powerconnpoint x=\"1268\" y=\"795\"/><accesspoint x=\"1633\" y=\"263\" height=\"250\" name=\"\" level=\"0\"><radio type=\"WiFi\" model=\"DLink\" frequency=\"2437\" frequencyband=\"2400\" gain=\"2\" power=\"14\" network=\"Network A\"/></accesspoint><accesspoint x=\"470\" y=\"728\" height=\"100\" name=\"\" level=\"0\"><radio type=\"WiFi\" model=\"Custom\" frequency=\"2437\" frequencyband=\"2400\" gain=\"2\" power=\"13\" network=\"Network B\"/></accesspoint><accesspoint x=\"513\" y=\"265\" height=\"300\" name=\"\" level=\"0\"><radio type=\"LTE Femtocell\" model=\"Custom\" frequency=\"2600\" frequencyband=\"2600\" gain=\"2\" power=\"15\" network=\"Network C\"/></accesspoint><activity type=\"HD video\" x=\"1633\" y=\"418\"/><activity type=\"No coverage\" x=\"668\" y=\"670\"/></level></plan>";
-		
-		//String s1 = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><plan><level><extraWalls><wall x1=\"250\" y1=\"200\" x2=\"350\" y2=\"150\" type=\"wall\" thickness=\"10\"><material name=\"Brick\"/></wall><wall x1=\"350\" y1=\"150\" x2=\"450\" y2=\"100\" type=\"wall\" thickness=\"10\"><material name=\"Brick\"/></wall><wall x1=\"500\" y1=\"300\" x2=\"350\" y2=\"150\" type=\"wall\" thickness=\"10\"><material name=\"Brick\"/></wall><wall x1=\"350\" y1=\"150\" x2=\"250\" y2=\"50\" type=\"wall\" thickness=\"10\"><material name=\"Brick\"/></wall></extraWalls></level></plan>";
-				String s2 = FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance());
-		System.out.println(s2);
+
+	// you can get these values from the wsdl file
+
+	public static SoapObject soap() throws IOException, XmlPullParserException {
+		String s2 = FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance());
 		SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME); //set up request
 		request.addProperty("client_version", "1.8.0.a");
 		request.addProperty("xml", s2);
 		request.addProperty("model", "sidp");
-		request.addProperty("grid_size", 200.0);
+		request.addProperty("grid_size", 20.0);
 		request.addProperty("default_type", "Surfing");
 		request.addProperty("receiver_name", "3G phone");
 		request.addProperty("receiver_gain", 0.0);
@@ -49,9 +61,6 @@ public class SoapShit extends AsyncTask<String, Void, SoapObject>{
 		request.addProperty("function", 1);
 		request.addProperty("frequency_planning", true);
 		
-		// request.addProperty("version", ""+i); //variable name, value. I got the variable name, from the wsdl file!
-		
-		
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //put all required data into a soap envelope
 		
 		envelope.setOutputSoapObject(request);  //prepare request
@@ -61,21 +70,38 @@ public class SoapShit extends AsyncTask<String, Void, SoapObject>{
 		httpTransport.debug = true;  //this is optional, use it if you don't want to use a packet sniffer to check what the sent message was (httpTransport.requestDump)
 		httpTransport.call(SOAP_ACTION, envelope); //send request
 		SoapObject result=(SoapObject)envelope.getResponse(); //get response
-        for(int i = 0; i < result.getPropertyCount(); i ++){
-        	System.out.println(""+i);
-        	System.out.println(result.getProperty(i));
-        	
-        	
-        }
+		
+		double[] infoArray = new double[3];
+		int infoIndex = 0;
+		PropertyInfo ai = new PropertyInfo();
+		for(int i = 0; i < result.getPropertyCount(); i ++){
+			result.getPropertyInfo(i, ai);
+			if(ai.getName().equals("info")){
+				infoArray[infoIndex] = Double.parseDouble(ai.getValue().toString());
+				System.out.println(infoArray[infoIndex]);
+				infoIndex++;
+			}
+		}
+		
+		List<AccessPoint> apList = parseAccessPoints(result.getPropertyAsString("accesspoints"));
+		String benchmarks = result.getPropertyAsString("benchmarks");
+		List<OptimizeResult> orList = parseOptimizeResults( result.getPropertyAsString("csv"));
+		String normalizedPlan = result.getPropertyAsString("normalizedPlan");
+		String optimizedPlan = result.getPropertyAsString("optimizedPlan");
+		
+		OptimizeResultModel.getInstance().loadModel(apList, benchmarks, orList, infoArray, "", normalizedPlan, optimizedPlan);
+		System.out.println(OptimizeResultModel.getInstance());
+
 		return result;
 		
 	}
+
 	@Override
 	protected SoapObject doInBackground(String... params) {
 		SoapObject so = null;
 		try {
 			so = soap();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,12 +111,57 @@ public class SoapShit extends AsyncTask<String, Void, SoapObject>{
 		}
 		return so;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+	private static List<OptimizeResult> parseOptimizeResults(String csvString) {
+		List<OptimizeResult> orList = new ArrayList<OptimizeResult>();
+		String[] orStrings = csvString.split("\n");
+		for (String orString : orStrings) {
+			String[] attrStrings = orString.split(",");
+			double level = Double.parseDouble(attrStrings[0]);
+			double x = Double.parseDouble(attrStrings[1]);
+			double y = Double.parseDouble(attrStrings[2]);
+			double download = Double.parseDouble(attrStrings[3]);
+			double upload = Double.parseDouble(attrStrings[4]);
+			double pathloss = Double.parseDouble(attrStrings[5]);
+			double powerRX = Double.parseDouble(attrStrings[6]);
+			double powerTX = Double.parseDouble(attrStrings[7]);
+			double absorption = Double.parseDouble(attrStrings[8]);
+			double eField = Double.parseDouble(attrStrings[9]);
+			double roomNumber = Double.parseDouble(attrStrings[10]);
+			double drawingSize = Double.parseDouble(attrStrings[11]);
+			OptimizeResult or = new OptimizeResult((int) level, new Point((int) x,
+					(int) y), (int) download, (int) upload, pathloss, powerRX,
+					powerTX, absorption, eField, (int) roomNumber,
+					(int) drawingSize);
+			orList.add(or);
+		}
+		return orList;
+	}
+
+	// 1633.0;263.0;250;\n\tWiFi;14.0;2;DLink;2400;2462
+	private static List<AccessPoint> parseAccessPoints(String apString) {
+		List<AccessPoint> apList = new ArrayList<AccessPoint>();
+		String[] apStrings = apString.split("\n\t?");
+		for (int i = 0; i + 1 < apStrings.length; i += 2) {
+			String[] attrs = apStrings[i].split(";");
+			String[] radioAttrs = apStrings[i + 1].split(";");
+			double x = Double.parseDouble(attrs[0]);
+			double y = Double.parseDouble(attrs[1]);
+			int height = Integer.parseInt(attrs[2]);
+			RadioType type = RadioType.getRadioTypeByText(radioAttrs[0]);
+			double gain = Double.parseDouble(radioAttrs[1]);
+			double power = Double.parseDouble(radioAttrs[2]);
+			RadioModel model = RadioModel.getRadioModelByText(radioAttrs[3]);
+			FrequencyBand frequency = FrequencyBand
+					.getFrequencyBandByText(radioAttrs[4]);
+			Frequency frequencyBand = Frequency.getFreqByNumber(Integer
+					.parseInt(radioAttrs[5]));
+			AccessPoint ap = new AccessPoint(new Point((int) x, (int) y), "",
+					height, type, model, frequency, frequencyBand, (int) gain,
+					(int) power, null);
+			apList.add(ap);
+		}
+		return apList;
+	}
+
 }

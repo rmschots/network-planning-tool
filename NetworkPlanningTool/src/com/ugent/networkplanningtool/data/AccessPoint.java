@@ -37,7 +37,7 @@ public class AccessPoint extends DataObject{
 	}
 
 	public AccessPoint(String name, int height, RadioType type,
-			RadioModel model, Frequency frequency, FrequencyBand frequencyband, int gain,
+			RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
 			int power, Network network) {
 		super();
 		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
@@ -53,7 +53,7 @@ public class AccessPoint extends DataObject{
 	}
 	
 	public AccessPoint(Point point, String name, int height, RadioType type,
-			RadioModel model, Frequency frequency, FrequencyBand frequencyband, int gain,
+			RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
 			int power, Network network) {
 		super(point);
 		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
@@ -232,6 +232,21 @@ public class AccessPoint extends DataObject{
 
 	@Override
 	public DataObject getPartialDeepCopy() {
-		return new AccessPoint(name, height, type, model, frequency, frequencyband, gain, power, network);
+		return new AccessPoint(name, height, type, model, frequencyband, frequency, gain, power, network);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AccessPoint [name=" + name + ", height=" + height + ", type="
+				+ type + ", model=" + model + ", frequency=" + frequency
+				+ ", frequencyband=" + frequencyband + ", gain=" + gain
+				+ ", power=" + power + ", network=" + network
+				+ ", DATA_OBJECT_TYPE=" + DATA_OBJECT_TYPE + ", point1="
+				+ point1 + "]";
+	}
+	
+	
 }

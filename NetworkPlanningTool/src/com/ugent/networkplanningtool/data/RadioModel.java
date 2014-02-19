@@ -24,7 +24,7 @@ public enum RadioModel {
 	private static void initMapping() {
 		textToRadioModelMapping = new HashMap<String, RadioModel>();
         for (RadioModel s : values()) {
-        	textToRadioModelMapping.put(s.getText(), s);
+        	textToRadioModelMapping.put(s.getText().toLowerCase(), s);
         }
     }
 	
@@ -32,7 +32,7 @@ public enum RadioModel {
 		if(textToRadioModelMapping == null){
 			initMapping();
 		}
-		return textToRadioModelMapping.get(text);
+		return textToRadioModelMapping.get(text.toLowerCase());
 	}
 	
 	public String getText(){

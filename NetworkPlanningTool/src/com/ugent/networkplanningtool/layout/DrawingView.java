@@ -26,6 +26,7 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.OptimizeResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
@@ -36,6 +37,7 @@ import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
+import com.ugent.networkplanningtool.model.OptimizeResultModel;
 
 public class DrawingView extends View implements Observer{
 
@@ -54,6 +56,7 @@ public class DrawingView extends View implements Observer{
 		if(drawingModel != null){
 			drawBackground(canvas);
 			drawGrid(canvas);
+			drawResults(canvas);
 			drawWalls(canvas);
 			drawActivities(canvas);
 			drawConnectionPoints(canvas);
@@ -61,6 +64,15 @@ public class DrawingView extends View implements Observer{
 			drawTouch(canvas);
 		}
 		super.onDraw(canvas);
+	}
+	
+	private void drawResults(Canvas canvas) {
+		OptimizeResultModel orm = OptimizeResultModel.getInstance();
+		if(!orm.getResultList().isEmpty()){
+			for(OptimizeResult or : orm.getResultList()){
+				or.drawOnCanvas(canvas, drawingModel, paint, false);
+			}
+		}
 	}
 	
 	private void drawBackground(Canvas canvas) {

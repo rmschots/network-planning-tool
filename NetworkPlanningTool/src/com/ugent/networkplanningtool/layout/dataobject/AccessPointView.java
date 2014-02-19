@@ -12,8 +12,8 @@ import android.widget.Spinner;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.Frequency;
 import com.ugent.networkplanningtool.data.FrequencyBand;
+import com.ugent.networkplanningtool.data.Frequency;
 import com.ugent.networkplanningtool.data.Network;
 import com.ugent.networkplanningtool.data.RadioModel;
 import com.ugent.networkplanningtool.data.RadioType;
@@ -101,17 +101,17 @@ public class AccessPointView extends DataObjectView {
 		return type;
 	}
 	
-	public Frequency getSelectedFrequency(){
+	public FrequencyBand getSelectedFrequencyBand(){
 		String itemAsString = networkMHzSpinner.getSelectedItem().toString();
-		Frequency frequency = Frequency.getFrequencyByText(itemAsString);
-		Log.d("DEBUG","Frequency: "+frequency.getText());
+		FrequencyBand frequency = FrequencyBand.getFrequencyBandByText(itemAsString);
+		Log.d("DEBUG","FrequencyBand: "+frequency.getText());
 		return frequency;
 	}
 	
-	public FrequencyBand getSelectedChannel(){
+	public Frequency getSelectedChannel(){
 		String itemAsString = networkChannelSpinner.getSelectedItem().toString();
-		FrequencyBand band = FrequencyBand.getFrequencyBandByText(itemAsString);
-		Log.d("DEBUG","FrequencyBand: "+band.getText());
+		Frequency band = Frequency.getFrequencyByText(itemAsString);
+		Log.d("DEBUG","Frequency: "+band.getText());
 		return band;
 	}
 	
@@ -136,8 +136,8 @@ public class AccessPointView extends DataObjectView {
 	public void updateDrawingModel(){
 		Log.d("DEBUG","updateDrawingModel "+drawingModel.getTouchDataObject());
 		RadioType signalType = getSelectedSignalType();
-		Frequency freq = getSelectedFrequency();
-		FrequencyBand freqBand = getSelectedChannel();
+		Frequency freq = getSelectedChannel();
+		FrequencyBand freqBand = getSelectedFrequencyBand();
 		RadioModel model = getSelectedModel();
 		Network network = getSelectedNetwork();
 		int transmitPower = Integer.parseInt(transmitPowerEditText.getText().toString());
@@ -156,7 +156,7 @@ public class AccessPointView extends DataObjectView {
 			ap.setGain(antennaGain);
 			ap.setHeight(elevation);
 		}else{
-			drawingModel.setPlaceMode(new AccessPoint("", elevation, signalType, model, freq, freqBand, antennaGain, transmitPower, network));
+			drawingModel.setPlaceMode(new AccessPoint("", elevation, signalType, model, freqBand, freq, antennaGain, transmitPower, network));
 		}
 		Log.d("DEBUG","updateDrawingModel "+drawingModel.getTouchDataObject());
 	}

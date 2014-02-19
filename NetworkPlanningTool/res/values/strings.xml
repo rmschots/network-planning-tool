@@ -117,25 +117,25 @@
         <item>@string/umtsFemtocellText</item>
     </string-array>
     
-    <string name="frequency2100">2100</string>
-    <string name="frequency2400">2400</string>
-    <string name="frequency2600">2600</string>
+    <string name="frequencyBand2100">2100</string>
+    <string name="frequencyBand2400">2400</string>
+    <string name="frequencyBand2600">2600</string>
     
     <string-array name="frequencyArray">
-        <item>@string/frequency2400</item>
+        <item>@string/frequencyBand2400</item>
     </string-array>
     
-    <string name="frequencyBand1">1</string>
-    <string name="frequencyBand2">2</string>
-    <string name="frequencyBand3">3</string>
-    <string name="frequencyBand4">4</string>
-    <string name="frequencyBand5">5</string>
-    <string name="frequencyBand6">6</string>
-    <string name="frequencyBand7">7</string>
-    <string name="frequencyBand8">8</string>
-    <string name="frequencyBand9">9</string>
-    <string name="frequencyBand10">10</string>
-    <string name="frequencyBand11">11</string>
+    <string name="frequency1">1</string>
+    <string name="frequency2">2</string>
+    <string name="frequency3">3</string>
+    <string name="frequency4">4</string>
+    <string name="frequency5">5</string>
+    <string name="frequency6">6</string>
+    <string name="frequency7">7</string>
+    <string name="frequency8">8</string>
+    <string name="frequency9">9</string>
+    <string name="frequency10">10</string>
+    <string name="frequency11">11</string>
     
     <string name="channel1">1</string>
     <string name="channel2">2</string>

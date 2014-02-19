@@ -23,7 +23,7 @@ public enum RadioType {
 	private static void initMapping() {
 		textToRadioTypeMapping = new HashMap<String, RadioType>();
         for (RadioType s : values()) {
-        	textToRadioTypeMapping.put(s.getText(), s);
+        	textToRadioTypeMapping.put(s.getText().toLowerCase(), s);
         }
     }
 	
@@ -31,7 +31,7 @@ public enum RadioType {
 		if(textToRadioTypeMapping == null){
 			initMapping();
 		}
-		return textToRadioTypeMapping.get(text);
+		return textToRadioTypeMapping.get(text.toLowerCase());
 	}
 	
 	public String getText(){
