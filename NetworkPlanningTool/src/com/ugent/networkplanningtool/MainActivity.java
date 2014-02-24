@@ -35,6 +35,7 @@ import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.io.ImageIO;
 import com.ugent.networkplanningtool.io.SoapShit;
+import com.ugent.networkplanningtool.io.ksoap2.WebServiceTaskManager;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
@@ -84,6 +85,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	private DrawingModel drawingModel;
 	private FloorPlanModel floorPlanModel;
+	
+	private WebServiceTaskManager taskManager;
+	private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +202,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         designView.setOnTouchListener(this);
         
-        
+        taskManager = new WebServiceTaskManager(this);
     }
 
 
@@ -332,7 +336,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			}
 		});
 		dialog.setFilter(".*xml|.*XML");
-		dialog.show();
+		displayNewDialog(dialog);
 		
 	}
 	
@@ -380,13 +384,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 					dialog.setFolderMode(true);
 					dialog.setShowOnlySelectable(true);
 					dialog.setCanCreateFiles(true);
-					dialog.show();
+					displayNewDialog(dialog);
 				}
 				
 				
 			}
 		});
-		d.show();
+		displayNewDialog(d);
 	}
 	
 	public void saveTofile(File f){
@@ -404,6 +408,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleNewFileClick(View v){
+		
 		//floorPlanModel.reset();
 		new SoapShit().execute();
 	}
@@ -474,15 +479,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 					dialog.setFolderMode(true);
 					dialog.setShowOnlySelectable(true);
 					dialog.setCanCreateFiles(true);
-					dialog.show();
+					displayNewDialog(dialog);
 				}
 				
 				
 			}
 		});
-		d.show();
-			
-		
+		displayNewDialog(d);
 	}
 	
 	public void handleImportImage(View v){
@@ -505,7 +508,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				iiDialog.setImage(bitmap);
 				iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 				iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-				iiDialog.show();
+				displayNewDialog(iiDialog);
 				iiDialog.setOnDismissListener(new OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
@@ -518,6 +521,32 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		});
 		dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
 		dialog.setShowOnlySelectable(true);
-		dialog.show();
+		displayNewDialog(dialog);
 	}
+	
+	@Override
+    protected void onResume() {
+        super.onResume();
+        if (taskManager == null) {
+            taskManager = new WebServiceTaskManager(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dismissDialog();
+    }
+    
+    private void displayNewDialog(Dialog d) {
+        dismissDialog();
+        dialog = d;
+        dialog.show();
+    }
+    
+    private void dismissDialog() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
 }

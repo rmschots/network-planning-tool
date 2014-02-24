@@ -11,7 +11,7 @@ import android.graphics.RadialGradient;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
-public class OptimizeResult extends DataObject{
+public class DeusResult extends DataObject{
 	
 	private final int level;
 	private final int download; // (mbps)
@@ -26,7 +26,7 @@ public class OptimizeResult extends DataObject{
 	private final int roomNumber;
 	private final int drawingSize; // non-relevant; always squares of 10cm; don't draw if 0
 	
-	public OptimizeResult(int level, Point point, int download,
+	public DeusResult(int level, Point point, int download,
 			int upload, double pathloss, double powerRX, double powerTX,
 			double absorption, double eField, int roomNumber, int drawingSize) {
 		super(point);

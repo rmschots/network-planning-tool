@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Observable;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.OptimizeResult;
+import com.ugent.networkplanningtool.data.DeusResult;
 
 public class OptimizeResultModel extends Observable {
 
 	private List<AccessPoint> apList;
 	private String benchmarks;
-	private List<OptimizeResult> resultList;
+	private List<DeusResult> resultList;
 	private double[] infoArray; //0 => aantal APs waaraan blootgesteld ; 1 => mediaan blootstelling ; 2 => p95 blootstelling
 	private String infomsg;
 	private String normalizedPlan;
@@ -22,11 +22,11 @@ public class OptimizeResultModel extends Observable {
 
 	private OptimizeResultModel() {
 		apList = new ArrayList<AccessPoint>();
-		resultList = new ArrayList<OptimizeResult>();
+		resultList = new ArrayList<DeusResult>();
 		infoArray = new double[3];
 	}
 	
-	public void loadModel(List<AccessPoint> apList, String benchmarks, List<OptimizeResult> resultList, double[] infoArray, String infomsg, String normalizedPlan, String optimizedPlan){
+	public void loadModel(List<AccessPoint> apList, String benchmarks, List<DeusResult> resultList, double[] infoArray, String infomsg, String normalizedPlan, String optimizedPlan){
 		reset();
 		this.apList.addAll(apList);
 		this.benchmarks = benchmarks;
@@ -72,7 +72,7 @@ public class OptimizeResultModel extends Observable {
 	/**
 	 * @return the resultList
 	 */
-	public List<OptimizeResult> getResultList() {
+	public List<DeusResult> getResultList() {
 		return resultList;
 	}
 

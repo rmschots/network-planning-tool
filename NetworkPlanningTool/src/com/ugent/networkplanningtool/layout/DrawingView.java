@@ -26,7 +26,7 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
-import com.ugent.networkplanningtool.data.OptimizeResult;
+import com.ugent.networkplanningtool.data.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
@@ -69,7 +69,7 @@ public class DrawingView extends View implements Observer{
 	private void drawResults(Canvas canvas) {
 		OptimizeResultModel orm = OptimizeResultModel.getInstance();
 		if(!orm.getResultList().isEmpty()){
-			for(OptimizeResult or : orm.getResultList()){
+			for(DeusResult or : orm.getResultList()){
 				or.drawOnCanvas(canvas, drawingModel, paint, false);
 			}
 		}

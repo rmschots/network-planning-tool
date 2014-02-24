@@ -1,4 +1,4 @@
-package com.ugent.networkplanningtool.io.marshal;
+package com.ugent.networkplanningtool.io.ksoap2.marshal;
 
 import java.io.IOException;
 

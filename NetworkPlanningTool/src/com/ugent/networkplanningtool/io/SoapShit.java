@@ -20,10 +20,10 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.FrequencyBand;
 import com.ugent.networkplanningtool.data.Frequency;
 import com.ugent.networkplanningtool.data.Network;
-import com.ugent.networkplanningtool.data.OptimizeResult;
+import com.ugent.networkplanningtool.data.DeusResult;
 import com.ugent.networkplanningtool.data.RadioModel;
 import com.ugent.networkplanningtool.data.RadioType;
-import com.ugent.networkplanningtool.io.marshal.MarshalDouble;
+import com.ugent.networkplanningtool.io.ksoap2.marshal.MarshalDouble;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.model.OptimizeResultModel;
 
@@ -85,7 +85,7 @@ public class SoapShit extends AsyncTask<String, Void, SoapObject> {
 		
 		List<AccessPoint> apList = parseAccessPoints(result.getPropertyAsString("accesspoints"));
 		String benchmarks = result.getPropertyAsString("benchmarks");
-		List<OptimizeResult> orList = parseOptimizeResults( result.getPropertyAsString("csv"));
+		List<DeusResult> orList = parseOptimizeResults( result.getPropertyAsString("csv"));
 		String normalizedPlan = result.getPropertyAsString("normalizedPlan");
 		String optimizedPlan = result.getPropertyAsString("optimizedPlan");
 		
@@ -112,8 +112,8 @@ public class SoapShit extends AsyncTask<String, Void, SoapObject> {
 		return so;
 	}
 
-	private static List<OptimizeResult> parseOptimizeResults(String csvString) {
-		List<OptimizeResult> orList = new ArrayList<OptimizeResult>();
+	private static List<DeusResult> parseOptimizeResults(String csvString) {
+		List<DeusResult> orList = new ArrayList<DeusResult>();
 		String[] orStrings = csvString.split("\n");
 		for (String orString : orStrings) {
 			String[] attrStrings = orString.split(",");
@@ -129,7 +129,7 @@ public class SoapShit extends AsyncTask<String, Void, SoapObject> {
 			double eField = Double.parseDouble(attrStrings[9]);
 			double roomNumber = Double.parseDouble(attrStrings[10]);
 			double drawingSize = Double.parseDouble(attrStrings[11]);
-			OptimizeResult or = new OptimizeResult((int) level, new Point((int) x,
+			DeusResult or = new DeusResult((int) level, new Point((int) x,
 					(int) y), (int) download, (int) upload, pathloss, powerRX,
 					powerTX, absorption, eField, (int) roomNumber,
 					(int) drawingSize);
