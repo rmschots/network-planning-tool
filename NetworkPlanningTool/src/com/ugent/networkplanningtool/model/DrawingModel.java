@@ -323,7 +323,7 @@ public class DrawingModel extends Observable {
 						break;
 					}
 				}
-				if(((Wall)touchDataObject).isComplete()){
+				if((touchDataObject).isComplete()){
 					Wall wall = (Wall) touchDataObject;
 					wall.setPoint2(wallPoint);
 				}else{
@@ -373,10 +373,6 @@ public class DrawingModel extends Observable {
 		}
 		setChanged();
 		notifyObservers();
-	}
-
-	public SnapTo isSnapToGrid() {
-		return snapTo;
 	}
 
 	public void setSnapToGrid(SnapTo snapToGrid) {

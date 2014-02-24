@@ -1,153 +1,71 @@
 package com.ugent.networkplanningtool.data;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
-import android.graphics.Point;
-import android.graphics.RadialGradient;
+import java.util.List;
+import java.util.Vector;
 
-import com.ugent.networkplanningtool.model.DrawingModel;
-import com.ugent.networkplanningtool.utils.Utils;
+public class DeusResult {
 
-public class DeusResult extends DataObject{
-	
-	private final int level;
-	private final int download; // (mbps)
-	private final int upload; // (mbps)
-	private final double pathloss; // (db)
-	private final double powerRX; // (db)
-	private final double powerTX; // (db)
-	private final double absorption; //SAR W/kg?
-	private final double eField; // veldsterkte V/m
-//	private final double pdLos;
-//	private final double pdDif;
-	private final int roomNumber;
-	private final int drawingSize; // non-relevant; always squares of 10cm; don't draw if 0
-	
-	public DeusResult(int level, Point point, int download,
-			int upload, double pathloss, double powerRX, double powerTX,
-			double absorption, double eField, int roomNumber, int drawingSize) {
-		super(point);
-		this.level = level;
-		this.download = download;
-		this.upload = upload;
-		this.pathloss = pathloss;
-		this.powerRX = powerRX;
-		this.powerTX = powerTX;
-		this.absorption = absorption;
-		this.eField = eField;
-		this.roomNumber = roomNumber;
-		this.drawingSize = drawingSize;
-	}
+    private List<AccessPoint> accessPoints;
+    private String benchmarks;
+    private List<CSVResult> csv;
+    private Double diffusePower;
+    private Double[] grid;
+    private Double[] info; //0 => aantal APs waaraan blootgesteld ; 1 => mediaan blootstelling ; 2 => p95 blootstelling
+    private String infomsg;
+    private Vector<Double> losPower;
+    private FloorPlan normalizedPlan;
+    private FloorPlan optimizedPlan;
 
-	/**
-	 * @return the level
-	 */
-	public int getLevel() {
-		return level;
-	}
+    public DeusResult(List<AccessPoint> accessPoints, String benchmarks, List<CSVResult> csv, Double diffusePower, Double[] grid, Double[] info, String infomsg, Vector<Double> losPower, FloorPlan normalizedPlan, FloorPlan optimizedPlan) {
+        this.accessPoints = accessPoints;
+        this.benchmarks = benchmarks;
+        this.csv = csv;
+        this.diffusePower = diffusePower;
+        this.grid = grid;
+        this.info = info;
+        this.infomsg = infomsg;
+        this.losPower = losPower;
+        this.normalizedPlan = normalizedPlan;
+        this.optimizedPlan = optimizedPlan;
+    }
 
-	/**
-	 * @return the download
-	 */
-	public int getDownload() {
-		return download;
-	}
+    public List<AccessPoint> getAccessPoints() {
+        return accessPoints;
+    }
 
-	/**
-	 * @return the upload
-	 */
-	public int getUpload() {
-		return upload;
-	}
+    public String getBenchmarks() {
+        return benchmarks;
+    }
 
-	/**
-	 * @return the pathloss
-	 */
-	public double getPathloss() {
-		return pathloss;
-	}
+    public List<CSVResult> getCsv() {
+        return csv;
+    }
 
-	/**
-	 * @return the powerRX
-	 */
-	public double getPowerRX() {
-		return powerRX;
-	}
+    public Double getDiffusePower() {
+        return diffusePower;
+    }
 
-	/**
-	 * @return the powerTX
-	 */
-	public double getPowerTX() {
-		return powerTX;
-	}
+    public Double[] getGrid() {
+        return grid;
+    }
 
-	/**
-	 * @return the absorption
-	 */
-	public double getAbsorption() {
-		return absorption;
-	}
+    public Double[] getInfo() {
+        return info;
+    }
 
-	/**
-	 * @return the eField
-	 */
-	public double geteField() {
-		return eField;
-	}
+    public String getInfomsg() {
+        return infomsg;
+    }
 
-	/**
-	 * @return the roomNumber
-	 */
-	public int getRoomNumber() {
-		return roomNumber;
-	}
+    public Vector<Double> getLosPower() {
+        return losPower;
+    }
 
-	/**
-	 * @return the drawingSize
-	 */
-	public int getDrawingSize() {
-		return drawingSize;
-	}
+    public FloorPlan getNormalizedPlan() {
+        return normalizedPlan;
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "OptimizeResult [level=" + level + ", download=" + download
-				+ ", upload=" + upload + ", pathloss=" + pathloss
-				+ ", powerRX=" + powerRX + ", powerTX=" + powerTX
-				+ ", absorption=" + absorption + ", eField=" + eField
-				+ ", roomNumber=" + roomNumber + ", drawingSize=" + drawingSize
-				+ ", point1=" + point1 + "]";
-	}
-
-	@Override
-	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
-		float circleRadius = drawingModel.getPixelsPerInterval()/3;
-		float rectHeight = circleRadius/2;
-		
-		float x = convertCoordinateToLocation(drawingModel, true, point1.x);
-		float y = convertCoordinateToLocation(drawingModel, false, point1.y);
-		
-		//paint.setStyle(Style.FILL);
-		RadialGradient gradient = new RadialGradient(x, y, circleRadius, Color.rgb((int)(eField*50),(int)(eField*50),(int)(eField*50)),
-				Color.TRANSPARENT, android.graphics.Shader.TileMode.CLAMP);
-		paint.setDither(true);
-		paint.setShader(gradient);
-		canvas.drawCircle(x, y, circleRadius, paint);
-		paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/4);
-		
-		paint.reset();
-	}
-
-	@Override
-	public DataObject getPartialDeepCopy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    public FloorPlan getOptimizedPlan() {
+        return optimizedPlan;
+    }
 }

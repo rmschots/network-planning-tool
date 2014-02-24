@@ -1,6 +1,5 @@
 package com.ugent.networkplanningtool.data;
 
-import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 import android.graphics.Canvas;

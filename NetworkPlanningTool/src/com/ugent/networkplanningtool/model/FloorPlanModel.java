@@ -11,13 +11,13 @@ import java.util.Observable;
 import java.util.Stack;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
 import android.graphics.Point;
 import android.util.Log;
 
+import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
@@ -31,26 +31,25 @@ public class FloorPlanModel extends Observable {
 	
 	private static FloorPlanModel model = new FloorPlanModel();
 	
-	private List<Wall> wallList;
-	private List<ConnectionPoint> connectionPointList;
-	private List<AccessPoint> accessPointList;
-	private List<DataActivity> dataActivityList;
+//	private List<Wall> wallList;
+//	private List<ConnectionPoint> connectionPointList;
+//	private List<AccessPoint> accessPointList;
+//	private List<DataActivity> dataActivityList;
+    private FloorPlan floorPlan;
 	
-	private Stack<FloorPlanModel> undoStack = new Stack<FloorPlanModel>();
-	private Stack<FloorPlanModel> redoStack = new Stack<FloorPlanModel>();
+	private Stack<FloorPlanModel> undoStack;
+	private Stack<FloorPlanModel> redoStack;
 	
 	private FloorPlanModel(ArrayList<Wall> wallList, ArrayList<ConnectionPoint> connectionPointList, ArrayList<AccessPoint> accessPointList, ArrayList<DataActivity> dataActivityList){
-		this.wallList = wallList;
-		this.connectionPointList = connectionPointList;
-		this.accessPointList = accessPointList;
-		this.dataActivityList = dataActivityList;
+		floorPlan = new FloorPlan(wallList,connectionPointList,accessPointList,dataActivityList);
+        undoStack = new Stack<FloorPlanModel>();
+        redoStack = new Stack<FloorPlanModel>();
 	}
 	
 	private FloorPlanModel() {
-		wallList = new ArrayList<Wall>();
-		connectionPointList = new ArrayList<ConnectionPoint>();
-		accessPointList = new ArrayList<AccessPoint>();
-		dataActivityList = new ArrayList<DataActivity>();
+        floorPlan = new FloorPlan();
+        undoStack = new Stack<FloorPlanModel>();
+        redoStack = new Stack<FloorPlanModel>();
 	}
 	
 	public static FloorPlanModel getInstance(){
@@ -58,61 +57,41 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	public List<Wall> getWallList() {
-		return wallList;
+		return floorPlan.getWallList();
 	}
 	
 	public List<ConnectionPoint> getConnectionPointList() {
-		return connectionPointList;
+		return floorPlan.getConnectionPointList();
 	}
 	
 	public List<AccessPoint> getAccessPointList() {
-		return accessPointList;
+		return floorPlan.getAccessPointList();
 	}
 	
 	public List<DataActivity> getDataActivityList() {
-		return dataActivityList;
+		return floorPlan.getDataActivityList();
 	}
 	
 	private void setWallList(List<Wall> wallList) {
-		this.wallList = wallList;
+		floorPlan.setWallList(wallList);
 	}
 
 	private void setConnectionPointList(List<ConnectionPoint> connectionPointList) {
-		this.connectionPointList = connectionPointList;
+        floorPlan.setConnectionPointList(connectionPointList);
 	}
 
 	private void setAccessPointList(List<AccessPoint> accessPointList) {
-		this.accessPointList = accessPointList;
+        floorPlan.setAccessPointList(accessPointList);
 	}
 
 	private void setDataActivityList(List<DataActivity> dataActivityList) {
-		this.dataActivityList = dataActivityList;
-	}
-
-	public void reset(){
-		wallList.clear();
-		connectionPointList.clear();
-		accessPointList.clear();
-		dataActivityList.clear();
-		undoStack.clear();
-		redoStack.clear();
-		setChanged();
-		notifyObservers();
+		floorPlan.setDataActivityList(dataActivityList);
 	}
 	
 	public void loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException{
-		List<Wall> newWallList = new ArrayList<Wall>();
-		List<ConnectionPoint> newConnectionPointList = new ArrayList<ConnectionPoint>();
-		List<AccessPoint> newAccessPointList = new ArrayList<AccessPoint>();
-		List<DataActivity> newDataActivityList = new ArrayList<DataActivity>();
-		
-		FloorPlanIO.loadFloorPlan(file, newWallList, newConnectionPointList, newAccessPointList, newDataActivityList);
-		model.reset();
-		wallList.addAll(newWallList);
-		connectionPointList.addAll(newConnectionPointList);
-		accessPointList.addAll(newAccessPointList);
-		dataActivityList.addAll(newDataActivityList);
-		// update observers
+        this.floorPlan = FloorPlanIO.loadFloorPlan(file);
+        undoStack = new Stack<FloorPlanModel>();
+        redoStack = new Stack<FloorPlanModel>();
         model.setChanged();
 		model.notifyObservers();
 	}
@@ -124,7 +103,7 @@ public class FloorPlanModel extends Observable {
 			if(touchDataObject instanceof Wall){
 				Wall newWall = (Wall) touchDataObject;
 				Map<Double, Point> splitPoints = new HashMap<Double, Point>();
-				List<Wall> wallListCopy = new ArrayList<Wall>(wallList);
+				List<Wall> wallListCopy = new ArrayList<Wall>(getWallList());
 				for(Wall w : wallListCopy){
 					Point[] pl = Utils.getIntersectionSpecial(newWall.getPoint1(), newWall.getPoint2(), w.getPoint1(), w.getPoint2(),true);
 					if(pl.length > 0){
@@ -133,14 +112,15 @@ public class FloorPlanModel extends Observable {
 							add1 = (Wall) w.getPartialDeepCopy();
 							add1.setPoint1(w.getPoint1());
 							add1.setPoint2(pl[0]);
-							wallList.add(add1);
+							getWallList().add(add1);
 						}
 						Wall add2 = null;
-						if(!pl[0].equals(w.getPoint2())){
+                        System.out.println(pl[0].equals(w.getPoint2()));
+                        if(!pl[0].equals(w.getPoint2())){
 							add2 = (Wall) w.getPartialDeepCopy();
 							add2.setPoint1(pl[0]);
 							add2.setPoint2(w.getPoint2());
-							wallList.add(add2);
+                            getWallList().add(add2);
 						}
 						if(pl.length > 1){
 							Wall wallToSplit;
@@ -153,23 +133,21 @@ public class FloorPlanModel extends Observable {
 								Log.d("DEBUG","ptlDist2: "+Utils.pointToLineDistance(add2.getPoint1(), add2.getPoint2(), pl[1], true));
 								wallToSplit = add2;
 							}
-							Wall add3 = null;
 							if(!pl[1].equals(wallToSplit.getPoint1())){
-								add3 = (Wall) wallToSplit.getPartialDeepCopy();
+                                Wall add3 = (Wall) wallToSplit.getPartialDeepCopy();
 								add3.setPoint1(wallToSplit.getPoint1());
 								add3.setPoint2(pl[1]);
-								wallList.add(add3);
+                                getWallList().add(add3);
 							}
-							Wall add4 = null;
 							if(!pl[1].equals(wallToSplit.getPoint2())){
-								add4 = (Wall) wallToSplit.getPartialDeepCopy();
+                                Wall add4 = (Wall) wallToSplit.getPartialDeepCopy();
 								add4.setPoint1(pl[1]);
 								add4.setPoint2(wallToSplit.getPoint2());
-								wallList.add(add4);
+                                getWallList().add(add4);
 							}
-							wallList.remove(wallToSplit);
+                            getWallList().remove(wallToSplit);
 						}
-						wallList.remove(w);
+                        getWallList().remove(w);
 					}
 					for(Point p : pl){
 						double d1 = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), newWall.getPoint1(), false);
@@ -190,26 +168,26 @@ public class FloorPlanModel extends Observable {
 						add.setPoint2(p);
 						newWall.setPoint1(p);
 						
-						wallListCopy = new ArrayList<Wall>(wallList);
+						wallListCopy = new ArrayList<Wall>(getWallList());
 						for(Wall w : wallListCopy){
 							if(w.equalsLocation(add)){
-								wallList.remove(w);
+                                getWallList().remove(w);
 							}
 						}
 						if(!add.getPoint1().equals(add.getPoint2())){
-							wallList.add(add);
+                            getWallList().add(add);
 						}
 						
 					}
 				}
-				wallListCopy = new ArrayList<Wall>(wallList);
+				wallListCopy = new ArrayList<Wall>(getWallList());
 				for(Wall w : wallListCopy){
 					if(w.equalsLocation(newWall)){
-						wallList.remove(w);
+                        getWallList().remove(w);
 					}
 				}
 				if(!newWall.getPoint1().equals(newWall.getPoint2())){
-					wallList.add(newWall);
+                    getWallList().add(newWall);
 				}
 				setChanged();
 				notifyObservers();
@@ -219,9 +197,9 @@ public class FloorPlanModel extends Observable {
 				notifyObservers();
 			}
 		}
-		Log.d("DEBUG","size: "+wallList.size());
+		Log.d("DEBUG","size: "+getWallList().size());
 		int i = 0;
-		for(Wall w : wallList){
+		for(Wall w : getWallList()){
 			Log.d("DEBUG",""+(i++)+": "+w.getPoint1()+" "+w.getPoint2());
 		}
 	}
@@ -230,13 +208,13 @@ public class FloorPlanModel extends Observable {
 	
 	private void addDataObjectToList(DataObject dataObject){
 		if(dataObject instanceof AccessPoint){
-			accessPointList.add((AccessPoint) dataObject);
+			getAccessPointList().add((AccessPoint) dataObject);
 		}else if(dataObject instanceof Wall){
-			wallList.add((Wall) dataObject);
+			getWallList().add((Wall) dataObject);
 		}else if(dataObject instanceof ConnectionPoint){
-			connectionPointList.add((ConnectionPoint) dataObject);
+			getConnectionPointList().add((ConnectionPoint) dataObject);
 		}else if(dataObject instanceof DataActivity){
-			dataActivityList.add((DataActivity) dataObject);
+			getDataActivityList().add((DataActivity) dataObject);
 		}else{
 			Log.e("DEBUG", "Trying to add an invalid type of DataObject");
 		}
@@ -253,13 +231,13 @@ public class FloorPlanModel extends Observable {
 	private void removeDataObjectFromList(DataObject dataobject){
 		Log.d("DEBUG","removeDataObjectFromList");
 		if(dataobject instanceof AccessPoint){
-			accessPointList.remove(dataobject);
+			getAccessPointList().remove(dataobject);
 		}else if(dataobject instanceof Wall){
-			wallList.remove(dataobject);
+			getWallList().remove(dataobject);
 		}else if(dataobject instanceof ConnectionPoint){
-			connectionPointList.remove(dataobject);
+			getConnectionPointList().remove(dataobject);
 		}else if(dataobject instanceof DataActivity){
-			dataActivityList.remove(dataobject);
+			getDataActivityList().remove(dataobject);
 		}else{
 			Log.e("DEBUG", "Trying to add an invalid type of DataObject");
 		}
@@ -288,30 +266,30 @@ public class FloorPlanModel extends Observable {
 	}
 	
 	public void deleteAllAccessPoints(){
-		if(!accessPointList.isEmpty()){
+		if(!getAccessPointList().isEmpty()){
 			pushStateToStack(undoStack);
 			redoStack.clear();
-			accessPointList.clear();
+			getAccessPointList().clear();
 			setChanged();
 			notifyObservers();
 		}
 	}
 	
 	public void deleteAllDataActivities(){
-		if(!dataActivityList.isEmpty()){
+		if(!getDataActivityList().isEmpty()){
 			pushStateToStack(undoStack);
 			redoStack.clear();
-			dataActivityList.clear();
+			getDataActivityList().clear();
 			setChanged();
 			notifyObservers();
 		}
 	}
 	
 	public void deleteAllConnectionPoints(){
-		if(!connectionPointList.isEmpty()){
+		if(!getConnectionPointList().isEmpty()){
 			pushStateToStack(undoStack);
 			redoStack.clear();
-			connectionPointList.clear();
+			getConnectionPointList().clear();
 			setChanged();
 			notifyObservers();
 		}
@@ -320,7 +298,7 @@ public class FloorPlanModel extends Observable {
 	public Point getClosestCornerToPoint(Point p){
 		Point closest = null;
 		double distance = Double.POSITIVE_INFINITY;
-		for(Wall w : wallList){
+		for(Wall w : getWallList()){
 			double dist = Utils.pointToPointDistance(p, w.getPoint1());
 			if(dist < distance){
 				distance = dist;
@@ -338,7 +316,7 @@ public class FloorPlanModel extends Observable {
 	public Couple<Double,Wall> getClosestWallToPoint(Point p, boolean upright){
 		Wall closest = null;
 		double distance = Double.POSITIVE_INFINITY;
-		for(Wall w : wallList){
+		for(Wall w : getWallList()){
 			double dist = Utils.pointToLineDistance(w.getPoint1(), w.getPoint2(), p, upright);
 			if(dist < distance){
 				distance = dist;
@@ -353,19 +331,19 @@ public class FloorPlanModel extends Observable {
 
 	private void pushStateToStack(Stack<FloorPlanModel> stack){
 		ArrayList<Wall> wallsClone = new ArrayList<Wall>();
-		for(Wall w : wallList){
+		for(Wall w : getWallList()){
 			wallsClone.add(new Wall(w));
 		}
 		ArrayList<ConnectionPoint> connectionPointsClone = new ArrayList<ConnectionPoint>();
-		for(ConnectionPoint cp : connectionPointList){
+		for(ConnectionPoint cp : getConnectionPointList()){
 			connectionPointsClone.add(new ConnectionPoint(cp));
 		}
 		ArrayList<AccessPoint> accessPointsClone = new ArrayList<AccessPoint>();
-		for(AccessPoint ap : accessPointList){
+		for(AccessPoint ap : getAccessPointList()){
 			accessPointsClone.add(new AccessPoint(ap));
 		}
 		ArrayList<DataActivity> dataActivitiesClone = new ArrayList<DataActivity>();
-		for(DataActivity da : dataActivityList){
+		for(DataActivity da : getDataActivityList()){
 			dataActivitiesClone.add(new DataActivity(da));
 		}
 		FloorPlanModel fpm = new FloorPlanModel(
@@ -389,21 +367,21 @@ public class FloorPlanModel extends Observable {
 		double minDist = couple==null?Double.POSITIVE_INFINITY:couple.getA();
 		Log.d("DEBUG","mindist: "+minDist);
 		DataObject closest = couple==null?null:couple.getB();
-		for(DataObject dObj : accessPointList){
+		for(DataObject dObj : getAccessPointList()){
 			double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
 			if(dist < minDist){
 				minDist = dist;
 				closest = dObj;
 			}
 		}
-		for(DataObject dObj : dataActivityList){
+		for(DataObject dObj : getDataActivityList()){
 			double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
 			if(dist < minDist){
 				minDist = dist;
 				closest = dObj;
 			}
 		}
-		for(DataObject dObj : connectionPointList){
+		for(DataObject dObj : getConnectionPointList()){
 			double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
 			if(dist < minDist){
 				minDist = dist;

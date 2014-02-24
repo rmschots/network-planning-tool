@@ -13,7 +13,7 @@ public interface OnAsyncTaskCompleteListener<T> {
 	/**
      * Callback method that get invoked when the web service task is successfully completed.
      * 
-     * @param result
+     * @param result result of the task
      */
     void onTaskCompleteSuccess(T result);
 

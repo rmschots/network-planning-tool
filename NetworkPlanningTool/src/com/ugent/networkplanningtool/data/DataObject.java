@@ -14,7 +14,7 @@ public abstract class DataObject{
 		WALL,
 		ACCESS_POINT,
 		DATA_ACTIVITY,
-		CONNECTION_POINT;
+		CONNECTION_POINT
 	}
 	
 	public DataObjectType DATA_OBJECT_TYPE;
@@ -42,7 +42,7 @@ public abstract class DataObject{
 	}
 
 	/**
-	 * @param x1 the x1 to set
+	 * @param point1 the point1 to set
 	 */
 	public void setPoint1(Point point1) {
 		this.point1 = point1;

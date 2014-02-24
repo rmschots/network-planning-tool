@@ -27,15 +27,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
+import com.ugent.networkplanningtool.data.DeusRequest;
+import com.ugent.networkplanningtool.data.DeusResult;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.io.ImageIO;
-import com.ugent.networkplanningtool.io.SoapShit;
+import com.ugent.networkplanningtool.io.ksoap2.OnAsyncTaskCompleteListener;
 import com.ugent.networkplanningtool.io.ksoap2.WebServiceTaskManager;
+import com.ugent.networkplanningtool.io.ksoap2.services.PredictCoverageTask;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.MyScrollBar;
@@ -47,16 +51,16 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
 public class MainActivity extends Activity implements Observer,OnTouchListener{
+
+    private static final String TAG = MainActivity.class.getName();
 	
 	private static MainActivity mContext;
 	
 	private DrawingView designView;
 	private TextView locationText;
 	private TextView coordinatesText;
-	private MyScrollBar hScrollBar;
-	private MyScrollBar vScrollBar;
-	
-	private View designActive;
+
+    private View designActive;
 	private View mainActive;
 	private View parametersActive;
 	private View toolsActive;
@@ -74,12 +78,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private AccessPointView accessPointView;
 	private DataActivityView dataActivityView;
 	private ConnectionPointView connectionPointView;
-	
-	private Button eraseAccessPointsButton;
-	private Button eraseDataActivitiesButton;
-	private Button eraseConnectionPointsButton;
-	
-	private ZoomControls zoomControls;
+
+    private ZoomControls zoomControls;
 	private ImageButton undoButton;
 	private ImageButton redoButton;
 	
@@ -98,9 +98,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         designView = (DrawingView) findViewById(R.id.drawingView);
         drawingModel = new DrawingModel(designView.getWidth(), designView.getHeight());
         floorPlanModel = FloorPlanModel.getInstance();
-        
-        hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
-        vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
+
+        MyScrollBar hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
+        MyScrollBar vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
         locationText = (TextView)findViewById(R.id.locationText);
         coordinatesText = (TextView)findViewById(R.id.coordinatesTextView);
         
@@ -116,10 +116,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         accessPointView = (AccessPointView) findViewById(R.id.accessPointView);
         dataActivityView = (DataActivityView) findViewById(R.id.dataActivityView);
         connectionPointView = (ConnectionPointView) findViewById(R.id.connectionPointView);
-        
-        eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
-        eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
-        eraseConnectionPointsButton = (Button) findViewById(R.id.eraseConnectionPointsButton);
+
+        Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
+        Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
+        Button eraseConnectionPointsButton = (Button) findViewById(R.id.eraseConnectionPointsButton);
         
         
         mainActive = findViewById(R.id.designButton);
@@ -176,23 +176,23 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		});
         
         eraseAccessPointsButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				floorPlanModel.deleteAllAccessPoints();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                floorPlanModel.deleteAllAccessPoints();
+            }
+        });
         eraseDataActivitiesButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				floorPlanModel.deleteAllDataActivities();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                floorPlanModel.deleteAllDataActivities();
+            }
+        });
         eraseConnectionPointsButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				floorPlanModel.deleteAllConnectionPoints();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                floorPlanModel.deleteAllConnectionPoints();
+            }
+        });
         
         designView.setModel(drawingModel);
         hScrollBar.setModel(drawingModel);
@@ -408,9 +408,43 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleNewFileClick(View v){
-		
-		//floorPlanModel.reset();
-		new SoapShit().execute();
+        //floorPlanModel.reset();
+        DeusRequest dr = new DeusRequest(
+                DeusRequest.RequestType.OPTIMAL_PLACEMENT,
+                "1.8.0.a",
+                FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance()),
+                "sidp",
+                20.0,
+                2.5,
+                "Surfing",
+                "3G phone",
+                0.0,
+                100.0,
+                0.0,
+                7.0,
+                5.0,
+                "WiFi",
+                2400,
+                14,
+                2,
+                250,
+                0, // not used
+                0, // not used
+                1,
+                true);
+        taskManager.executeTask(new PredictCoverageTask(),dr,"ws in progress",new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                Log.d(TAG, "GREAT SUCCESS!");
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
 	}
 	
 	public static MainActivity getInstance(){

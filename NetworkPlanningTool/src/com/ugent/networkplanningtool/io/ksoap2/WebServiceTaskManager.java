@@ -17,7 +17,7 @@ public class WebServiceTaskManager {
      * Executes a task in the background thread, while displaying a busy dialog (non cancellable).
      * 
      * @param task
-     *            {@link AbstractProgressableAsyncTask}
+     *            {@link com.ugent.networkplanningtool.io.ksoap2.AbstractWebServiceTask}
      * @param request
      *            request for the background task
      * @param progressLabel

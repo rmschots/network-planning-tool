@@ -61,7 +61,7 @@ public class Wall extends DataObject{
 	}
 
 	/**
-	 * @param x2 the x2 to set
+	 * @param point2 the point2 to set
 	 */
 	public void setPoint2(Point point2) {
 		this.point2 = point2;
@@ -117,7 +117,7 @@ public class Wall extends DataObject{
 	}
 
 	/**
-	 * @param color the Material to set
+	 * @param material the Material to set
 	 */
 	public void setMaterial(Material material) {
 		if(material != null){

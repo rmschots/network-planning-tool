@@ -1,5 +1,7 @@
 package com.ugent.networkplanningtool.data;
 
+import android.util.SparseArray;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public enum Frequency {
 	private int number;
 	
 	private static Map<String, Frequency> textToFreqMapping;
-	private static Map<Integer, Frequency> numberToFreqMapping;
+	private static SparseArray<Frequency> numberToFreqMapping;
 	
 	private Frequency(String text, int number){
 		this.text = text;
@@ -45,7 +47,7 @@ public enum Frequency {
 	}
 	
 	private static void initMapping2() {
-		numberToFreqMapping = new HashMap<Integer, Frequency>();
+		numberToFreqMapping = new SparseArray<Frequency>();
         for (Frequency s : values()) {
         	numberToFreqMapping.put(s.getNumber(), s);
         }

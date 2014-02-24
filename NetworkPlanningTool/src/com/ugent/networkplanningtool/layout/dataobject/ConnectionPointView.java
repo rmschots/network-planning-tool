@@ -47,7 +47,7 @@ public class ConnectionPointView extends DataObjectView {
 			if(type.equals(ViewType.INFO)){
 				connectionTypeRadioGroup.setEnabled(false);
 				for(int i = 0; i < connectionTypeRadioGroup.getChildCount(); i++){
-					((RadioButton)connectionTypeRadioGroup.getChildAt(i)).setEnabled(false);
+					(connectionTypeRadioGroup.getChildAt(i)).setEnabled(false);
 				}
 			}else{
 				OnCheckedChangeListener listener = new OnCheckedChangeListener() {

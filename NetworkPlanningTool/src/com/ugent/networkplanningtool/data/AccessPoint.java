@@ -19,13 +19,13 @@ public class AccessPoint extends DataObject{
 	private Frequency frequency;
 	private FrequencyBand frequencyband;
 	private int gain;
-	private int power;
+	private double power;
 	private Network network;
 	
 	public AccessPoint(AccessPoint accessPoint){
 		super(accessPoint);
 		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
-		this.name = new String(accessPoint.name);
+		this.name = accessPoint.name;
 		this.height = accessPoint.height;
 		this.type = accessPoint.type;
 		this.model = accessPoint.model;
@@ -38,7 +38,7 @@ public class AccessPoint extends DataObject{
 
 	public AccessPoint(String name, int height, RadioType type,
 			RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
-			int power, Network network) {
+            double power, Network network) {
 		super();
 		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
 		this.name = name;
@@ -54,7 +54,7 @@ public class AccessPoint extends DataObject{
 	
 	public AccessPoint(Point point, String name, int height, RadioType type,
 			RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
-			int power, Network network) {
+            double power, Network network) {
 		super(point);
 		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
 		this.name = name;
@@ -124,7 +124,7 @@ public class AccessPoint extends DataObject{
 		this.gain = gain;
 	}
 
-	public int getPower() {
+	public double getPower() {
 		return power;
 	}
 

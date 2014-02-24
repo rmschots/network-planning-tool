@@ -1,5 +1,7 @@
 package com.ugent.networkplanningtool.data;
 
+import android.util.SparseArray;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +15,7 @@ public enum Thickness {
 	private String text;
 	private int number;
 	private static Map<String, Thickness> textToThicknessMapping;
-	private static Map<Integer, Thickness> numberToThicknessMapping;
+	private static SparseArray<Thickness> numberToThicknessMapping;
 	
 	private Thickness(String text, int number){
 		this.text = text;
@@ -35,7 +37,7 @@ public enum Thickness {
 	}
 	
 	private static void initMapping2() {
-		numberToThicknessMapping = new HashMap<Integer, Thickness>();
+		numberToThicknessMapping = new SparseArray<Thickness>();
         for (Thickness s : values()) {
         	numberToThicknessMapping.put(s.getNumber(), s);
         }

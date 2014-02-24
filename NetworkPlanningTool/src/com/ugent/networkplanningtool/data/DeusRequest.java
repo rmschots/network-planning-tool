@@ -13,56 +13,51 @@ public class DeusRequest {
 	private String clientVersion;
 	private String xml;
 	private String model;
-	private double grid_size;
-	private String default_type;
-	private String receiver_name;
-	private double receiver_gain;
-	private double receiver_height;
+	private double gridSize;
+    private double roomHeightM;
+	private String defaultType;
+	private String receiverName;
+	private double receiverGain;
+	private double receiverHeight;
 	private double interference;
-	private double shadow_margin;
-	private double fade_margin;
-	private String ap_type;
-	private int ap_frequency;
-	private int ap_power;
-	private int ap_gain;
-	private int ap_height;
-	private int max_e_field;
-	private int distance_to_ap;
+	private double shadowMargin;
+	private double fadeMargin;
+	private String apType;
+	private int apFrequency;
+	private int apPower;
+	private int apGain;
+	private int apHeight;
+	private int maxEField;
+	private int distanceToAp;
 	private int function;
-	private boolean frequency_planning;
-	
-	private DeusRequest(RequestType type, String clientVersion, String xml, String model,
-			double grid_size, String default_type, String receiver_name,
-			double receiver_gain, double receiver_height, double interference,
-			double shadow_margin, double fade_margin, String ap_type,
-			int ap_frequency, int ap_power, int ap_gain, int ap_height,
-			int max_e_field, int distance_to_ap, int function,
-			boolean frequency_planning) {
-		this.type = type;
-		this.clientVersion = clientVersion;
-		this.xml = xml;
-		this.model = model;
-		this.grid_size = grid_size;
-		this.default_type = default_type;
-		this.receiver_name = receiver_name;
-		this.receiver_gain = receiver_gain;
-		this.receiver_height = receiver_height;
-		this.interference = interference;
-		this.shadow_margin = shadow_margin;
-		this.fade_margin = fade_margin;
-		this.ap_type = ap_type;
-		this.ap_frequency = ap_frequency;
-		this.ap_power = ap_power;
-		this.ap_gain = ap_gain;
-		this.ap_height = ap_height;
-		this.max_e_field = max_e_field;
-		this.distance_to_ap = distance_to_ap;
-		this.function = function;
-		this.frequency_planning = frequency_planning;
-	}
-	
-	
-	/**
+	private boolean frequencyPlanning;
+
+    public DeusRequest(RequestType type, String clientVersion, String xml, String model, double gridSize, double roomHeightM, String defaultType, String receiverName, double receiverGain, double receiverHeight, double interference, double shadowMargin, double fadeMargin, String apType, int apFrequency, int apPower, int apGain, int apHeight, int maxEField, int distanceToAp, int function, boolean frequencyPlanning) {
+        this.type = type;
+        this.clientVersion = clientVersion;
+        this.xml = xml;
+        this.model = model;
+        this.gridSize = gridSize;
+        this.roomHeightM = roomHeightM;
+        this.defaultType = defaultType;
+        this.receiverName = receiverName;
+        this.receiverGain = receiverGain;
+        this.receiverHeight = receiverHeight;
+        this.interference = interference;
+        this.shadowMargin = shadowMargin;
+        this.fadeMargin = fadeMargin;
+        this.apType = apType;
+        this.apFrequency = apFrequency;
+        this.apPower = apPower;
+        this.apGain = apGain;
+        this.apHeight = apHeight;
+        this.maxEField = maxEField;
+        this.distanceToAp = distanceToAp;
+        this.function = function;
+        this.frequencyPlanning = frequencyPlanning;
+    }
+
+    /**
 	 * @return the type
 	 */
 	public RequestType getType() {
@@ -91,38 +86,42 @@ public class DeusRequest {
 	}
 
 	/**
-	 * @return the grid_size
+	 * @return the gridSize
 	 */
-	public double getGrid_size() {
-		return grid_size;
+	public double getGridSize() {
+		return gridSize;
+	}
+
+    public double getRoomHeightM() {
+        return roomHeightM;
+    }
+
+    /**
+	 * @return the defaultType
+	 */
+	public String getDefaultType() {
+		return defaultType;
 	}
 
 	/**
-	 * @return the default_type
+	 * @return the receiverName
 	 */
-	public String getDefault_type() {
-		return default_type;
+	public String getReceiverName() {
+		return receiverName;
 	}
 
 	/**
-	 * @return the receiver_name
+	 * @return the receiverGain
 	 */
-	public String getReceiver_name() {
-		return receiver_name;
+	public double getReceiverGain() {
+		return receiverGain;
 	}
 
 	/**
-	 * @return the receiver_gain
+	 * @return the receiverHeight
 	 */
-	public double getReceiver_gain() {
-		return receiver_gain;
-	}
-
-	/**
-	 * @return the receiver_height
-	 */
-	public double getReceiver_height() {
-		return receiver_height;
+	public double getReceiverHeight() {
+		return receiverHeight;
 	}
 
 	/**
@@ -133,66 +132,66 @@ public class DeusRequest {
 	}
 
 	/**
-	 * @return the shadow_margin
+	 * @return the shadowMargin
 	 */
-	public double getShadow_margin() {
-		return shadow_margin;
+	public double getShadowMargin() {
+		return shadowMargin;
 	}
 
 	/**
-	 * @return the fade_margin
+	 * @return the fadeMargin
 	 */
-	public double getFade_margin() {
-		return fade_margin;
+	public double getFadeMargin() {
+		return fadeMargin;
 	}
 
 	/**
-	 * @return the ap_type
+	 * @return the apType
 	 */
-	public String getAp_type() {
-		return ap_type;
+	public String getApType() {
+		return apType;
 	}
 
 	/**
-	 * @return the ap_frequency
+	 * @return the apFrequency
 	 */
-	public int getAp_frequency() {
-		return ap_frequency;
+	public int getApFrequency() {
+		return apFrequency;
 	}
 
 	/**
-	 * @return the ap_power
+	 * @return the apPower
 	 */
-	public int getAp_power() {
-		return ap_power;
+	public int getApPower() {
+		return apPower;
 	}
 
 	/**
-	 * @return the ap_gain
+	 * @return the apGain
 	 */
-	public int getAp_gain() {
-		return ap_gain;
+	public int getApGain() {
+		return apGain;
 	}
 
 	/**
-	 * @return the ap_height
+	 * @return the apHeight
 	 */
-	public int getAp_height() {
-		return ap_height;
+	public int getApHeight() {
+		return apHeight;
 	}
 
 	/**
-	 * @return the max_e_field
+	 * @return the maxEField
 	 */
-	public int getMax_e_field() {
-		return max_e_field;
+	public int getMaxEField() {
+		return maxEField;
 	}
 
 	/**
-	 * @return the distance_to_ap
+	 * @return the distanceToAp
 	 */
-	public int getDistance_to_ap() {
-		return distance_to_ap;
+	public int getDistanceToAp() {
+		return distanceToAp;
 	}
 
 	/**
@@ -203,10 +202,10 @@ public class DeusRequest {
 	}
 
 	/**
-	 * @return the frequency_planning
+	 * @return the frequencyPlanning
 	 */
-	public boolean isFrequency_planning() {
-		return frequency_planning;
+	public boolean isFrequencyPlanning() {
+		return frequencyPlanning;
 	}
 
 }

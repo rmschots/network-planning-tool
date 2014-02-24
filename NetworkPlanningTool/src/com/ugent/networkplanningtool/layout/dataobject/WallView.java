@@ -44,8 +44,9 @@ public class WallView extends DataObjectView {
 
 	public WallView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		tag = getTag();
-		init();
+        tag = getTag();
+        init();
+
 	}
 	
 	private void init(){

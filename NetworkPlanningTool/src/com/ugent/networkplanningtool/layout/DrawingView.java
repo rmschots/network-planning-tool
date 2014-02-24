@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import android.R.drawable;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -23,10 +21,10 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.CSVResult;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
-import com.ugent.networkplanningtool.data.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
@@ -37,7 +35,6 @@ import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
-import com.ugent.networkplanningtool.model.OptimizeResultModel;
 
 public class DrawingView extends View implements Observer{
 
@@ -56,7 +53,7 @@ public class DrawingView extends View implements Observer{
 		if(drawingModel != null){
 			drawBackground(canvas);
 			drawGrid(canvas);
-			drawResults(canvas);
+//			drawResults(canvas);
 			drawWalls(canvas);
 			drawActivities(canvas);
 			drawConnectionPoints(canvas);
@@ -66,14 +63,14 @@ public class DrawingView extends View implements Observer{
 		super.onDraw(canvas);
 	}
 	
-	private void drawResults(Canvas canvas) {
-		OptimizeResultModel orm = OptimizeResultModel.getInstance();
-		if(!orm.getResultList().isEmpty()){
-			for(DeusResult or : orm.getResultList()){
-				or.drawOnCanvas(canvas, drawingModel, paint, false);
-			}
-		}
-	}
+//	private void drawResults(Canvas canvas) {
+//		OptimizeResultModel orm = OptimizeResultModel.getInstance();
+//		if(!orm.getResultList().isEmpty()){
+//			for(CSVResult or : orm.getResultList()){
+//				or.drawOnCanvas(canvas, drawingModel, paint, false);
+//			}
+//		}
+//	}
 	
 	private void drawBackground(Canvas canvas) {
 		if(drawingModel.getBackgroundImage() != null){
@@ -145,11 +142,10 @@ public class DrawingView extends View implements Observer{
 			canvas.drawLine(0, i, viewWidth, i, paint);
 		}
 	}
-	
-	
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
 		MotionEvent movedEvent = MotionEvent.obtain(event);
 		movedEvent.setLocation(event.getX()-50,event.getY()-50);
 		
@@ -218,14 +214,14 @@ public class DrawingView extends View implements Observer{
 						break;
 					}
         			alert.setView(view);
-        			alert.setOnDismissListener(new OnDismissListener() {
-						@Override
-						public void onDismiss(DialogInterface dialog) {
-							drawingModel.deselect();
-						}
-					});
         			alert.setPositiveButton(android.R.string.ok, null);
         			AlertDialog d = alert.create();
+                    d.setOnDismissListener(new OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            drawingModel.deselect();
+                        }
+                    });
         			d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         			d.show();
         		}else{
@@ -310,7 +306,7 @@ public class DrawingView extends View implements Observer{
 	}
 
 	/**
-	 * @param model the model to set
+	 * @param drawingModel the model to set
 	 */
 	public void setModel(DrawingModel drawingModel) {
 		this.drawingModel = drawingModel;

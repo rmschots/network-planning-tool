@@ -42,7 +42,7 @@ public abstract class DataObjectView extends LinearLayout {
 	protected ViewType type;
 	
 	public DataObjectView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+		super(context, attrs);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DataObjectView);
 		type = ViewType.getViewTypeByText(a.getString(R.styleable.DataObjectView_draw));
 		a.recycle();
@@ -50,9 +50,9 @@ public abstract class DataObjectView extends LinearLayout {
 
 	public DataObjectView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DataObjectView);
-		type = ViewType.getViewTypeByText(a.getString(R.styleable.DataObjectView_draw));
-		a.recycle();
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DataObjectView);
+        type = ViewType.getViewTypeByText(a.getString(R.styleable.DataObjectView_draw));
+        a.recycle();
 	}
 
 	public DataObjectView(Context context) {

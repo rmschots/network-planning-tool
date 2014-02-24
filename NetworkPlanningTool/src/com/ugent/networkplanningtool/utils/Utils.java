@@ -17,10 +17,9 @@ public class Utils {
 	/**
 	   * Return child elements with specified name.
 	   * 
-	   * @param parent
-	   * @param ns
-	   * @param nodeName
-	   * @return
+	   * @param parent parent node
+	   * @param nodeName name of node
+	   * @return children
 	   */
 	public static List<Node> getChildrenWithName(Node parent, String nodeName) {
 	    List<Node> r = new ArrayList<Node>();

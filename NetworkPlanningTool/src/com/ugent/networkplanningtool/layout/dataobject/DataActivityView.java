@@ -10,7 +10,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ActivityType;
-import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
 import com.ugent.networkplanningtool.model.DrawingModel;

@@ -35,7 +35,7 @@ public class MyScrollBar extends View implements Observer{
 
 	public MyScrollBar(Context context) {
 		super(context);
-		horizontal = getWidth()<getHeight()?false:true;
+		horizontal = getWidth() >= getHeight();
 	}
 
 	public MyScrollBar(Context context, AttributeSet attrs) {
@@ -141,7 +141,7 @@ public class MyScrollBar extends View implements Observer{
 
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		horizontal = w<h?false:true;
+		horizontal = w >= h;
 		super.onSizeChanged(w, h, oldw, oldh);
 	}
 
