@@ -1,15 +1,5 @@
 package com.ugent.networkplanningtool.layout.dataobject;
 
-import com.ugent.networkplanningtool.R;
-import com.ugent.networkplanningtool.data.Material;
-import com.ugent.networkplanningtool.data.SnapTo;
-import com.ugent.networkplanningtool.data.Thickness;
-import com.ugent.networkplanningtool.data.Wall;
-import com.ugent.networkplanningtool.data.WallType;
-import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
-import com.ugent.networkplanningtool.model.DrawingModel;
-import com.ugent.networkplanningtool.utils.UniqueIdGenerator;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,6 +10,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+
+import com.ugent.networkplanningtool.R;
+import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
+import com.ugent.networkplanningtool.data.Wall;
+import com.ugent.networkplanningtool.data.enums.Material;
+import com.ugent.networkplanningtool.data.enums.SnapTo;
+import com.ugent.networkplanningtool.data.enums.Thickness;
+import com.ugent.networkplanningtool.data.enums.WallType;
+import com.ugent.networkplanningtool.model.DrawingModel;
+import com.ugent.networkplanningtool.utils.UniqueIdGenerator;
 
 public class WallView extends DataObjectView {
 	

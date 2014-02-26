@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="accesspoints" >
+    android:tag="accesspoints">
 
     <Spinner
         android:id="@+id/networkSignalTypeSpinner"
@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <Spinner
             android:id="@+id/networkMHzSpinner"
@@ -35,7 +35,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <Spinner
             android:id="@+id/networkChannelSpinner"
@@ -76,7 +76,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/transmitPowerEditText"
@@ -85,7 +85,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="numberSigned"
-            android:text="0" >
+            android:text="0">
 
             <requestFocus />
         </EditText>
@@ -109,7 +109,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/antennaGainEditText"
@@ -139,7 +139,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/elevationEditText"
@@ -171,6 +171,6 @@
         android:id="@+id/networkIDSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/networksArray" />
+        android:entries="@array/receivers" />
 
 </LinearLayout>

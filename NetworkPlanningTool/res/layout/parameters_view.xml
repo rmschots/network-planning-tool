@@ -55,26 +55,37 @@
         android:layout_height="wrap_content"
         android:measureAllChildren="false" >
 
-        <include
+        <com.ugent.networkplanningtool.layout.parameters.ReceiversView
+            android:id="@+id/receiversView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/parameters_view_receivers" />
+            android:tag="receivers">
 
-        <include
+        </com.ugent.networkplanningtool.layout.parameters.ReceiversView>
+
+        <com.ugent.networkplanningtool.layout.parameters.MarginsView
+            android:id="@+id/marginsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/parameters_view_margins" />
+            android:tag="margins">
 
-        <include
+        </com.ugent.networkplanningtool.layout.parameters.MarginsView>
+
+        <com.ugent.networkplanningtool.layout.parameters.AlgorithmsView
+            android:id="@+id/algorithmsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/parameters_view_algorithms" />
+            android:tag="algorithms">
 
-        <include
+        </com.ugent.networkplanningtool.layout.parameters.AlgorithmsView>
+
+        <com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView
+            android:id="@+id/receiversView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/parameters_view_generatedaps" />
+            android:tag="generatedaps">
 
+        </com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView>
     </ViewFlipper>
 
 </LinearLayout>

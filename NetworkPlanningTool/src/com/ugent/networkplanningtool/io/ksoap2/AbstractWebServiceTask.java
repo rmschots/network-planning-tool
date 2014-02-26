@@ -4,14 +4,14 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.CSVResult;
-import com.ugent.networkplanningtool.data.DeusResult;
-import com.ugent.networkplanningtool.data.Frequency;
-import com.ugent.networkplanningtool.data.FrequencyBand;
-import com.ugent.networkplanningtool.data.RadioModel;
-import com.ugent.networkplanningtool.data.RadioType;
+import com.ugent.networkplanningtool.data.FloorPlan;
+import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
+import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
+import com.ugent.networkplanningtool.data.enums.Frequency;
+import com.ugent.networkplanningtool.data.enums.FrequencyBand;
+import com.ugent.networkplanningtool.data.enums.RadioModel;
+import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
 
 import org.ksoap2.serialization.PropertyInfo;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R> {
 
-	private final String TAG = getClass().getName();
+    private final String TAG = getClass().getName();
 
     private OnAsyncTaskCompleteListener<R> taskCompletionListener;
     private WebServiceTaskManager progressTracker;
@@ -70,9 +70,8 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
     protected abstract R performTaskInBackground(P parameter) throws Exception;
 
     /**
-     * @param result
-     *            to be sent back to the observer (typically an {@link android.app.Activity} running on the UI Thread). This can be <code>null</code> if
-     *            an error occurs while attempting to invoke the web service (e.g. web service was unreachable, or network I/O issue etc.)
+     * @param result to be sent back to the observer (typically an {@link android.app.Activity} running on the UI Thread). This can be <code>null</code> if
+     *               an error occurs while attempting to invoke the web service (e.g. web service was unreachable, or network I/O issue etc.)
      */
     @Override
     protected final void onPostExecute(R result) {
@@ -94,7 +93,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
         taskCompletionListener = null;
     }
 
-    protected DeusResult parseDeusResult(SoapObject so) throws ServiceException{
+    protected DeusResult parseDeusResult(SoapObject so) throws ServiceException {
         System.out.println(so.toString());
         Double[] infoArray = new Double[3];
         int infoIndex = 0;
@@ -108,7 +107,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             }
         }
         List<AccessPoint> accessPoints = new ArrayList<AccessPoint>();
-        if(so.hasProperty("accesspoints")){
+        if (so.hasProperty("accesspoints")) {
             accessPoints = parseAccessPoints(so.getPropertyAsString("accesspoints"));
         }
 
@@ -116,7 +115,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
         List<CSVResult> csv = parseCSV(so.getPropertyAsString("csv"));
 
         FloorPlan normalizedPlan = null;
-        if(so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")){
+        if (so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")) {
             try {
                 normalizedPlan = FloorPlanIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
             } catch (Exception e) {
@@ -124,7 +123,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             }
         }
         FloorPlan optimizedPlan = null;
-        if(so.hasProperty("optimizedPlan") && !so.getPropertyAsString("optimizedPlan").equals("anyType{}")){
+        if (so.hasProperty("optimizedPlan") && !so.getPropertyAsString("optimizedPlan").equals("anyType{}")) {
             try {
                 optimizedPlan = FloorPlanIO.loadFloorPlan(so.getPropertyAsString("optimizedPlan"));
             } catch (Exception e) {
@@ -137,8 +136,8 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
 
     private static List<CSVResult> parseCSV(String csvString) {
         List<CSVResult> orList = new ArrayList<CSVResult>();
-        if(csvString.startsWith("L")){
-            csvString = csvString.substring(csvString.indexOf('\n')+1);
+        if (csvString.startsWith("L")) {
+            csvString = csvString.substring(csvString.indexOf('\n') + 1);
         }
         String[] orStrings = csvString.split("\n");
         for (String orString : orStrings) {
@@ -156,7 +155,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             double eField = Double.parseDouble(attrStrings[i++]);
             double pdLos = 0;
             double pdDif = 0;
-            if(attrStrings.length != 12){
+            if (attrStrings.length != 12) {
                 pdLos = Double.parseDouble(attrStrings[i++]);
                 pdDif = Double.parseDouble(attrStrings[i++]);
             }
@@ -164,7 +163,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             double drawingSize = Double.parseDouble(attrStrings[i]);
             CSVResult or = new CSVResult(new Point((int) x, (int) y),
                     (int) level, (int) download, (int) upload, pathloss, powerRX,
-                    powerTX, absorption, eField, pdLos,pdDif,(int) roomNumber,
+                    powerTX, absorption, eField, pdLos, pdDif, (int) roomNumber,
                     (int) drawingSize);
             orList.add(or);
         }

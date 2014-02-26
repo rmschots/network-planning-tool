@@ -1,10 +1,10 @@
-package com.ugent.networkplanningtool.data;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.ugent.networkplanningtool.data.enums;
 
 import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum FrequencyBand {
 	FREQBAND_2100(MainActivity.getInstance().getResources().getString(R.string.frequencyBand2100)),
@@ -37,4 +37,9 @@ public enum FrequencyBand {
 	public String getText(){
 		return text;
 	}
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

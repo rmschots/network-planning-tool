@@ -1,7 +1,7 @@
 package com.ugent.networkplanningtool.io.ksoap2.services;
 
-import com.ugent.networkplanningtool.data.DeusRequest;
-import com.ugent.networkplanningtool.data.DeusResult;
+import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
+import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.io.ksoap2.AbstractWebServiceTask;
 import com.ugent.networkplanningtool.io.ksoap2.marshal.MarshalDouble;
 

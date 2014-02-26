@@ -1,4 +1,7 @@
-package com.ugent.networkplanningtool.data;
+package com.ugent.networkplanningtool.data.ServiceData;
+
+import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.FloorPlan;
 
 import java.util.List;
 import java.util.Vector;

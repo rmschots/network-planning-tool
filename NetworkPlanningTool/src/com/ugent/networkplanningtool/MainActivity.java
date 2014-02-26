@@ -1,11 +1,5 @@
 package com.ugent.networkplanningtool;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -30,11 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
-import ar.com.daidalos.afiledialog.FileChooserDialog;
-import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
-import com.ugent.networkplanningtool.data.DeusRequest;
-import com.ugent.networkplanningtool.data.DeusResult;
+import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
+import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.io.ImageIO;
 import com.ugent.networkplanningtool.io.ksoap2.OnAsyncTaskCompleteListener;
@@ -47,8 +39,18 @@ import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
 import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
 import com.ugent.networkplanningtool.layout.dataobject.WallView;
+import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
+
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
 public class MainActivity extends Activity implements Observer,OnTouchListener{
 
@@ -79,11 +81,15 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private DataActivityView dataActivityView;
 	private ConnectionPointView connectionPointView;
 
+    private AlgorithmsView algorithmsView;
+
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
 	private ImageButton redoButton;
-	
-	private DrawingModel drawingModel;
+
+    private Button resultsButton;
+
+    private DrawingModel drawingModel;
 	private FloorPlanModel floorPlanModel;
 	
 	private WebServiceTaskManager taskManager;
@@ -117,6 +123,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         dataActivityView = (DataActivityView) findViewById(R.id.dataActivityView);
         connectionPointView = (ConnectionPointView) findViewById(R.id.connectionPointView);
 
+        algorithmsView = (AlgorithmsView) findViewById(R.id.algorithmsView);
+
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
         Button eraseConnectionPointsButton = (Button) findViewById(R.id.eraseConnectionPointsButton);
@@ -132,14 +140,17 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         undoButton = (ImageButton) findViewById(R.id.undoButton);
         redoButton = (ImageButton) findViewById(R.id.redoButton);
-        
+
+        resultsButton = (Button) findViewById(R.id.resultsButton);
+
         wallView.setDrawingModel(drawingModel);
         doorView.setDrawingModel(drawingModel);
         windowView.setDrawingModel(drawingModel);
         accessPointView.setDrawingModel(drawingModel);
         dataActivityView.setDrawingModel(drawingModel);
         connectionPointView.setDrawingModel(drawingModel);
-        
+
+
         onMainFlipClick(mainActive);
         onDesignFlipClick(designActive);
         onParametersFlipClick(parametersActive);
@@ -408,44 +419,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleNewFileClick(View v){
-        //floorPlanModel.reset();
-        DeusRequest dr = new DeusRequest(
-                DeusRequest.RequestType.OPTIMAL_PLACEMENT,
-                "1.8.0.a",
-                FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance()),
-                "sidp",
-                20.0,
-                2.5,
-                "Surfing",
-                "3G phone",
-                0.0,
-                100.0,
-                0.0,
-                7.0,
-                5.0,
-                "WiFi",
-                2400,
-                14,
-                2,
-                250,
-                0, // not used
-                0, // not used
-                1,
-                true);
-        taskManager.executeTask(new PredictCoverageTask(),dr,"ws in progress",new OnAsyncTaskCompleteListener<DeusResult>() {
-            @Override
-            public void onTaskCompleteSuccess(DeusResult result) {
-                Log.d(TAG, "GREAT SUCCESS!");
-            }
-
-            @Override
-            public void onTaskFailed(Exception cause) {
-                Log.e(TAG, cause.getMessage(), cause);
-                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-	}
+        floorPlanModel.resetModel();
+    }
 	
 	public static MainActivity getInstance(){
         return mContext;
@@ -557,8 +532,55 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		dialog.setShowOnlySelectable(true);
 		displayNewDialog(dialog);
 	}
-	
-	@Override
+
+    public void onPredictClick(final View v) {
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.OPTIMAL_PLACEMENT);
+        taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                onResultsFlipClick(findViewById(R.id.renderDataButton));
+                onMainFlipClick(resultsButton);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {
+        String pathLossModel = algorithmsView.getPathLossModel().getValue();
+        boolean frequencyPlanning = algorithmsView.isGetFrequencies();
+
+
+        return new DeusRequest(
+                type,
+                "1.8.0.a",
+                FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance()),
+                pathLossModel,
+                20.0,
+                2.5,
+                "Surfing",
+                "3G phone",
+                0.0,
+                100.0,
+                0.0,
+                7.0,
+                5.0,
+                "WiFi",
+                2400,
+                14,
+                2,
+                250,
+                0, // not used
+                0, // not used
+                1,
+                true);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (taskManager == null) {

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="receivers" >
+    android:tag="receivers">
 
     <Spinner
         android:id="@+id/receiversSpinner"
@@ -15,26 +15,30 @@
         android:id="@+id/wifiCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="WiFi" />
+        android:checked="false"
+        android:text="WiFi"
+        android:enabled="false" />
 
     <CheckBox
         android:id="@+id/sensonCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sensor" />
+        android:text="Sensor"
+        android:enabled="false" />
 
     <CheckBox
         android:id="@+id/threeGCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3G" />
+        android:text="3G"
+        android:enabled="false" />
 
     <CheckBox
         android:id="@+id/fourGCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="4G" />
+        android:text="4G"
+        android:enabled="false" />
 
     <TextView
         android:id="@+id/receiverElevationText"

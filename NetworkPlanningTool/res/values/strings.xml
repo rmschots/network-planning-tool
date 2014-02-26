@@ -109,7 +109,10 @@
     <string name="sensorText">Sensor</string>
     <string name="lteFemtocellText">LTE Femtocell</string>
     <string name="umtsFemtocellText">UMTS Femtocell</string>
-    
+
+    <string name="g3Text">3G</string>
+    <string name="g4Text">4G</string>
+
     <string-array name="accesspointsTypesArray">
         <item>@string/wifiText</item>
         <item>@string/sensorText</item>
@@ -187,6 +190,34 @@
         <item>@string/networkFText</item>
         <item>@string/networkGText</item>
         <item>@string/networkHText</item>
+    </string-array>
+
+    <string name="whippText">WHIPP</string>
+    <string name="tgnText">TGn IEEE Indoor</string>
+    <string name="freespaceText">Free-space</string>
+    <string name="multiwallText">Multiwall</string>
+    <string name="oneslopeText">One-slope</string>
+
+    <string-array name="pathLossModels">
+        <item>@string/whippText</item>
+        <item>@string/tgnText</item>
+        <item>@string/freespaceText</item>
+        <item>@string/multiwallText</item>
+        <item>@string/oneslopeText</item>
+    </string-array>
+
+    <string name="receiver2400Text">Ref. receiver 2400</string>
+    <string name="rec802.11n">802.11n</string>
+    <string name="phone3G">3G phone</string>
+    <string name="phone4G">4G phone</string>
+
+    <string-array name="receivers">
+        <item>@string/receiver2400Text</item>
+        <item>@string/cc2420Text</item>
+        <item>@string/jn516xtext</item>
+        <item>@string/rec802.11n</item>
+        <item>@string/phone3G</item>
+        <item>@string/phone4G</item>
     </string-array>
     
     <string name="thicknessText">Thickness</string>

@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="coverage" >
+    android:tag="coverage">
 
     <Button
         android:id="@+id/predictButton"
         style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Predict!" />
+        android:text="Predict!"
+        android:onClick="onPredictClick" />
 
 </LinearLayout>

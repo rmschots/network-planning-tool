@@ -7,246 +7,250 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
 
+import com.ugent.networkplanningtool.data.enums.Frequency;
+import com.ugent.networkplanningtool.data.enums.FrequencyBand;
+import com.ugent.networkplanningtool.data.enums.Network;
+import com.ugent.networkplanningtool.data.enums.RadioModel;
+import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class AccessPoint extends DataObject{
-	
-	private String name;
-	private int height;
-	
-	private RadioType type;
-	private RadioModel model;
-	private Frequency frequency;
-	private FrequencyBand frequencyband;
-	private int gain;
-	private double power;
-	private Network network;
-	
-	public AccessPoint(AccessPoint accessPoint){
-		super(accessPoint);
-		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
-		this.name = accessPoint.name;
-		this.height = accessPoint.height;
-		this.type = accessPoint.type;
-		this.model = accessPoint.model;
-		this.frequency = accessPoint.frequency;
-		this.frequencyband = accessPoint.frequencyband;
-		this.gain = accessPoint.gain;
-		this.power = accessPoint.power;
-		this.network = accessPoint.network;
-	}
+public class AccessPoint extends DataObject {
 
-	public AccessPoint(String name, int height, RadioType type,
-			RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
-            double power, Network network) {
-		super();
-		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
-		this.name = name;
-		this.height = height;
-		this.type = type;
-		this.model = model;
-		this.frequency = frequency;
-		this.frequencyband = frequencyband;
-		this.gain = gain;
-		this.power = power;
-		this.network = network;
-	}
-	
-	public AccessPoint(Point point, String name, int height, RadioType type,
-			RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
-            double power, Network network) {
-		super(point);
-		DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
-		this.name = name;
-		this.height = height;
-		this.type = type;
-		this.model = model;
-		this.frequency = frequency;
-		this.frequencyband = frequencyband;
-		this.gain = gain;
-		this.power = power;
-		this.network = network;
-	}
+    private String name;
+    private int height;
 
-	public String getName() {
-		return name;
-	}
+    private RadioType type;
+    private RadioModel model;
+    private Frequency frequency;
+    private FrequencyBand frequencyband;
+    private int gain;
+    private double power;
+    private Network network;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public AccessPoint(AccessPoint accessPoint) {
+        super(accessPoint);
+        DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
+        this.name = accessPoint.name;
+        this.height = accessPoint.height;
+        this.type = accessPoint.type;
+        this.model = accessPoint.model;
+        this.frequency = accessPoint.frequency;
+        this.frequencyband = accessPoint.frequencyband;
+        this.gain = accessPoint.gain;
+        this.power = accessPoint.power;
+        this.network = accessPoint.network;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public AccessPoint(String name, int height, RadioType type,
+                       RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
+                       double power, Network network) {
+        super();
+        DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
+        this.name = name;
+        this.height = height;
+        this.type = type;
+        this.model = model;
+        this.frequency = frequency;
+        this.frequencyband = frequencyband;
+        this.gain = gain;
+        this.power = power;
+        this.network = network;
+    }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    public AccessPoint(Point point, String name, int height, RadioType type,
+                       RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
+                       double power, Network network) {
+        super(point);
+        DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
+        this.name = name;
+        this.height = height;
+        this.type = type;
+        this.model = model;
+        this.frequency = frequency;
+        this.frequencyband = frequencyband;
+        this.gain = gain;
+        this.power = power;
+        this.network = network;
+    }
 
-	public RadioType getType() {
-		return type;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setType(RadioType type) {
-		this.type = type;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public RadioModel getModel() {
-		return model;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public void setModel(RadioModel model) {
-		this.model = model;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-	public Frequency getFrequency() {
-		return frequency;
-	}
+    public RadioType getType() {
+        return type;
+    }
 
-	public void setFrequency(Frequency frequency) {
-		this.frequency = frequency;
-	}
+    public void setType(RadioType type) {
+        this.type = type;
+    }
 
-	public FrequencyBand getFrequencyband() {
-		return frequencyband;
-	}
+    public RadioModel getModel() {
+        return model;
+    }
 
-	public void setFrequencyband(FrequencyBand frequencyband) {
-		this.frequencyband = frequencyband;
-	}
+    public void setModel(RadioModel model) {
+        this.model = model;
+    }
 
-	public int getGain() {
-		return gain;
-	}
+    public Frequency getFrequency() {
+        return frequency;
+    }
 
-	public void setGain(int gain) {
-		this.gain = gain;
-	}
+    public void setFrequency(Frequency frequency) {
+        this.frequency = frequency;
+    }
 
-	public double getPower() {
-		return power;
-	}
+    public FrequencyBand getFrequencyband() {
+        return frequencyband;
+    }
 
-	public void setPower(int power) {
-		this.power = power;
-	}
+    public void setFrequencyband(FrequencyBand frequencyband) {
+        this.frequencyband = frequencyband;
+    }
 
-	public Network getNetwork() {
-		return network;
-	}
+    public int getGain() {
+        return gain;
+    }
 
-	public void setNetwork(Network network) {
-		this.network = network;
-	}
-	
-	@Override
-	public boolean isComplete(){
-		return super.isComplete()
-				&& canDraw();
-	}
-	
-	@Override
-	public boolean canDraw(){
-		return super.canDraw()
-				&& name != null
-				&& type != null
-				&& model != null;
-	}
+    public void setGain(int gain) {
+        this.gain = gain;
+    }
 
-	@Override
-	public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
-		// TODO display gain+power
-		float x = convertCoordinateToLocation(drawingModel, true, point1.x);
-		float y = convertCoordinateToLocation(drawingModel, false, point1.y);
-		float circleRadius;
-		switch(type){
-		case WIFI:
-			circleRadius = drawingModel.getPixelsPerInterval()/4;
-			paint.setColor(network.getColor());
-			paint.setStyle(Style.FILL);
-			canvas.drawCircle(x, y, circleRadius, paint);
-			paint.setStyle(Style.STROKE);
-			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
-			paint.setColor(Color.BLACK);
-			canvas.drawCircle(x, y, circleRadius, paint);
-			if(touch){
-				paint.setColor(Color.RED);
-				paint.setPathEffect(dottedLineEffect);
-				canvas.drawCircle(x, y, circleRadius, paint);
-			}
-			break;
-		case SENSOR:
-			circleRadius = drawingModel.getPixelsPerInterval()/5;
-			paint.setColor(network.getColor());
-			paint.setStyle(Style.FILL);
-			canvas.drawCircle(x, y, circleRadius, paint);
-			paint.setStyle(Style.STROKE);
-			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
-			paint.setColor(Color.BLACK);
-			canvas.drawCircle(x, y, circleRadius, paint);
-			if(touch){
-				paint.setColor(Color.RED);
-				paint.setPathEffect(dottedLineEffect);
-				canvas.drawCircle(x, y, circleRadius, paint);
-			}
-			break;
-		case LTE_FEMTOCELL:
-		case UMTS_FEMTOCELL:
-			float dist1 = drawingModel.getPixelsPerInterval()/3;
-			float dist2 = dist1*4/6;
-			paint.setStyle(Style.FILL);
-			paint.setColor(network.getColor());
-			Path p = new Path();
-			p.reset();
-			p.moveTo(x-dist1, y);
-			p.lineTo(x-dist2, y-dist2);
-			p.lineTo(x+dist2, y-dist2);
-			
-			p.lineTo(x+dist1, y);
-			p.lineTo(x+dist2, y+dist2);
-			p.lineTo(x-dist2, y+dist2);
-			p.lineTo(x-dist1, y);
-			p.lineTo(x-dist1, y);
-			
-			canvas.drawPath(p, paint);
-			paint.setStrokeCap(Paint.Cap.ROUND);
-			
-			paint.setStyle(Style.STROKE);
-			paint.setStrokeWidth(drawingModel.getPixelsPerInterval()/16);
-			paint.setColor(Color.BLACK);
-			canvas.drawPath(p, paint);
-			if(touch){
-				paint.setStrokeCap(Paint.Cap.BUTT);
-				paint.setColor(Color.RED);
-				paint.setPathEffect(dottedLineEffect);
-				canvas.drawPath(p, paint);
-			}
-			break;
-		}
-		
-		paint.reset();
-	}
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public Network getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
+
+    @Override
+    public boolean isComplete() {
+        return super.isComplete()
+                && canDraw();
+    }
+
+    @Override
+    public boolean canDraw() {
+        return super.canDraw()
+                && name != null
+                && type != null
+                && model != null;
+    }
+
+    @Override
+    public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
+        // TODO display gain+power
+        float x = convertCoordinateToLocation(drawingModel, true, point1.x);
+        float y = convertCoordinateToLocation(drawingModel, false, point1.y);
+        float circleRadius;
+        switch (type) {
+            case WIFI:
+                circleRadius = drawingModel.getPixelsPerInterval() / 4;
+                paint.setColor(network.getColor());
+                paint.setStyle(Style.FILL);
+                canvas.drawCircle(x, y, circleRadius, paint);
+                paint.setStyle(Style.STROKE);
+                paint.setStrokeWidth(drawingModel.getPixelsPerInterval() / 16);
+                paint.setColor(Color.BLACK);
+                canvas.drawCircle(x, y, circleRadius, paint);
+                if (touch) {
+                    paint.setColor(Color.RED);
+                    paint.setPathEffect(dottedLineEffect);
+                    canvas.drawCircle(x, y, circleRadius, paint);
+                }
+                break;
+            case SENSOR:
+                circleRadius = drawingModel.getPixelsPerInterval() / 5;
+                paint.setColor(network.getColor());
+                paint.setStyle(Style.FILL);
+                canvas.drawCircle(x, y, circleRadius, paint);
+                paint.setStyle(Style.STROKE);
+                paint.setStrokeWidth(drawingModel.getPixelsPerInterval() / 16);
+                paint.setColor(Color.BLACK);
+                canvas.drawCircle(x, y, circleRadius, paint);
+                if (touch) {
+                    paint.setColor(Color.RED);
+                    paint.setPathEffect(dottedLineEffect);
+                    canvas.drawCircle(x, y, circleRadius, paint);
+                }
+                break;
+            case LTE_FEMTOCELL:
+            case UMTS_FEMTOCELL:
+                float dist1 = drawingModel.getPixelsPerInterval() / 3;
+                float dist2 = dist1 * 4 / 6;
+                paint.setStyle(Style.FILL);
+                paint.setColor(network.getColor());
+                Path p = new Path();
+                p.reset();
+                p.moveTo(x - dist1, y);
+                p.lineTo(x - dist2, y - dist2);
+                p.lineTo(x + dist2, y - dist2);
+
+                p.lineTo(x + dist1, y);
+                p.lineTo(x + dist2, y + dist2);
+                p.lineTo(x - dist2, y + dist2);
+                p.lineTo(x - dist1, y);
+                p.lineTo(x - dist1, y);
+
+                canvas.drawPath(p, paint);
+                paint.setStrokeCap(Paint.Cap.ROUND);
+
+                paint.setStyle(Style.STROKE);
+                paint.setStrokeWidth(drawingModel.getPixelsPerInterval() / 16);
+                paint.setColor(Color.BLACK);
+                canvas.drawPath(p, paint);
+                if (touch) {
+                    paint.setStrokeCap(Paint.Cap.BUTT);
+                    paint.setColor(Color.RED);
+                    paint.setPathEffect(dottedLineEffect);
+                    canvas.drawPath(p, paint);
+                }
+                break;
+        }
+
+        paint.reset();
+    }
 
 
+    @Override
+    public DataObject getPartialDeepCopy() {
+        return new AccessPoint(name, height, type, model, frequencyband, frequency, gain, power, network);
+    }
 
-	@Override
-	public DataObject getPartialDeepCopy() {
-		return new AccessPoint(name, height, type, model, frequencyband, frequency, gain, power, network);
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "AccessPoint [name=" + name + ", height=" + height + ", type="
+                + type + ", model=" + model + ", frequency=" + frequency
+                + ", frequencyband=" + frequencyband + ", gain=" + gain
+                + ", power=" + power + ", network=" + network
+                + ", DATA_OBJECT_TYPE=" + DATA_OBJECT_TYPE + ", point1="
+                + point1 + "]";
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "AccessPoint [name=" + name + ", height=" + height + ", type="
-				+ type + ", model=" + model + ", frequency=" + frequency
-				+ ", frequencyband=" + frequencyband + ", gain=" + gain
-				+ ", power=" + power + ", network=" + network
-				+ ", DATA_OBJECT_TYPE=" + DATA_OBJECT_TYPE + ", point1="
-				+ point1 + "]";
-	}
-	
-	
+
 }
