@@ -16,7 +16,8 @@
     <Spinner
         android:id="@+id/placeAccesspointsSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/apPlacements" />
 
     <TextView
         android:id="@+id/defaultActivityText"

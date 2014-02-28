@@ -80,7 +80,7 @@ public class MySeekBar extends LinearLayout {
                 double dTmp = (maxValue - minValue) * i / seekBar.getMax();
                 double rounded = Math.round((dTmp) / stepSize) * stepSize;
                 double value = Math.round((minValue + rounded) * 100.0) / 100.0;
-                DecimalFormat df = new DecimalFormat("###.#");
+                DecimalFormat df = new DecimalFormat("###.###");
                 unitAmountTextView.setText("" + df.format(minValue + rounded));
             }
 

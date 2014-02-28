@@ -54,5 +54,8 @@ public enum ActivityType {
         this.textSize = textSize;
     }
 
-
+    @Override
+    public String toString() {
+        return text;
+    }
 }

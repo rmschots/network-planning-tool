@@ -171,6 +171,14 @@
     <string name="youtubeText">YouTube</string>
     <string name="surfingText">Surfing</string>
     <string name="noCoverageText">No coverage</string>
+
+    <string-array name="activityArray">
+        <item>@string/hdVideotext</item>
+        <item>@string/actionGamesText</item>
+        <item>@string/youtubeText</item>
+        <item>@string/surfingText</item>
+        <item>@string/noCoverageText</item>
+    </string-array>
     
     <string name="networkAText">Network A</string>
     <string name="networkBText">Network B</string>
@@ -218,6 +226,14 @@
         <item>@string/rec802.11n</item>
         <item>@string/phone3G</item>
         <item>@string/phone4G</item>
+    </string-array>
+
+    <string name="anywhereText">Anywhere</string>
+    <string name="onWallText">On walls</string>
+
+    <string-array name="apPlacements">
+        <item>@string/anywhereText</item>
+        <item>@string/onWallText</item>
     </string-array>
     
     <string name="thicknessText">Thickness</string>

@@ -17,6 +17,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="module" module-name="aFileDialog" />
+    <orderEntry type="module" module-name="aFileDialog" />
   </component>
 </module>
 

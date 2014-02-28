@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ugent.networkplanningtool"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="sar" >
+    android:tag="sar">
 
     <TextView
         android:id="@+id/personAgeText"
@@ -95,25 +96,16 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/roomHeightText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Room Height"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/roomHeightSlider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/roomHeightTextView"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/roomHeightView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="2.675 m"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="2.5"
+        app:maxValue="4"
+        app:defaultValue="2.676"
+        app:stepSize="0.025"
+        app:unitType="m"
+        app:title="Room Height" />
 
     <Button
         android:id="@+id/estimateSARButton"

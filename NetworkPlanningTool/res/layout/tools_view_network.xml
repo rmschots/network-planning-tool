@@ -13,43 +13,10 @@
         android:text="Default Activity"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <RadioGroup
-        android:id="@+id/defaultActivityRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/wallsMaterialBrickRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="HD video" />
-
-        <RadioButton
-            android:id="@+id/wallsMaterialLayeredDrywallRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Action games" />
-
-        <RadioButton
-            android:id="@+id/wallsMaterialConcreteRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="YouTube" />
-
-        <RadioButton
-            android:id="@+id/wallsMaterialZeroDBRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Surfing" />
-
-        <RadioButton
-            android:id="@+id/wallsMaterialMetalRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No coverage" />
-
-    </RadioGroup>
+    <Spinner
+        android:id="@+id/defaultActivitySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/reduceNetworkButton"

@@ -43,6 +43,10 @@ import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
 import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
 import com.ugent.networkplanningtool.layout.parameters.MarginsView;
 import com.ugent.networkplanningtool.layout.parameters.ReceiversView;
+import com.ugent.networkplanningtool.layout.tools.EstimateSARView;
+import com.ugent.networkplanningtool.layout.tools.ExposureReductionView;
+import com.ugent.networkplanningtool.layout.tools.NetworkReductionView;
+import com.ugent.networkplanningtool.layout.tools.OptimalPlacementView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
@@ -89,6 +93,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private MarginsView marginsView;
     private ReceiversView recieversView;
 
+    private OptimalPlacementView optimalPlacementeView;
+    private EstimateSARView estimateSARView;
+    private NetworkReductionView networkReductionView;
+    private ExposureReductionView exposureReductionView;
+
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
 	private ImageButton redoButton;
@@ -133,6 +142,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         generatedAPsView = (GeneratedAPsView) findViewById(R.id.generatedAPsView);
         marginsView = (MarginsView) findViewById(R.id.marginsView);
         recieversView = (ReceiversView) findViewById(R.id.receiversView);
+
+        optimalPlacementeView = (OptimalPlacementView) findViewById(R.id.optimalPlacementeView);
+        estimateSARView = (EstimateSARView) findViewById(R.id.estimateSarView);
+        networkReductionView = (NetworkReductionView) findViewById(R.id.networkReductionView);
+        exposureReductionView = (ExposureReductionView) findViewById(R.id.reduceExposureView);
 
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
@@ -563,7 +577,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         String pathLossModel = algorithmsView.getPathLossModel().getValue();
         double gridSize = recieversView.getGridSize() * 100;
         double roomHeight = 2.5; // TODO
-        String defaultActivity = "Surfing"; // TODO
+        String defaultActivity = optimalPlacementeView.getDefaultActivity().getText();
         String receiverName = recieversView.getReceiver();
         double receiverGain = generatedAPsView.getAntennaGain();
         double receiverHeight = recieversView.getHeight();

@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ugent.networkplanningtool"
     android:id="@+id/exposureLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="exposure" >
+    android:tag="exposure">
 
-    <TextView
-        android:id="@+id/distanceToAPText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Distance to AP"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/distanceToAPSlider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/distanceToAPTextView"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/distanceToAPView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="10 cm"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="10"
+        app:maxValue="100"
+        app:defaultValue="10"
+        app:stepSize="1"
+        app:unitType="cm"
+        app:title="Distance to AP" />
 
     <TextView
         android:id="@+id/maxElectricFieldText"
@@ -68,7 +60,8 @@
     <Spinner
         android:id="@+id/placeAccesspointsSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/apPlacements" />
 
     <TextView
         android:id="@+id/defaultActivityEditText"
