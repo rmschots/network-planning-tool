@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ugent.networkplanningtool"
     android:id="@+id/receiversLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -40,45 +41,26 @@
         android:text="4G"
         android:enabled="false" />
 
-    <TextView
-        android:id="@+id/receiverElevationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Receiver Elevation"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/receiverElevationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/receiverElevationTextView"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/elevationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="1 m"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="1"
+        app:maxValue="4"
+        app:defaultValue="1"
+        app:stepSize="0.2"
+        app:unitType="m"
+        app:title="Elevation" />
 
-    <TextView
-        android:id="@+id/receiverGridText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Receiver Grid"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/receiverGridBar"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/receiverGridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progress="100" />
-
-    <TextView
-        android:id="@+id/receiverGridTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="2 m"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="0.2"
+        app:maxValue="2"
+        app:defaultValue="2"
+        app:stepSize="0.2"
+        app:unitType="m"
+        app:title="Grid Size" />
 
 </LinearLayout>

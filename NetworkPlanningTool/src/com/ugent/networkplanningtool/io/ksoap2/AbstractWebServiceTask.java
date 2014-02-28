@@ -94,7 +94,11 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
     }
 
     protected DeusResult parseDeusResult(SoapObject so) throws ServiceException {
-        System.out.println(so.toString());
+        System.out.println("PIEMELS: " + so.toString());
+        if (so.hasProperty("errormsg")) {
+            throw new ServiceException(so.getPropertyAsString("errormsg"));
+        }
+
         Double[] infoArray = new Double[3];
         int infoIndex = 0;
         PropertyInfo ai = new PropertyInfo();
@@ -112,7 +116,10 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
         }
 
         String benchmarks = so.getPropertyAsString("benchmarks");
-        List<CSVResult> csv = parseCSV(so.getPropertyAsString("csv"));
+        List<CSVResult> csv = null;
+        if (so.hasProperty("csv")) {
+            csv = parseCSV(so.getPropertyAsString("csv"));
+        }
 
         FloorPlan normalizedPlan = null;
         if (so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")) {

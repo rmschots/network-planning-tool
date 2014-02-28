@@ -10,7 +10,7 @@ public class DeusRequest {
     }
 
     private final RequestType type;
-    private String clientVersion;
+    private static final String clientVersion = "1.8.0.a";
     private String xml;
     private String model;
     private double gridSize;
@@ -24,17 +24,16 @@ public class DeusRequest {
     private double fadeMargin;
     private String apType;
     private int apFrequency;
-    private int apPower;
-    private int apGain;
-    private int apHeight;
-    private int maxEField;
+    private double apPower;
+    private double apGain;
+    private double apHeight;
+    private double maxEField;
     private int distanceToAp;
     private int function;
     private boolean frequencyPlanning;
 
-    public DeusRequest(RequestType type, String clientVersion, String xml, String model, double gridSize, double roomHeightM, String defaultType, String receiverName, double receiverGain, double receiverHeight, double interference, double shadowMargin, double fadeMargin, String apType, int apFrequency, int apPower, int apGain, int apHeight, int maxEField, int distanceToAp, int function, boolean frequencyPlanning) {
+    public DeusRequest(RequestType type, String xml, String model, double gridSize, double roomHeightM, String defaultType, String receiverName, double receiverGain, double receiverHeight, double interference, double shadowMargin, double fadeMargin, String apType, int apFrequency, double apPower, double apGain, double apHeight, double maxEField, int distanceToAp, int function, boolean frequencyPlanning) {
         this.type = type;
-        this.clientVersion = clientVersion;
         this.xml = xml;
         this.model = model;
         this.gridSize = gridSize;
@@ -162,28 +161,28 @@ public class DeusRequest {
     /**
      * @return the apPower
      */
-    public int getApPower() {
+    public double getApPower() {
         return apPower;
     }
 
     /**
      * @return the apGain
      */
-    public int getApGain() {
+    public double getApGain() {
         return apGain;
     }
 
     /**
      * @return the apHeight
      */
-    public int getApHeight() {
+    public double getApHeight() {
         return apHeight;
     }
 
     /**
      * @return the maxEField
      */
-    public int getMaxEField() {
+    public double getMaxEField() {
         return maxEField;
     }
 

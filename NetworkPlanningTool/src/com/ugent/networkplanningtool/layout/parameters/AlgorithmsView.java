@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -20,9 +19,6 @@ public class AlgorithmsView extends LinearLayout {
 
     private CheckBox frequenciesCheckBox;
     private Spinner pathLossModelSpinner;
-    private EditText refDistanceEditText;
-    private EditText refPathLossEditText;
-    private EditText pathLossExponentEditText;
 
     private DrawingModel drawingModel;
 
@@ -44,9 +40,6 @@ public class AlgorithmsView extends LinearLayout {
 
         frequenciesCheckBox = (CheckBox) findViewById(R.id.frequenciesCheckBox);
         pathLossModelSpinner = (Spinner) findViewById(R.id.pathlossModelSpinner);
-        refDistanceEditText = (EditText) findViewById(R.id.refDistanceEditText);
-        refPathLossEditText = (EditText) findViewById(R.id.refPathLossEditText);
-        pathLossExponentEditText = (EditText) findViewById(R.id.pathLossExponentEditText);
     }
 
     public boolean isGetFrequencies() {
@@ -58,30 +51,6 @@ public class AlgorithmsView extends LinearLayout {
         PathLossModel type = PathLossModel.getPathLossModelByName(itemAsString);
         Log.d("DEBUG", "PathLossModel: " + type.getValue());
         return type;
-    }
-
-    public double getRefDistance() {
-        try {
-            return Double.parseDouble(refDistanceEditText.getText().toString());
-        } catch (NumberFormatException ex) {
-            return 1;
-        }
-    }
-
-    public double getRefPathLoss() {
-        try {
-            return Double.parseDouble(refPathLossEditText.getText().toString());
-        } catch (NumberFormatException ex) {
-            return 40;
-        }
-    }
-
-    public double getPathLossExponent() {
-        try {
-            return Double.parseDouble(pathLossExponentEditText.getText().toString());
-        } catch (NumberFormatException ex) {
-            return 2;
-        }
     }
 
 }

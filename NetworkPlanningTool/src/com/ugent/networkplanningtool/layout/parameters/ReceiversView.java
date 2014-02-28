@@ -8,11 +8,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.parameters.Receiver;
+import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 import java.util.Arrays;
@@ -23,8 +23,8 @@ public class ReceiversView extends LinearLayout {
     private ArrayAdapter<Receiver> receiversAdapter;
 
     private Spinner receiversSpinner;
-    private SeekBar elevationSeekBar;
-    private SeekBar gridSizeSeeBar;
+    private MySeekBar elevationSeekBar;
+    private MySeekBar gridSizeSeeBar;
 
     private CheckBox[] receiverTypeCheckboxes;
 
@@ -47,8 +47,8 @@ public class ReceiversView extends LinearLayout {
         inflater.inflate(R.layout.parameters_view_receivers, this, true);
 
         receiversSpinner = (Spinner) findViewById(R.id.receiversSpinner);
-        elevationSeekBar = (SeekBar) findViewById(R.id.receiverElevationBar);
-        gridSizeSeeBar = (SeekBar) findViewById(R.id.receiverGridBar);
+        elevationSeekBar = (MySeekBar) findViewById(R.id.elevationView);
+        gridSizeSeeBar = (MySeekBar) findViewById(R.id.receiverGridView);
 
         receiversAdapter = new ArrayAdapter<Receiver>(getContext(), android.R.layout.simple_spinner_dropdown_item, Receiver.values());
         receiversSpinner.setAdapter(receiversAdapter);
@@ -80,10 +80,10 @@ public class ReceiversView extends LinearLayout {
     }
 
     public double getElevation() {
-        return elevationSeekBar.getProgress();
+        return elevationSeekBar.getValue();
     }
 
     public double getGridSize() {
-        return gridSizeSeeBar.getProgress();
+        return gridSizeSeeBar.getValue();
     }
 }

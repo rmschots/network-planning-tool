@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ugent.networkplanningtool"
     android:id="@+id/generatedapsLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/transmitPowerText"
+        android:id="@+id/gapsTransmitPowerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Transmit Power"
@@ -42,11 +43,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <SeekBar
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/transmitPowerBar"
-            android:layout_weight="1" />
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/gapsTransmitPowerEditText"
+            android:text="14" />
 
         <TextView
             android:id="@+id/dBmText"
@@ -57,46 +60,26 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/antennaGainText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Antenna Gain"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/antennaGainBar"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/antennaGainView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        app:minValue="-5"
+        app:maxValue="10"
+        app:defaultValue="2"
+        app:stepSize="1"
+        app:unitType="dB"
+        app:title="Antenna Gain" />
 
-    <TextView
-        android:id="@+id/antennaGainTextView"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/elevationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="10 dB"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/elevationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Elevation"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/elevationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/elevationTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="0 m"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="0"
+        app:maxValue="4"
+        app:defaultValue="2.5"
+        app:stepSize="0.25"
+        app:unitType="m"
+        app:title="Elevation" />
 
 </LinearLayout>

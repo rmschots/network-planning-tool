@@ -146,7 +146,7 @@
         android:layout_toLeftOf="@+id/scrollView1"
         android:background="@android:color/white" />
 
-    <com.ugent.networkplanningtool.layout.MyScrollBar
+    <com.ugent.networkplanningtool.layout.components.MyScrollBar
         android:id="@+id/myScrollBar1"
         android:layout_width="fill_parent"
         android:layout_height="16dp"
@@ -156,7 +156,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
 
-    <com.ugent.networkplanningtool.layout.MyScrollBar
+    <com.ugent.networkplanningtool.layout.components.MyScrollBar
         android:id="@+id/myScrollBar2"
         android:layout_width="16dp"
         android:layout_height="fill_parent"

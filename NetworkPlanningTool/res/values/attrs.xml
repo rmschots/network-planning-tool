@@ -2,7 +2,16 @@
 <resources>
     <declare-styleable name="DataObjectView">
 
-		<attr name="draw" format="string"/>
+        <attr name="draw" format="string" />
 
-	</declare-styleable>
+    </declare-styleable>
+
+    <declare-styleable name="MySeekBar">
+        <attr name="minValue" format="float" />
+        <attr name="maxValue" format="float" />
+        <attr name="defaultValue" format="float" />
+        <attr name="stepSize" format="float" />
+        <attr name="unitType" format="string" />
+        <attr name="title" format="string" />
+    </declare-styleable>
 </resources>

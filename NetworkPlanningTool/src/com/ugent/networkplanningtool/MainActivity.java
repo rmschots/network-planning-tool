@@ -34,12 +34,15 @@ import com.ugent.networkplanningtool.io.ksoap2.WebServiceTaskManager;
 import com.ugent.networkplanningtool.io.ksoap2.services.PredictCoverageTask;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
-import com.ugent.networkplanningtool.layout.MyScrollBar;
+import com.ugent.networkplanningtool.layout.components.MyScrollBar;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
 import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
 import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
+import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
+import com.ugent.networkplanningtool.layout.parameters.MarginsView;
+import com.ugent.networkplanningtool.layout.parameters.ReceiversView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
@@ -82,6 +85,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	private ConnectionPointView connectionPointView;
 
     private AlgorithmsView algorithmsView;
+    private GeneratedAPsView generatedAPsView;
+    private MarginsView marginsView;
+    private ReceiversView recieversView;
 
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
@@ -124,6 +130,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         connectionPointView = (ConnectionPointView) findViewById(R.id.connectionPointView);
 
         algorithmsView = (AlgorithmsView) findViewById(R.id.algorithmsView);
+        generatedAPsView = (GeneratedAPsView) findViewById(R.id.generatedAPsView);
+        marginsView = (MarginsView) findViewById(R.id.marginsView);
+        recieversView = (ReceiversView) findViewById(R.id.receiversView);
 
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
@@ -552,32 +561,48 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
     private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {
         String pathLossModel = algorithmsView.getPathLossModel().getValue();
-        boolean frequencyPlanning = algorithmsView.isGetFrequencies();
+        double gridSize = recieversView.getGridSize() * 100;
+        double roomHeight = 2.5; // TODO
+        String defaultActivity = "Surfing"; // TODO
+        String receiverName = recieversView.getReceiver();
+        double receiverGain = generatedAPsView.getAntennaGain();
+        double receiverHeight = recieversView.getHeight();
+        double interference = marginsView.getInterferenceMargin();
+        double shadowMargin = marginsView.getShadowMargin();
+        double fadeMargin = marginsView.getFadeMargin();
+        String apType = generatedAPsView.getGeneratedAPType().getText();
+        int apFrequency = Integer.parseInt(generatedAPsView.getGeneratedAPFrequencyBand().getText());
+        double apPower = generatedAPsView.getTransmitPower();
+        double apGain = generatedAPsView.getAntennaGain();
+        double apHeight = generatedAPsView.getHeight();
+        double maxEField = 0; //TODO
+        int distanceToAP = 0; // TODO
+        int function = 1;
 
+        boolean frequencyPlanning = algorithmsView.isGetFrequencies();
 
         return new DeusRequest(
                 type,
-                "1.8.0.a",
                 FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance()),
                 pathLossModel,
-                20.0,
-                2.5,
-                "Surfing",
-                "3G phone",
-                0.0,
-                100.0,
-                0.0,
-                7.0,
-                5.0,
-                "WiFi",
-                2400,
-                14,
-                2,
-                250,
-                0, // not used
-                0, // not used
-                1,
-                true);
+                gridSize,
+                roomHeight,
+                defaultActivity,
+                receiverName,
+                receiverGain,
+                receiverHeight,
+                interference,
+                shadowMargin,
+                fadeMargin,
+                apType,
+                apFrequency,
+                apPower,
+                apGain,
+                apHeight,
+                maxEField, // not used
+                distanceToAP, // not used
+                function,
+                frequencyPlanning);
     }
 
     @Override

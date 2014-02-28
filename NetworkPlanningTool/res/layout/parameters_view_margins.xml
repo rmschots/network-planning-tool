@@ -1,71 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ugent.networkplanningtool"
     android:id="@+id/marginsLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="margins" >
+    android:tag="margins">
 
-    <TextView
-        android:id="@+id/interferenceMarginText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Interference Margin"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/interferenceMarginBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/interferenceMarginTextView"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/interferenceMarginView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="0 dB"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="0"
+        app:maxValue="10"
+        app:defaultValue="0"
+        app:stepSize="1"
+        app:unitType="dB"
+        app:title="Interference Margin" />
 
-    <TextView
-        android:id="@+id/shadowingMarginText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Shadowing Margin"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/shadowingMarginBar"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/shadowingMarginView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progress="35" />
+        app:minValue="0"
+        app:maxValue="20"
+        app:defaultValue="7"
+        app:stepSize="1"
+        app:unitType="dB"
+        app:title="Shadowing Margin" />
 
-    <TextView
-        android:id="@+id/shadowingMarginTextView"
+    <com.ugent.networkplanningtool.layout.components.MySeekBar
+        android:id="@+id/fadeMarginView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="7 dB"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/fadeMarginText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fade Margin"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <SeekBar
-        android:id="@+id/fadeMarginBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progress="25" />
-
-    <TextView
-        android:id="@+id/fadeMarginTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="2 m"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:minValue="0"
+        app:maxValue="20"
+        app:defaultValue="5"
+        app:stepSize="1"
+        app:unitType="dB"
+        app:title="Fade Margin" />
 
 </LinearLayout>

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 
 import com.ugent.networkplanningtool.R;
+import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
@@ -14,9 +14,9 @@ import com.ugent.networkplanningtool.model.DrawingModel;
  */
 public class MarginsView extends LinearLayout {
 
-    private SeekBar interferenceMarginBar;
-    private SeekBar shadowingMarginBar;
-    private SeekBar fadeMarginBar;
+    private MySeekBar interferenceMarginBar;
+    private MySeekBar shadowingMarginBar;
+    private MySeekBar fadeMarginBar;
 
     private DrawingModel drawingModel;
 
@@ -36,20 +36,20 @@ public class MarginsView extends LinearLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.parameters_view_margins, this, true);
 
-        interferenceMarginBar = (SeekBar) findViewById(R.id.interferenceMarginBar);
-        shadowingMarginBar = (SeekBar) findViewById(R.id.shadowingMarginBar);
-        fadeMarginBar = (SeekBar) findViewById(R.id.fadeMarginBar);
+        interferenceMarginBar = (MySeekBar) findViewById(R.id.interferenceMarginView);
+        shadowingMarginBar = (MySeekBar) findViewById(R.id.shadowingMarginView);
+        fadeMarginBar = (MySeekBar) findViewById(R.id.fadeMarginView);
     }
 
     public double getInterferenceMargin() {
-        return interferenceMarginBar.getProgress();
+        return interferenceMarginBar.getValue();
     }
 
     public double getShadowMargin() {
-        return shadowingMarginBar.getProgress();
+        return shadowingMarginBar.getValue();
     }
 
     public double getFadeMargin() {
-        return fadeMarginBar.getProgress();
+        return fadeMarginBar.getValue();
     }
 }
