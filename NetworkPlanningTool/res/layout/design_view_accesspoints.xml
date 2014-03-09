@@ -9,8 +9,7 @@
     <Spinner
         android:id="@+id/networkSignalTypeSpinner"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/accesspointsTypesArray" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,8 +19,7 @@
             android:id="@+id/networkMHzSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/frequencyArray" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/mhzText"
@@ -41,8 +39,7 @@
             android:id="@+id/networkChannelSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/channelArray" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/networkChannelText"
@@ -64,8 +61,7 @@
     <Spinner
         android:id="@+id/networkModelSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/wifiArray" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/transmitPowerText"
@@ -170,7 +166,6 @@
     <Spinner
         android:id="@+id/networkIDSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/receivers" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -52,20 +52,19 @@
             android:layout_height="wrap_content"
             android:tag="renderdata"></com.ugent.networkplanningtool.layout.results.RenderDataView>
 
-        <include
+        <com.ugent.networkplanningtool.layout.results.VisualOptionsView
+            android:id="@+id/visualOptionsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/results_view_renderdata" />
+            android:tag="visualoptions">
+            </com.ugent.networkplanningtool.layout.results.VisualOptionsView>
 
-        <include
+        <com.ugent.networkplanningtool.layout.results.ExportRawDataView
+            android:id="@+id/exportRawDataView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/results_view_visualoptions" />
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/results_view_exportrawdata" />
+            android:tag="export">
+        </com.ugent.networkplanningtool.layout.results.ExportRawDataView>
 
     </ViewFlipper>
 

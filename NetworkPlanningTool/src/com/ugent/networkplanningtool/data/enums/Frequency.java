@@ -67,4 +67,9 @@ public enum Frequency {
     public int getNumber() {
         return number;
     }
+
+    @Override
+    public String toString() {
+        return text+" ("+number+")";
+    }
 }

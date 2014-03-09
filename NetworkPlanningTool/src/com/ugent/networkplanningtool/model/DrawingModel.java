@@ -22,6 +22,72 @@ import java.util.Observable;
 
 public class DrawingModel extends Observable {
 
+    private boolean drawAccessPoints = true;
+    private boolean drawActivities = true;
+    private boolean drawLabels = true;
+    private boolean drawGridPoints = true;
+    private boolean drawResult;
+
+    public boolean isDrawResult() {
+        if(drawResult){
+            System.out.println("LOLZ "+FloorPlanModel.getInstance().getDeusResult());
+        }
+        return drawResult;
+    }
+
+    public void setDrawResult(boolean drawResult) {
+        this.drawResult = drawResult;
+    }
+
+    public boolean isDrawAccessPoints() {
+        return drawAccessPoints;
+    }
+
+    public void setDrawAccessPoints(boolean drawAccessPoints) {
+        if(this.drawAccessPoints != drawAccessPoints){
+            this.drawAccessPoints = drawAccessPoints;
+            setChanged();
+            notifyObservers();
+        }
+
+    }
+
+    public boolean isDrawActivities() {
+        return drawActivities;
+    }
+
+    public void setDrawActivities(boolean drawActivities) {
+        if(this.drawActivities != drawActivities){
+            this.drawActivities = drawActivities;
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public boolean isDrawLabels() {
+        return drawLabels;
+    }
+
+    public void setDrawLabels(boolean drawLabels) {
+        if(this.drawLabels != drawLabels){
+            this.drawLabels = drawLabels;
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public boolean isDrawGridPoints() {
+        return drawGridPoints;
+    }
+
+    public void setDrawGridPoints(boolean drawGridPoints) {
+        if(this.drawGridPoints != drawGridPoints){
+            this.drawGridPoints = drawGridPoints;
+            setChanged();
+            notifyObservers();
+        }
+    }
+
     private DeusResult.ResultType resultRenderType;
 
     public void setResultRenderType(DeusResult.ResultType resultRenderType) {
@@ -97,7 +163,7 @@ public class DrawingModel extends Observable {
         offsetX = 0;
         offsetY = 0;
 
-        state = STATE.IDLE;
+        state = STATE.PRE_PLACE;
         moving = false;
         this.viewWidth = viewWidth;
         this.viewHeight = viewHeight;
@@ -428,6 +494,7 @@ public class DrawingModel extends Observable {
     }
 
     public void setPlaceMode(DataObject dataObject) {
+        System.out.println("PREPACCCCEE");
         state = STATE.PRE_PLACE;
         setTouchDataObject(dataObject);
         setChanged();
@@ -510,6 +577,7 @@ public class DrawingModel extends Observable {
 
     public void setIdle() {
         state = STATE.IDLE;
+        touchDataObject = null;
         setChanged();
         notifyObservers();
     }

@@ -175,19 +175,19 @@ public class Wall extends DataObject {
                 canvas.drawRect(pixelsX1 - circleRadius, pixelsY1 - circleRadius, pixelsX1 + circleRadius, pixelsY1 + circleRadius, paint);
                 canvas.drawRect(pixelsX2 - circleRadius, pixelsY2 - circleRadius, pixelsX2 + circleRadius, pixelsY2 + circleRadius, paint);
             }
-
-            String textToDraw = Math.round(Utils.pointToPointDistance(point1, point2)) / 100.0 + " m";
-            paint.setTextSize(20);
-            if (paint.measureText(textToDraw) < drawingModel.getPixelsPerInterval() * 2) {
-                paint.setTextAlign(Align.CENTER);
-                paint.setColor(Color.BLACK);
-                float textX = (pixelsX2 + pixelsX1) / 2;
-                float textY = ((pixelsY2 + pixelsY1) / 2 - ((paint.descent() + paint.ascent()) / 2));
-                ;
-                double distanceCM = Utils.pointToPointDistance(point1, point2);
-                canvas.drawText(Math.round(distanceCM) / 100.0 + " m", textX, textY, paint);
+            if(drawingModel.isDrawLabels()){
+                String textToDraw = Math.round(Utils.pointToPointDistance(point1, point2)) / 100.0 + " m";
+                paint.setTextSize(20);
+                if (paint.measureText(textToDraw) < drawingModel.getPixelsPerInterval() * 2) {
+                    paint.setTextAlign(Align.CENTER);
+                    paint.setColor(Color.BLACK);
+                    float textX = (pixelsX2 + pixelsX1) / 2;
+                    float textY = ((pixelsY2 + pixelsY1) / 2 - ((paint.descent() + paint.ascent()) / 2));
+                    ;
+                    double distanceCM = Utils.pointToPointDistance(point1, point2);
+                    canvas.drawText(Math.round(distanceCM) / 100.0 + " m", textX, textY, paint);
+                }
             }
-
         } else {
             paint.reset();
             paint.setStrokeWidth(0);

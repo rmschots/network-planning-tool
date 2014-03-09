@@ -49,4 +49,9 @@ public enum Network {
     public int getColor() {
         return color;
     }
+
+    @Override
+    public String toString(){
+        return text;
+    }
 }

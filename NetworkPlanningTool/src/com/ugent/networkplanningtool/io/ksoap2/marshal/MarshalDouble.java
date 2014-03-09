@@ -1,13 +1,13 @@
 package com.ugent.networkplanningtool.io.ksoap2.marshal;
 
-import java.io.IOException;
-
 import org.ksoap2.serialization.Marshal;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
+
+import java.io.IOException;
 
 public class MarshalDouble implements Marshal {
 	@Override

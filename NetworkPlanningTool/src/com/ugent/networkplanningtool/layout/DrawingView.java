@@ -52,16 +52,30 @@ public class DrawingView extends View implements Observer {
     protected void onDraw(Canvas canvas) {
         if (drawingModel != null) {
             drawBackground(canvas);
-            drawGrid(canvas);
-            if (drawingModel.getResultRenderType() != null) {
+            if(drawingModel.isDrawResult()){
+                if(drawingModel.isDrawGridPoints()){
+                    drawGrid(canvas);
+                }
                 DeusResult dr = FloorPlanModel.getInstance().getDeusResult();
-                dr.drawResult(canvas, drawingModel, drawingModel.getResultRenderType());
+                if(dr != null && drawingModel.getResultRenderType() != null){
+                    dr.drawResult(canvas, drawingModel, drawingModel.getResultRenderType());
+                }
+                drawWalls(canvas);
+                if(drawingModel.isDrawActivities()){
+                    drawActivities(canvas);
+                }
+                drawConnectionPoints(canvas);
+                if(drawingModel.isDrawAccessPoints()){
+                    drawAccessPoints(canvas);
+                }
+            }else{
+                drawGrid(canvas);
+                drawWalls(canvas);
+                drawActivities(canvas);
+                drawConnectionPoints(canvas);
+                drawAccessPoints(canvas);
+                drawTouch(canvas);
             }
-            drawWalls(canvas);
-            drawActivities(canvas);
-            drawConnectionPoints(canvas);
-            drawAccessPoints(canvas);
-            drawTouch(canvas);
         }
         super.onDraw(canvas);
     }
@@ -150,6 +164,7 @@ public class DrawingView extends View implements Observer {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        System.out.println(drawingModel.getState());
         MotionEvent movedEvent = MotionEvent.obtain(event);
         movedEvent.setLocation(event.getX() - 50, event.getY() - 50);
 
@@ -162,8 +177,11 @@ public class DrawingView extends View implements Observer {
                     case PRE_SELECTING_REMOVE:
                         drawingModel.startSelect(movedEvent.getX(0), movedEvent.getY(0));
                         break;
-                    default:
+                    case PRE_PLACE:
+                    case PLACING:
                         drawingModel.setTouchLocation(movedEvent.getX(0), movedEvent.getY(0));
+                        break;
+                    default:
                         break;
 
                 }
@@ -183,7 +201,6 @@ public class DrawingView extends View implements Observer {
                             break;
                         default:
                             break;
-
                     }
                 }
                 break;

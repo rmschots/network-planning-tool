@@ -1,12 +1,12 @@
 package com.ugent.networkplanningtool.data;
 
-import com.ugent.networkplanningtool.model.DrawingModel;
-
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PathEffect;
 import android.graphics.Point;
+
+import com.ugent.networkplanningtool.model.DrawingModel;
 
 public abstract class DataObject{
 	

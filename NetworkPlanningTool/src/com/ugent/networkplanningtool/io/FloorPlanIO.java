@@ -18,7 +18,6 @@ import com.ugent.networkplanningtool.data.enums.RadioModel;
 import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.data.enums.Thickness;
 import com.ugent.networkplanningtool.data.enums.WallType;
-import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
 import org.w3c.dom.Document;
@@ -134,18 +133,18 @@ public class FloorPlanIO {
         return new FloorPlan(wallList, connectionPointList, accessPointList, dataActivityList);
     }
 
-    public static void saveFloorPlan(File file, FloorPlanModel fpm) throws ParserConfigurationException, TransformerException {
+    public static void saveFloorPlan(File file, FloorPlan fp) throws ParserConfigurationException, TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         StreamResult result = new StreamResult(file);
-        DOMSource source = new DOMSource(getDocument(fpm));
+        DOMSource source = new DOMSource(getDocument(fp));
         transformer.transform(source, result);
         Log.i("DEBUG", "File saved");
     }
 
-    public static String getXMLAsString(FloorPlanModel fpm) {
+    public static String getXMLAsString(FloorPlan fp) {
         try {
-            DOMSource domSource = new DOMSource(getDocument(fpm));
+            DOMSource domSource = new DOMSource(getDocument(fp));
             StringWriter writer = new StringWriter();
             StreamResult result = new StreamResult(writer);
             TransformerFactory tf = TransformerFactory.newInstance();
@@ -158,7 +157,7 @@ public class FloorPlanIO {
         }
     }
 
-    public static Document getDocument(FloorPlanModel fpm) throws ParserConfigurationException, TransformerException {
+    public static Document getDocument(FloorPlan fp) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
@@ -175,7 +174,7 @@ public class FloorPlanIO {
         Element extraWallsElement = doc.createElement("extraWalls");
         levelElement.appendChild(extraWallsElement);
 
-        for (Wall wall : fpm.getWallList()) {
+        for (Wall wall : fp.getWallList()) {
             Element wallElement = doc.createElement("wall");
             extraWallsElement.appendChild(wallElement);
             wallElement.setAttribute("x1", "" + wall.getPoint1().x);
@@ -189,7 +188,7 @@ public class FloorPlanIO {
             wallElement.appendChild(materialElement);
         }
 
-        for (ConnectionPoint cp : fpm.getConnectionPointList()) {
+        for (ConnectionPoint cp : fp.getConnectionPointList()) {
             Element cpElement;
             if (cp.getType().equals(ConnectionPointType.DATA)) {
                 cpElement = doc.createElement("dataconnpoint");
@@ -200,7 +199,7 @@ public class FloorPlanIO {
             cpElement.setAttribute("x", "" + cp.getPoint1().x);
             cpElement.setAttribute("y", "" + cp.getPoint1().y);
         }
-        for (AccessPoint ap : fpm.getAccessPointList()) {
+        for (AccessPoint ap : fp.getAccessPointList()) {
             Element apElement = doc.createElement("accesspoint");
             apElement.setAttribute("level", "0");
             levelElement.appendChild(apElement);
@@ -218,7 +217,7 @@ public class FloorPlanIO {
             radioElement.setAttribute("network", ap.getNetwork().getText());
             apElement.appendChild(radioElement);
         }
-        for (DataActivity da : fpm.getDataActivityList()) {
+        for (DataActivity da : fp.getDataActivityList()) {
             Element apElement = doc.createElement("activity");
             levelElement.appendChild(apElement);
             apElement.setAttribute("x", "" + da.getPoint1().x);

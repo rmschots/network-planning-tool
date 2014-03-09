@@ -18,32 +18,32 @@
         android:layout_height="wrap_content" >
 
         <RadioButton
-            android:id="@+id/wallsMaterialMetalRadioButton"
+            android:id="@+id/normalizedPlanRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Normalized plan" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialZeroDBRadioButton"
+            android:id="@+id/optimizedPlanRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Optimized plan" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialBrickRadioButton"
+            android:id="@+id/coverageDataRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Coverage Data" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialLayeredDrywallRadioButton"
+            android:id="@+id/exposureInfoRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exposure info" />
 
         <RadioButton
-            android:id="@+id/wallsMaterialConcreteRadioButton"
+            android:id="@+id/benchmarksRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Benchmarks" />
@@ -54,20 +54,22 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/saveButton"
+            android:id="@+id/saveRawDataButton"
             style="@style/MyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="Save" />
+            android:text="Save"
+            android:onClick="handleSaveRawData" />
 
         <Button
-            android:id="@+id/viewButton"
+            android:id="@+id/viewRawDataButton"
             style="@style/MyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="View" />
+            android:text="View"
+            android:onClick="handleViewRawData" />
 
     </LinearLayout>
 

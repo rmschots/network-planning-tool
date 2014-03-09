@@ -1,11 +1,11 @@
 package com.ugent.networkplanningtool.io;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 
 public class ImageIO {
 	public static void saveImage(Bitmap img, File f) throws FileNotFoundException{

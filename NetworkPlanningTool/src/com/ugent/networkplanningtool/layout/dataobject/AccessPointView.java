@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -31,6 +32,12 @@ public class AccessPointView extends DataObjectView {
     private EditText antennaGainEditText;
     private EditText transmitPowerEditText;
     private EditText elevationEditText;
+
+    private ArrayAdapter<RadioType> typeAdapter;
+    private ArrayAdapter<Frequency> freqAdapter;
+    private ArrayAdapter<FrequencyBand> freqBandAdapter;
+    private ArrayAdapter<RadioModel> modelAdapter;
+    private ArrayAdapter<Network> networkAdapter;
 
     private DrawingModel drawingModel;
 
@@ -60,6 +67,25 @@ public class AccessPointView extends DataObjectView {
         antennaGainEditText = (EditText) findViewById(R.id.antennaGainEditText);
         transmitPowerEditText = (EditText) findViewById(R.id.transmitPowerEditText);
         elevationEditText = (EditText) findViewById(R.id.elevationEditText);
+
+        typeAdapter = new ArrayAdapter<RadioType>(getContext(),android.R.layout.simple_spinner_dropdown_item,RadioType.values());
+        networkSignalTypeSpinner.setAdapter(typeAdapter);
+
+
+
+        freqBandAdapter = new ArrayAdapter<FrequencyBand>(getContext(),android.R.layout.simple_spinner_dropdown_item,FrequencyBand.values());
+        networkMHzSpinner.setAdapter(freqBandAdapter);
+        networkMHzSpinner.setSelection(freqBandAdapter.getPosition(FrequencyBand.FREQBAND_2400));
+        networkMHzSpinner.setEnabled(false);
+
+        freqAdapter = new ArrayAdapter<Frequency>(getContext(),android.R.layout.simple_spinner_dropdown_item,Frequency.values());
+        networkChannelSpinner.setAdapter(freqAdapter);
+
+        modelAdapter = new ArrayAdapter<RadioModel>(getContext(),android.R.layout.simple_spinner_dropdown_item,RadioModel.values());
+        networkModelSpinner.setAdapter(modelAdapter);
+
+        networkAdapter = new ArrayAdapter<Network>(getContext(),android.R.layout.simple_spinner_dropdown_item,Network.values());
+        networkIDSpinner.setAdapter(networkAdapter);
 
         initComponents();
     }
@@ -97,38 +123,23 @@ public class AccessPointView extends DataObjectView {
     }
 
     public RadioType getSelectedSignalType() {
-        String itemAsString = networkSignalTypeSpinner.getSelectedItem().toString();
-        RadioType type = RadioType.getRadioTypeByText(itemAsString);
-        Log.d("DEBUG", "RadioType: " + type.getText());
-        return type;
+        return typeAdapter.getItem(networkSignalTypeSpinner.getSelectedItemPosition());
     }
 
     public FrequencyBand getSelectedFrequencyBand() {
-        String itemAsString = networkMHzSpinner.getSelectedItem().toString();
-        FrequencyBand frequency = FrequencyBand.getFrequencyBandByText(itemAsString);
-        Log.d("DEBUG", "FrequencyBand: " + frequency.getText());
-        return frequency;
+        return freqBandAdapter.getItem(networkMHzSpinner.getSelectedItemPosition());
     }
 
-    public Frequency getSelectedChannel() {
-        String itemAsString = networkChannelSpinner.getSelectedItem().toString();
-        Frequency band = Frequency.getFrequencyByText(itemAsString);
-        Log.d("DEBUG", "Frequency: " + band.getText());
-        return band;
+    public Frequency getSelectedFrequency() {
+        return freqAdapter.getItem(networkChannelSpinner.getSelectedItemPosition());
     }
 
     public RadioModel getSelectedModel() {
-        String itemAsString = networkModelSpinner.getSelectedItem().toString();
-        RadioModel model = RadioModel.getRadioModelByText(itemAsString);
-        Log.d("DEBUG", "RadioModel: " + model.getText());
-        return model;
+        return modelAdapter.getItem(networkModelSpinner.getSelectedItemPosition());
     }
 
     public Network getSelectedNetwork() {
-        String itemAsString = networkIDSpinner.getSelectedItem().toString();
-        Network network = Network.getNetworkByText(itemAsString);
-        Log.d("DEBUG", "Network: " + network.getText());
-        return network;
+        return networkAdapter.getItem(networkIDSpinner.getSelectedItemPosition());
     }
 
     public void setDrawingModel(DrawingModel drawingModel) {
@@ -138,7 +149,7 @@ public class AccessPointView extends DataObjectView {
     public void updateDrawingModel() {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
         RadioType signalType = getSelectedSignalType();
-        Frequency freq = getSelectedChannel();
+        Frequency freq = getSelectedFrequency();
         FrequencyBand freqBand = getSelectedFrequencyBand();
         RadioModel model = getSelectedModel();
         Network network = getSelectedNetwork();
@@ -165,41 +176,11 @@ public class AccessPointView extends DataObjectView {
 
     private void loadData() {
         AccessPoint ap = (AccessPoint) drawingModel.getSelected();
-        for (int i = 0; i < networkSignalTypeSpinner.getChildCount(); i++) {
-            String itemAsString = networkSignalTypeSpinner.getChildAt(i).toString();
-            if (itemAsString.equals(ap.getType().getText())) {
-                networkSignalTypeSpinner.setSelection(i);
-                break;
-            }
-        }
-        for (int i = 0; i < networkMHzSpinner.getChildCount(); i++) {
-            String itemAsString = networkMHzSpinner.getChildAt(i).toString();
-            if (itemAsString.equals(ap.getFrequency().getText())) {
-                networkMHzSpinner.setSelection(i);
-                break;
-            }
-        }
-        for (int i = 0; i < networkChannelSpinner.getChildCount(); i++) {
-            String itemAsString = networkChannelSpinner.getChildAt(i).toString();
-            if (itemAsString.equals(ap.getFrequencyband().getText())) {
-                networkChannelSpinner.setSelection(i);
-                break;
-            }
-        }
-        for (int i = 0; i < networkModelSpinner.getChildCount(); i++) {
-            String itemAsString = networkModelSpinner.getChildAt(i).toString();
-            if (itemAsString.equals(ap.getModel().getText())) {
-                networkModelSpinner.setSelection(i);
-                break;
-            }
-        }
-        for (int i = 0; i < networkIDSpinner.getChildCount(); i++) {
-            String itemAsString = networkIDSpinner.getChildAt(i).toString();
-            if (itemAsString.equals(ap.getNetwork().getText())) {
-                networkIDSpinner.setSelection(i);
-                break;
-            }
-        }
+        networkSignalTypeSpinner.setSelection(typeAdapter.getPosition(ap.getType()));
+        networkChannelSpinner.setSelection(freqAdapter.getPosition(ap.getFrequency()));
+        networkMHzSpinner.setSelection(freqBandAdapter.getPosition(ap.getFrequencyband()));
+        networkModelSpinner.setSelection(modelAdapter.getPosition(ap.getModel()));
+        networkIDSpinner.setSelection(networkAdapter.getPosition(ap.getNetwork()));
     }
 
 

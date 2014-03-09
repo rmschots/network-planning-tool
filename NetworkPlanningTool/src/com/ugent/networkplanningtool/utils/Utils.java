@@ -1,13 +1,13 @@
 package com.ugent.networkplanningtool.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.w3c.dom.Node;
-
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+
+import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 	

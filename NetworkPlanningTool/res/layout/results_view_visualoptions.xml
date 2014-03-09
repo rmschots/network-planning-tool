@@ -6,18 +6,6 @@
     android:tag="visualoptions" >
 
     <TextView
-        android:id="@+id/accesspointLabelText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Accesspoint Label"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Spinner
-        android:id="@+id/accesspointLabelSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
         android:id="@+id/showText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,24 +16,28 @@
         android:id="@+id/showAccesspointsCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accesspoints" />
+        android:text="Accesspoints"
+        android:checked="true" />
 
     <CheckBox
         android:id="@+id/showActivitiesCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activities" />
+        android:text="Activities"
+        android:checked="true" />
 
     <CheckBox
         android:id="@+id/showLabelsCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Labels" />
+        android:text="Labels"
+        android:checked="true" />
 
     <CheckBox
         android:id="@+id/showGridpointsCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gridpoints" />
+        android:text="Gridpoints"
+        android:checked="true" />
 
 </LinearLayout>

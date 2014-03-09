@@ -185,7 +185,8 @@ public class WallView extends DataObjectView {
 			wall.setMaterial(material);
 			wall.setThickness(thickness);
 		}else{
-			drawingModel.setPlaceMode(new Wall(wallType, thickness, material));
+            System.out.println("TOLO");
+            drawingModel.setPlaceMode(new Wall(wallType, thickness, material));
 		}
 		if(type.equals(ViewType.DRAW)){
 			drawingModel.setSnapToGrid(getSnapTo());

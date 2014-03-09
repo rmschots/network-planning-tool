@@ -58,6 +58,10 @@ public class FloorPlanModel extends Observable {
         return model;
     }
 
+    public FloorPlan getFloorPlan(){
+        return floorPlan;
+    }
+
     public List<Wall> getWallList() {
         return floorPlan.getWallList();
     }

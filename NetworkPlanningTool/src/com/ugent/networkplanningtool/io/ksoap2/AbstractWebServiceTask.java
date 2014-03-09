@@ -106,7 +106,6 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             so.getPropertyInfo(i, ai);
             if (ai.getName().equals("info")) {
                 infoArray[infoIndex] = Double.parseDouble(ai.getValue().toString());
-                System.out.println(infoArray[infoIndex]);
                 infoIndex++;
             }
         }
@@ -142,7 +141,6 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
     }
 
     private static List<CSVResult> parseCSV(String csvString) {
-        System.out.println(csvString);
         List<CSVResult> orList = new ArrayList<CSVResult>();
         if (csvString.startsWith("L")) {
             csvString = csvString.substring(csvString.indexOf('\n') + 1);

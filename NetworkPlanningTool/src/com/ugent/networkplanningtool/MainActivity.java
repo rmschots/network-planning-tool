@@ -27,6 +27,7 @@ import android.widget.ZoomControls;
 
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
+import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
 import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.io.ImageIO;
 import com.ugent.networkplanningtool.io.ksoap2.OnAsyncTaskCompleteListener;
@@ -47,7 +48,9 @@ import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
 import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
 import com.ugent.networkplanningtool.layout.parameters.MarginsView;
 import com.ugent.networkplanningtool.layout.parameters.ReceiversView;
+import com.ugent.networkplanningtool.layout.results.ExportRawDataView;
 import com.ugent.networkplanningtool.layout.results.RenderDataView;
+import com.ugent.networkplanningtool.layout.results.VisualOptionsView;
 import com.ugent.networkplanningtool.layout.tools.EstimateSARView;
 import com.ugent.networkplanningtool.layout.tools.ExposureReductionView;
 import com.ugent.networkplanningtool.layout.tools.NetworkReductionView;
@@ -104,6 +107,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private ExposureReductionView exposureReductionView;
 
     private RenderDataView renderDataView;
+    private VisualOptionsView visualOptionsView;
+    private ExportRawDataView exportRawDataView;
 
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
@@ -156,6 +161,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         exposureReductionView = (ExposureReductionView) findViewById(R.id.reduceExposureView);
 
         renderDataView = (RenderDataView) findViewById(R.id.renderDataView);
+        visualOptionsView = (VisualOptionsView) findViewById(R.id.visualOptionsView);
+        exportRawDataView = (ExportRawDataView) findViewById(R.id.exportRawDataView);
 
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
@@ -183,11 +190,12 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         connectionPointView.setDrawingModel(drawingModel);
 
 
-        onMainFlipClick(mainActive);
-        onDesignFlipClick(designActive);
+
         onParametersFlipClick(parametersActive);
         onToolsFlipClick(toolsActive);
         onResultsFlipClick(resultsActive);
+        onMainFlipClick(mainActive);
+        onDesignFlipClick(designActive);
         
         
         zoomControls.setOnZoomInClickListener(new OnClickListener() {
@@ -241,6 +249,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         hScrollBar.setModel(drawingModel);
         vScrollBar.setModel(drawingModel);
         renderDataView.setDrawingModel(drawingModel);
+        visualOptionsView.setDrawingModel(drawingModel);
         drawingModel.addObserver(this);
         floorPlanModel.addObserver(this);
         floorPlanModel.addObserver(renderDataView);
@@ -252,9 +261,20 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
 
 	public void onMainFlipClick(View v) {
-        if (v.equals(findViewById(R.id.resultsButton)) && floorPlanModel.getDeusResult() == null) {
-            Toast.makeText(MainActivity.this, "No result to display.", Toast.LENGTH_SHORT).show();
-            return;
+        if (v.getId() == R.id.resultsButton) {
+            if(floorPlanModel.getDeusResult() == null){
+                Toast.makeText(MainActivity.this, "No result to display.", Toast.LENGTH_SHORT).show();
+                return;
+            }else{
+                drawingModel.setDrawResult(true);
+            }
+        }else{
+            drawingModel.setDrawResult(false);
+        }
+        if(v.getId() == R.id.designButton){
+            onDesignFlipClick(designActive);
+        }else{
+            drawingModel.setIdle();
         }
         mainActive.setEnabled(true);
 		mainActive = v;
@@ -444,7 +464,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	public void saveTofile(File f){
 		try {
-			FloorPlanIO.saveFloorPlan(f, floorPlanModel);
+			FloorPlanIO.saveFloorPlan(f, floorPlanModel.getFloorPlan());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			String StackTrace = "";
@@ -577,7 +597,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
-                FloorPlanModel.getInstance().setDeusResult(result);
+                floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
             }
@@ -595,7 +615,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new OptimalPlacementTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
-                FloorPlanModel.getInstance().setDeusResult(result);
+                floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
             }
@@ -613,7 +633,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new ExposureReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
-                FloorPlanModel.getInstance().setDeusResult(result);
+                floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
             }
@@ -631,7 +651,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new NetworkReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
-                FloorPlanModel.getInstance().setDeusResult(result);
+                floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
             }
@@ -649,7 +669,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new EstimateSARTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
-                FloorPlanModel.getInstance().setDeusResult(result);
+                floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
             }
@@ -686,7 +706,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
         return new DeusRequest(
                 type,
-                FloorPlanIO.getXMLAsString(FloorPlanModel.getInstance()),
+                FloorPlanIO.getXMLAsString(floorPlanModel.getFloorPlan()),
                 pathLossModel,
                 gridSize,
                 roomHeight,
@@ -732,5 +752,32 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    public void handleSaveRawData(View view){
+        String s = getRawData(exportRawDataView.getExportType());
+        System.out.println("save: "+s);
+        // TODO deftig late gebeure
+    }
+
+    public void handleViewRawData(View view){
+        // TODO deftig weergeven
+    }
+
+    private String getRawData(ExportRawDataType exportType) {
+        // TODO toStrings van klassen fixen
+        switch(exportType){
+            case NORMALIZED_PLAN:
+                return floorPlanModel.getDeusResult().getNormalizedPlan().toString();
+            case OPTIMIZED_PLAN:
+                return floorPlanModel.getDeusResult().getOptimizedPlan().toString();
+            case COVERAGE_DATA:
+                return floorPlanModel.getDeusResult().getCsv().toString();
+            case EXPOSURE_INFO:
+                return floorPlanModel.getDeusResult().getInfo().toString();
+            case BENCHMARK:
+                return floorPlanModel.getDeusResult().getBenchmarks();
+        }
+        return null;
     }
 }
