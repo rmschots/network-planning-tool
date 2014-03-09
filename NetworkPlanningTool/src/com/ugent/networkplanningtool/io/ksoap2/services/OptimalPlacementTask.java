@@ -60,7 +60,7 @@ public class OptimalPlacementTask extends AbstractWebServiceTask<DeusRequest, De
 
         httpTransport.call(SOAP_ACTION, envelope, headerPropertyArrayList); //send request
         SoapObject result = (SoapObject) envelope.getResponse(); //get response
-        return parseDeusResult(result);
+        return parseDeusResult(result, dr.getType());
     }
 
 }

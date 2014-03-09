@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/personAgeEditText"
@@ -44,7 +44,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/personHeightEditText"
@@ -53,7 +53,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:text="180" >
+            android:text="180">
 
             <requestFocus />
         </EditText>
@@ -76,7 +76,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/personWeightEditText"
@@ -112,6 +112,7 @@
         style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Estimate SAR!" />
+        android:text="Estimate SAR!"
+        android:onClick="onEstimateSARClick" />
 
 </LinearLayout>

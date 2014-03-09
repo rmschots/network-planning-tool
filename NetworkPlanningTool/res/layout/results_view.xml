@@ -46,6 +46,12 @@
         android:layout_height="wrap_content"
         android:measureAllChildren="false" >
 
+        <com.ugent.networkplanningtool.layout.results.RenderDataView
+            android:id="@+id/renderDataView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="renderdata"></com.ugent.networkplanningtool.layout.results.RenderDataView>
+
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

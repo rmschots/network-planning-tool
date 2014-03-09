@@ -7,6 +7,7 @@ import android.util.Log;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
+import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.data.enums.FrequencyBand;
@@ -93,8 +94,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
         taskCompletionListener = null;
     }
 
-    protected DeusResult parseDeusResult(SoapObject so) throws ServiceException {
-        System.out.println("PIEMELS: " + so.toString());
+    protected DeusResult parseDeusResult(SoapObject so, DeusRequest.RequestType requestType) throws ServiceException {
         if (so.hasProperty("errormsg")) {
             throw new ServiceException(so.getPropertyAsString("errormsg"));
         }
@@ -138,10 +138,11 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             }
         }
 
-        return new DeusResult(accessPoints, benchmarks, csv, null, null, infoArray, null, null, normalizedPlan, optimizedPlan);
+        return new DeusResult(requestType, accessPoints, benchmarks, csv, null, null, infoArray, null, null, normalizedPlan, optimizedPlan);
     }
 
     private static List<CSVResult> parseCSV(String csvString) {
+        System.out.println(csvString);
         List<CSVResult> orList = new ArrayList<CSVResult>();
         if (csvString.startsWith("L")) {
             csvString = csvString.substring(csvString.indexOf('\n') + 1);
@@ -150,28 +151,28 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
         for (String orString : orStrings) {
             String[] attrStrings = orString.split(",");
             int i = 0;
-            double level = Double.parseDouble(attrStrings[i++]);
-            double x = Double.parseDouble(attrStrings[i++]);
-            double y = Double.parseDouble(attrStrings[i++]);
-            double download = Double.parseDouble(attrStrings[i++]);
-            double upload = Double.parseDouble(attrStrings[i++]);
-            double pathloss = Double.parseDouble(attrStrings[i++]);
-            double powerRX = Double.parseDouble(attrStrings[i++]);
-            double powerTX = Double.parseDouble(attrStrings[i++]);
-            double absorption = Double.parseDouble(attrStrings[i++]);
-            double eField = Double.parseDouble(attrStrings[i++]);
-            double pdLos = 0;
-            double pdDif = 0;
+            Double level = Double.parseDouble(attrStrings[i++]);
+            Double x = Double.parseDouble(attrStrings[i++]);
+            Double y = Double.parseDouble(attrStrings[i++]);
+            Double download = Double.parseDouble(attrStrings[i++]);
+            Double upload = Double.parseDouble(attrStrings[i++]);
+            Double pathloss = attrStrings[i++].equals("null") ? null : Double.parseDouble(attrStrings[i - 1]);
+            Double powerRX = attrStrings[i++].equals("null") ? null : Double.parseDouble(attrStrings[i - 1]);
+            Double powerTX = attrStrings[i++].equals("null") ? null : Double.parseDouble(attrStrings[i - 1]);
+            Double absorption = Double.parseDouble(attrStrings[i++]);
+            Double eField = Double.parseDouble(attrStrings[i++]);
+            Double pdLos = 0.0;
+            Double pdDif = 0.0;
             if (attrStrings.length != 12) {
                 pdLos = Double.parseDouble(attrStrings[i++]);
                 pdDif = Double.parseDouble(attrStrings[i++]);
             }
-            double roomNumber = Double.parseDouble(attrStrings[i++]);
-            double drawingSize = Double.parseDouble(attrStrings[i]);
-            CSVResult or = new CSVResult(new Point((int) x, (int) y),
-                    (int) level, (int) download, (int) upload, pathloss, powerRX,
-                    powerTX, absorption, eField, pdLos, pdDif, (int) roomNumber,
-                    (int) drawingSize);
+            Double roomNumber = Double.parseDouble(attrStrings[i++]);
+            Double drawingSize = Double.parseDouble(attrStrings[i]);
+            CSVResult or = new CSVResult(new Point(x.intValue(), y.intValue()),
+                    level.intValue(), download, upload, pathloss, powerRX,
+                    powerTX, absorption, eField, pdLos, pdDif, roomNumber.intValue(),
+                    drawingSize.intValue());
             orList.add(or);
         }
         return orList;

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="network" >
+    android:tag="network">
 
     <TextView
         android:id="@+id/defaultActivityEditText"
@@ -23,6 +23,7 @@
         style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reduce Network!" />
+        android:text="Reduce Network!"
+        android:onClick="onNetworkReductionClick" />
 
 </LinearLayout>

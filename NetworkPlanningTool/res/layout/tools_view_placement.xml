@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="placement" >
+    android:tag="placement">
 
     <TextView
         android:id="@+id/placeAccesspointsText"
@@ -58,6 +58,7 @@
         style="@style/MyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Optimize!" />
+        android:text="Optimize!"
+        android:onClick="onOptimalPlacementClick" />
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
@@ -52,7 +53,10 @@ public class DrawingView extends View implements Observer {
         if (drawingModel != null) {
             drawBackground(canvas);
             drawGrid(canvas);
-//			drawResults(canvas);
+            if (drawingModel.getResultRenderType() != null) {
+                DeusResult dr = FloorPlanModel.getInstance().getDeusResult();
+                dr.drawResult(canvas, drawingModel, drawingModel.getResultRenderType());
+            }
             drawWalls(canvas);
             drawActivities(canvas);
             drawConnectionPoints(canvas);
@@ -75,8 +79,9 @@ public class DrawingView extends View implements Observer {
         if (drawingModel.getBackgroundImage() != null) {
             Bitmap bgImg = drawingModel.getBackgroundImage();
             double scale = drawingModel.getBackgroundScale();
+            System.out.println("bgscale: " + scale);
             Matrix m = new Matrix();
-            double newScale = drawingModel.getPixelsPerInterval() / (scale * DrawingModel.INTERVAL * 2);
+            double newScale = drawingModel.getPixelsPerInterval() / (scale * DrawingModel.INTERVAL);
             m.postScale((float) newScale, (float) newScale);
             float offsetX = drawingModel.getOffsetX();
             float offsetY = drawingModel.getOffsetY();

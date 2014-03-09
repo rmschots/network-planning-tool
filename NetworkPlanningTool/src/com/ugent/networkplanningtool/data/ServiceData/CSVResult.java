@@ -11,20 +11,20 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 
 public class CSVResult extends DataObject {
 
-    private final int level;
-    private final int download; // (mbps)
-    private final int upload; // (mbps)
-    private final double pathloss; // (db)
-    private final double powerRX; // (db)
-    private final double powerTX; // (db)
-    private final double absorption; //SAR W/kg?
-    private final double eField; // veldsterkte V/m
-    private final double pdLos;
-    private final double pdDif;
-    private final int roomNumber;
-    private final int drawingSize; // non-relevant; always squares of 10cm; don't draw if 0
+    private final Integer level;
+    private final Double download; // (mbps)
+    private final Double upload; // (mbps)
+    private final Double pathloss; // (db)
+    private final Double powerRX; // (db)
+    private final Double powerTX; // (db)
+    private final Double absorption; //SAR W/kg?
+    private final Double eField; // veldsterkte V/m
+    private final Double pdLos;
+    private final Double pdDif;
+    private final Integer roomNumber;
+    private final Integer drawingSize; // non-relevant; always squares of 10cm; don't draw if 0
 
-    public CSVResult(Point point, int level, int download, int upload, double pathloss, double powerRX, double powerTX, double absorption, double eField, double pdLos, double pdDif, int roomNumber, int drawingSize) {
+    public CSVResult(Point point, Integer level, Double download, Double upload, Double pathloss, Double powerRX, Double powerTX, Double absorption, Double eField, Double pdLos, Double pdDif, Integer roomNumber, Integer drawingSize) {
         super(point);
         this.level = level;
         this.download = download;
@@ -43,78 +43,78 @@ public class CSVResult extends DataObject {
     /**
      * @return the level
      */
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
     /**
      * @return the download
      */
-    public int getDownload() {
+    public Double getDownload() {
         return download;
     }
 
     /**
      * @return the upload
      */
-    public int getUpload() {
+    public Double getUpload() {
         return upload;
     }
 
     /**
      * @return the pathloss
      */
-    public double getPathloss() {
+    public Double getPathloss() {
         return pathloss;
     }
 
     /**
      * @return the powerRX
      */
-    public double getPowerRX() {
+    public Double getPowerRX() {
         return powerRX;
     }
 
     /**
      * @return the powerTX
      */
-    public double getPowerTX() {
+    public Double getPowerTX() {
         return powerTX;
     }
 
     /**
      * @return the absorption
      */
-    public double getAbsorption() {
+    public Double getAbsorption() {
         return absorption;
     }
 
     /**
      * @return the eField
      */
-    public double geteField() {
+    public Double geteField() {
         return eField;
     }
 
     /**
      * @return the roomNumber
      */
-    public int getRoomNumber() {
+    public Integer getRoomNumber() {
         return roomNumber;
     }
 
     /**
      * @return the drawingSize
      */
-    public int getDrawingSize() {
+    public Integer getDrawingSize() {
         return drawingSize;
     }
 
-    public double getPdLos() {
+    public Double getPdLos() {
         return pdLos;
     }
 
-    public double getPdDif() {
+    public Double getPdDif() {
         return pdDif;
     }
 

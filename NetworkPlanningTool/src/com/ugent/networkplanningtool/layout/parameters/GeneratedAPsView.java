@@ -88,6 +88,7 @@ public class GeneratedAPsView extends LinearLayout {
     }
 
     public double getAntennaGain() {
+        System.out.println("PERJHKODFGHDOGH3 " + antennaGainBar.getValue());
         return antennaGainBar.getValue();
     }
 

@@ -9,6 +9,7 @@ import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.enums.Material;
 import com.ugent.networkplanningtool.data.enums.SnapTo;
@@ -20,6 +21,20 @@ import com.ugent.networkplanningtool.utils.Utils;
 import java.util.Observable;
 
 public class DrawingModel extends Observable {
+
+    private DeusResult.ResultType resultRenderType;
+
+    public void setResultRenderType(DeusResult.ResultType resultRenderType) {
+        if (this.resultRenderType != resultRenderType) {
+            this.resultRenderType = resultRenderType;
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public DeusResult.ResultType getResultRenderType() {
+        return resultRenderType;
+    }
 
     public static enum PlaceResult {
         SUCCESS(null),

@@ -31,6 +31,10 @@ import com.ugent.networkplanningtool.io.FloorPlanIO;
 import com.ugent.networkplanningtool.io.ImageIO;
 import com.ugent.networkplanningtool.io.ksoap2.OnAsyncTaskCompleteListener;
 import com.ugent.networkplanningtool.io.ksoap2.WebServiceTaskManager;
+import com.ugent.networkplanningtool.io.ksoap2.services.EstimateSARTask;
+import com.ugent.networkplanningtool.io.ksoap2.services.ExposureReductionTask;
+import com.ugent.networkplanningtool.io.ksoap2.services.NetworkReductionTask;
+import com.ugent.networkplanningtool.io.ksoap2.services.OptimalPlacementTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.PredictCoverageTask;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
@@ -43,6 +47,7 @@ import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
 import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
 import com.ugent.networkplanningtool.layout.parameters.MarginsView;
 import com.ugent.networkplanningtool.layout.parameters.ReceiversView;
+import com.ugent.networkplanningtool.layout.results.RenderDataView;
 import com.ugent.networkplanningtool.layout.tools.EstimateSARView;
 import com.ugent.networkplanningtool.layout.tools.ExposureReductionView;
 import com.ugent.networkplanningtool.layout.tools.NetworkReductionView;
@@ -98,6 +103,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private NetworkReductionView networkReductionView;
     private ExposureReductionView exposureReductionView;
 
+    private RenderDataView renderDataView;
+
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
 	private ImageButton redoButton;
@@ -147,6 +154,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         estimateSARView = (EstimateSARView) findViewById(R.id.estimateSarView);
         networkReductionView = (NetworkReductionView) findViewById(R.id.networkReductionView);
         exposureReductionView = (ExposureReductionView) findViewById(R.id.reduceExposureView);
+
+        renderDataView = (RenderDataView) findViewById(R.id.renderDataView);
 
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
@@ -231,9 +240,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         designView.setModel(drawingModel);
         hScrollBar.setModel(drawingModel);
         vScrollBar.setModel(drawingModel);
+        renderDataView.setDrawingModel(drawingModel);
         drawingModel.addObserver(this);
         floorPlanModel.addObserver(this);
-        
+        floorPlanModel.addObserver(renderDataView);
+
         designView.setOnTouchListener(this);
         
         taskManager = new WebServiceTaskManager(this);
@@ -241,7 +252,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
 
 	public void onMainFlipClick(View v) {
-		mainActive.setEnabled(true);
+        if (v.equals(findViewById(R.id.resultsButton)) && floorPlanModel.getDeusResult() == null) {
+            Toast.makeText(MainActivity.this, "No result to display.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mainActive.setEnabled(true);
 		mainActive = v;
 		onFlipClick(v, mainFlip);
 	}
@@ -443,6 +458,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	public void handleNewFileClick(View v){
         floorPlanModel.resetModel();
+        onMainFlipClick(findViewById(R.id.designButton));
     }
 	
 	public static MainActivity getInstance(){
@@ -557,10 +573,83 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 
     public void onPredictClick(final View v) {
-        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.OPTIMAL_PLACEMENT);
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.PREDICT_COVERAGE);
         taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
+                FloorPlanModel.getInstance().setDeusResult(result);
+                onResultsFlipClick(findViewById(R.id.renderDataButton));
+                onMainFlipClick(resultsButton);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void onOptimalPlacementClick(final View v) {
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.OPTIMAL_PLACEMENT);
+        taskManager.executeTask(new OptimalPlacementTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                FloorPlanModel.getInstance().setDeusResult(result);
+                onResultsFlipClick(findViewById(R.id.renderDataButton));
+                onMainFlipClick(resultsButton);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void onExposureReductionClick(final View v) {
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.EXPOSURE_REDUCTION);
+        taskManager.executeTask(new ExposureReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                FloorPlanModel.getInstance().setDeusResult(result);
+                onResultsFlipClick(findViewById(R.id.renderDataButton));
+                onMainFlipClick(resultsButton);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void onNetworkReductionClick(final View v) {
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.NETWORK_REDUCTION);
+        taskManager.executeTask(new NetworkReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                FloorPlanModel.getInstance().setDeusResult(result);
+                onResultsFlipClick(findViewById(R.id.renderDataButton));
+                onMainFlipClick(resultsButton);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void onEstimateSARClick(final View v) {
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.ESTIMATE_SAR);
+        taskManager.executeTask(new EstimateSARTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                FloorPlanModel.getInstance().setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
             }
@@ -576,11 +665,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {
         String pathLossModel = algorithmsView.getPathLossModel().getValue();
         double gridSize = recieversView.getGridSize() * 100;
-        double roomHeight = 2.5; // TODO
+        double roomHeight = estimateSARView.getRoomHeight();
         String defaultActivity = optimalPlacementeView.getDefaultActivity().getText();
         String receiverName = recieversView.getReceiver();
         double receiverGain = generatedAPsView.getAntennaGain();
-        double receiverHeight = recieversView.getHeight();
+        double receiverHeight = recieversView.getElevation() * 100;
         double interference = marginsView.getInterferenceMargin();
         double shadowMargin = marginsView.getShadowMargin();
         double fadeMargin = marginsView.getFadeMargin();
@@ -588,10 +677,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         int apFrequency = Integer.parseInt(generatedAPsView.getGeneratedAPFrequencyBand().getText());
         double apPower = generatedAPsView.getTransmitPower();
         double apGain = generatedAPsView.getAntennaGain();
-        double apHeight = generatedAPsView.getHeight();
-        double maxEField = 0; //TODO
-        int distanceToAP = 0; // TODO
-        int function = 1;
+        double apHeight = generatedAPsView.getHeight() * 100;
+        double maxEField = 3; //TODO
+        int distanceToAP = 10; // TODO
+        int function = 0;
 
         boolean frequencyPlanning = algorithmsView.isGetFrequencies();
 

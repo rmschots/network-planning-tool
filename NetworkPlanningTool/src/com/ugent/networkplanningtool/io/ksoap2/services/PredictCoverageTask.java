@@ -32,7 +32,6 @@ public class PredictCoverageTask extends AbstractWebServiceTask<DeusRequest, Deu
         request.addProperty("xml", dr.getXml());
         request.addProperty("model", dr.getModel());
         request.addProperty("grid_size", dr.getGridSize());
-        request.addProperty("default_type", dr.getDefaultType());
         request.addProperty("receiver_name", dr.getReceiverName());
         request.addProperty("receiver_gain", dr.getReceiverGain());
         request.addProperty("receiver_height", dr.getReceiverHeight());
@@ -40,6 +39,7 @@ public class PredictCoverageTask extends AbstractWebServiceTask<DeusRequest, Deu
         request.addProperty("shadow_margin", dr.getShadowMargin());
         request.addProperty("fade_margin", dr.getFadeMargin());
         request.addProperty("frequency_planning", dr.isFrequencyPlanning());
+        System.out.println(request.toString());
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //put all required data into a soap envelope
 
@@ -54,6 +54,6 @@ public class PredictCoverageTask extends AbstractWebServiceTask<DeusRequest, Deu
 
         httpTransport.call(SOAP_ACTION, envelope, headerPropertyArrayList); //send request
         SoapObject result = (SoapObject) envelope.getResponse(); //get response
-        return parseDeusResult(result);
+        return parseDeusResult(result, dr.getType());
     }
 }

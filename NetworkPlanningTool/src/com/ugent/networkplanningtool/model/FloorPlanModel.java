@@ -74,6 +74,10 @@ public class FloorPlanModel extends Observable {
         return floorPlan.getDataActivityList();
     }
 
+    public DeusResult getDeusResult() {
+        return deusResult;
+    }
+
     private void setWallList(List<Wall> wallList) {
         floorPlan.setWallList(wallList);
     }
@@ -90,10 +94,19 @@ public class FloorPlanModel extends Observable {
         floorPlan.setDataActivityList(dataActivityList);
     }
 
+    public void setDeusResult(DeusResult deusResult) {
+        if (this.deusResult != deusResult) {
+            this.deusResult = deusResult;
+            setChanged();
+            notifyObservers(deusResult);
+        }
+    }
+
     public static void resetModel() {
         model.floorPlan = new FloorPlan();
         model.undoStack = new Stack<FloorPlanModel>();
         model.redoStack = new Stack<FloorPlanModel>();
+        model.deusResult = null;
         model.setChanged();
         model.notifyObservers();
     }
