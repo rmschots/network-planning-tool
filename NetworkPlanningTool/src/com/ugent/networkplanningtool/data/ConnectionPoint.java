@@ -9,7 +9,10 @@ import android.graphics.Point;
 import com.ugent.networkplanningtool.data.enums.ConnectionPointType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class ConnectionPoint extends DataObject {
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class ConnectionPoint extends DataObject implements XMLTransformable{
 
     private ConnectionPointType type;
 
@@ -76,6 +79,19 @@ public class ConnectionPoint extends DataObject {
     @Override
     public DataObject getPartialDeepCopy() {
         return new ConnectionPoint(type);
+    }
+
+    @Override
+    public Element toXML(Document doc) {
+        Element cpElement;
+        if (type.equals(ConnectionPointType.DATA)) {
+            cpElement = doc.createElement("dataconnpoint");
+        } else {
+            cpElement = doc.createElement("powerconnpoint");
+        }
+        cpElement.setAttribute("x", "" + point1.x);
+        cpElement.setAttribute("y", "" + point1.y);
+        return cpElement;
     }
 
 }

@@ -7,9 +7,13 @@ import android.graphics.Point;
 import android.graphics.RadialGradient;
 
 import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.XMLTransformable;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class CSVResult extends DataObject {
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class CSVResult extends DataObject implements XMLTransformable {
 
     private final Integer level;
     private final Double download; // (mbps)
@@ -157,6 +161,24 @@ public class CSVResult extends DataObject {
     @Override
     public DataObject getPartialDeepCopy() {
         return new CSVResult(point1, level, download, upload, pathloss, powerRX, powerTX, absorption, eField, pdLos, pdDif, roomNumber, drawingSize);
+    }
+
+    @Override
+    public Element toXML(Document doc) {
+        Element resultElem = doc.createElement("result");
+        resultElem.setAttribute("level",""+level);
+        resultElem.setAttribute("download",""+download);
+        resultElem.setAttribute("upload",""+upload);
+        resultElem.setAttribute("pathloss",""+pathloss);
+        resultElem.setAttribute("powerRX",""+powerRX);
+        resultElem.setAttribute("powerTX",""+powerTX);
+        resultElem.setAttribute("absorption",""+absorption);
+        resultElem.setAttribute("eField",""+eField);
+        resultElem.setAttribute("pdLos",""+pdLos);
+        resultElem.setAttribute("pdDif",""+pdDif);
+        resultElem.setAttribute("roomNumber",""+roomNumber);
+        resultElem.setAttribute("drawingSize",""+drawingSize);
+        return resultElem;
     }
 
 }

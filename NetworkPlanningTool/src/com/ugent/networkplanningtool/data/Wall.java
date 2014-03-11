@@ -12,7 +12,10 @@ import com.ugent.networkplanningtool.data.enums.WallType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
-public class Wall extends DataObject {
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class Wall extends DataObject implements XMLTransformable{
 
     private Point point2;
 
@@ -205,6 +208,21 @@ public class Wall extends DataObject {
     @Override
     public DataObject getPartialDeepCopy() {
         return new Wall(wallType, thickness, material);
+    }
+
+    @Override
+    public Element toXML(Document doc) {
+        Element wallElement = doc.createElement("wall");
+        wallElement.setAttribute("x1", "" + point1.x);
+        wallElement.setAttribute("y1", "" + point1.y);
+        wallElement.setAttribute("x2", "" + point2.x);
+        wallElement.setAttribute("y2", "" + point2.y);
+        wallElement.setAttribute("type", wallType.getText());
+        wallElement.setAttribute("thickness", "" + thickness.getNumber());
+        Element materialElement = doc.createElement("material");
+        materialElement.setAttribute("name", material.getText());
+        wallElement.appendChild(materialElement);
+        return wallElement;
     }
 
     public boolean equalsLocation(Wall wall2) {

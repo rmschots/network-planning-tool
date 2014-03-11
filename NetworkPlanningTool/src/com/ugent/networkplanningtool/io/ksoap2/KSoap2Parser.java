@@ -1,8 +1,6 @@
 package com.ugent.networkplanningtool.io.ksoap2;
 
 import android.graphics.Point;
-import android.os.AsyncTask;
-import android.util.Log;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.FloorPlan;
@@ -13,7 +11,8 @@ import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.data.enums.FrequencyBand;
 import com.ugent.networkplanningtool.data.enums.RadioModel;
 import com.ugent.networkplanningtool.data.enums.RadioType;
-import com.ugent.networkplanningtool.io.FloorPlanIO;
+import com.ugent.networkplanningtool.io.ASyncTaskException;
+import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -21,82 +20,13 @@ import org.ksoap2.serialization.SoapObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R> {
-
-    private final String TAG = getClass().getName();
-
-    private OnAsyncTaskCompleteListener<R> taskCompletionListener;
-    private WebServiceTaskManager progressTracker;
-    // Most recent exception (used to diagnose failures)
-    private Exception mostRecentException;
-
-    public AbstractWebServiceTask() {
-    }
-
-    public final void setOnTaskCompletionListener(OnAsyncTaskCompleteListener<R> taskCompletionListener) {
-        this.taskCompletionListener = taskCompletionListener;
-    }
-
-    public final void setProgressTracker(WebServiceTaskManager progressTracker) {
-        if (progressTracker != null) {
-            this.progressTracker = progressTracker;
-        }
-    }
-
-    @Override
-    protected final void onPreExecute() {
-        if (progressTracker != null) {
-            this.progressTracker.onStartProgress();
-        }
-    }
-
-    /**
-     * Invoke the web service request
-     */
-    @Override
-    protected final R doInBackground(P... parameters) {
-        mostRecentException = null;
-        R result = null;
-
-        try {
-            result = performTaskInBackground(parameters[0]);
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to invoke the web service: ", e);
-            mostRecentException = e;
-        }
-
-        return result;
-    }
-
-    protected abstract R performTaskInBackground(P parameter) throws Exception;
-
-    /**
-     * @param result to be sent back to the observer (typically an {@link android.app.Activity} running on the UI Thread). This can be <code>null</code> if
-     *               an error occurs while attempting to invoke the web service (e.g. web service was unreachable, or network I/O issue etc.)
-     */
-    @Override
-    protected final void onPostExecute(R result) {
-        if (progressTracker != null) {
-            progressTracker.onStopProgress();
-        }
-
-        if (taskCompletionListener != null) {
-            if (result == null || mostRecentException != null) {
-                taskCompletionListener.onTaskFailed(mostRecentException);
-
-            } else {
-                taskCompletionListener.onTaskCompleteSuccess(result);
-            }
-        }
-
-        // clean up listeners since we are done with this task
-        progressTracker = null;
-        taskCompletionListener = null;
-    }
-
-    protected DeusResult parseDeusResult(SoapObject so, DeusRequest.RequestType requestType) throws ServiceException {
+/**
+ * Created by Roel on 10/03/14.
+ */
+public class KSoap2Parser {
+    public static DeusResult parseDeusResult(SoapObject so, DeusRequest.RequestType requestType) throws ASyncTaskException {
         if (so.hasProperty("errormsg")) {
-            throw new ServiceException(so.getPropertyAsString("errormsg"));
+            throw new ASyncTaskException(so.getPropertyAsString("errormsg"));
         }
 
         Double[] infoArray = new Double[3];
@@ -122,10 +52,11 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
 
         FloorPlan normalizedPlan = null;
         if (so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")) {
+            System.out.println(so.getPropertyAsString("normalizedPlan"));
             try {
                 normalizedPlan = FloorPlanIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
             } catch (Exception e) {
-                throw new ServiceException("Error parsing service response normalized xml");
+                throw new ASyncTaskException("Error parsing service response normalized xml");
             }
         }
         FloorPlan optimizedPlan = null;
@@ -133,7 +64,7 @@ public abstract class AbstractWebServiceTask<P, R> extends AsyncTask<P, Void, R>
             try {
                 optimizedPlan = FloorPlanIO.loadFloorPlan(so.getPropertyAsString("optimizedPlan"));
             } catch (Exception e) {
-                throw new ServiceException("Error parsing service response normalized xml");
+                throw new ASyncTaskException("Error parsing service response normalized xml");
             }
         }
 

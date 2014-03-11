@@ -14,7 +14,10 @@ import com.ugent.networkplanningtool.data.enums.RadioModel;
 import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class AccessPoint extends DataObject {
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class AccessPoint extends DataObject implements XMLTransformable{
 
     private String name;
     private int height;
@@ -237,6 +240,26 @@ public class AccessPoint extends DataObject {
     @Override
     public DataObject getPartialDeepCopy() {
         return new AccessPoint(name, height, type, model, frequencyband, frequency, gain, power, network);
+    }
+
+    @Override
+    public Element toXML(Document doc) {
+        Element apElement = doc.createElement("accesspoint");
+        apElement.setAttribute("level", "0");
+        apElement.setAttribute("x", "" + point1.x);
+        apElement.setAttribute("y", "" + point1.y);
+        apElement.setAttribute("height", "" + height);
+        apElement.setAttribute("name", name);
+        Element radioElement = doc.createElement("radio");
+        radioElement.setAttribute("type", type.getText());
+        radioElement.setAttribute("model", model.getText());
+        radioElement.setAttribute("frequency", "" + frequency.getNumber());
+        radioElement.setAttribute("frequencyband", "" + frequencyband.getText());
+        radioElement.setAttribute("gain", "" + gain);
+        radioElement.setAttribute("power", "" + power);
+        radioElement.setAttribute("network", network.getText());
+        apElement.appendChild(radioElement);
+        return apElement;
     }
 
     /* (non-Javadoc)

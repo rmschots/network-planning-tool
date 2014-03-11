@@ -8,9 +8,13 @@ import android.graphics.Point;
 
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 public abstract class DataObject{
-	
-	public static enum DataObjectType{
+
+    public static enum DataObjectType{
 		WALL,
 		ACCESS_POINT,
 		DATA_ACTIVITY,

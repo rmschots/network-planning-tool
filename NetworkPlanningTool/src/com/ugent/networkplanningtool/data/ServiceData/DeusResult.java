@@ -198,4 +198,13 @@ public class DeusResult {
         }
         return rts;
     }
+
+    public String getInfoAsString(){
+        if(info==null || info.length < 3){
+            return "";
+        }
+        return info[0]+" accesspoint(s)\n" +
+                "Median exposure: "+info[1]+" V/m\n" +
+                "P95 exposure: "+info[2]+" V/m\n";
+    }
 }

@@ -11,7 +11,10 @@ import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
-public class DataActivity extends DataObject {
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+public class DataActivity extends DataObject implements XMLTransformable {
 
     private ActivityType type;
 
@@ -104,5 +107,14 @@ public class DataActivity extends DataObject {
     @Override
     public DataObject getPartialDeepCopy() {
         return new DataActivity(type);
+    }
+
+    @Override
+    public Element toXML(Document doc) {
+        Element apElement = doc.createElement("activity");
+        apElement.setAttribute("x", "" + point1.x);
+        apElement.setAttribute("y", "" + point1.y);
+        apElement.setAttribute("type", type.getText());
+        return apElement;
     }
 }

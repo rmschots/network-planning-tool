@@ -2,7 +2,8 @@ package com.ugent.networkplanningtool.io.ksoap2.services;
 
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
-import com.ugent.networkplanningtool.io.ksoap2.AbstractWebServiceTask;
+import com.ugent.networkplanningtool.io.AbstractASyncTask;
+import com.ugent.networkplanningtool.io.ksoap2.KSoap2Parser;
 import com.ugent.networkplanningtool.io.ksoap2.marshal.MarshalDouble;
 
 import org.ksoap2.HeaderProperty;
@@ -13,7 +14,7 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
-public class EstimateSARTask extends AbstractWebServiceTask<DeusRequest, DeusResult> {
+public class EstimateSARTask extends AbstractASyncTask<DeusRequest, DeusResult> {
     private static final String METHOD_NAME = "calculatesar";
     private static final String SOAP_ACTION = "http://wicaweb2.intec.ugent.be:80/DeusService/Deus/calculatesar";
     private static final String NAMESPACE = "http://web.deus.wica.intec.ugent.be/";
@@ -52,6 +53,6 @@ public class EstimateSARTask extends AbstractWebServiceTask<DeusRequest, DeusRes
 
         httpTransport.call(SOAP_ACTION, envelope, headerPropertyArrayList); //send request
         SoapObject result = (SoapObject) envelope.getResponse(); //get response
-        return parseDeusResult(result, dr.getType());
+        return KSoap2Parser.parseDeusResult(result, dr.getType());
     }
 }

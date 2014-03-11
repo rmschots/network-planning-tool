@@ -1,4 +1,4 @@
-package com.ugent.networkplanningtool.io.ksoap2;
+package com.ugent.networkplanningtool.io;
 
 /**
  * Observer for executing logic asynchronously.

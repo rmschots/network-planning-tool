@@ -25,13 +25,14 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
 
+import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
-import com.ugent.networkplanningtool.io.FloorPlanIO;
-import com.ugent.networkplanningtool.io.ImageIO;
-import com.ugent.networkplanningtool.io.ksoap2.OnAsyncTaskCompleteListener;
-import com.ugent.networkplanningtool.io.ksoap2.WebServiceTaskManager;
+import com.ugent.networkplanningtool.io.ASyncIOTaskManager;
+import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
+import com.ugent.networkplanningtool.io.img.ImageIO;
+import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
 import com.ugent.networkplanningtool.io.ksoap2.services.EstimateSARTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.ExposureReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.NetworkReductionTask;
@@ -119,7 +120,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private DrawingModel drawingModel;
 	private FloorPlanModel floorPlanModel;
 	
-	private WebServiceTaskManager taskManager;
+	private ASyncIOTaskManager taskManager;
 	private Dialog dialog;
 
     @Override
@@ -256,7 +257,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
         designView.setOnTouchListener(this);
         
-        taskManager = new WebServiceTaskManager(this);
+        taskManager = new ASyncIOTaskManager(this);
     }
 
 
@@ -464,7 +465,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	public void saveTofile(File f){
 		try {
-			FloorPlanIO.saveFloorPlan(f, floorPlanModel.getFloorPlan());
+			FloorPlanIO.saveXML(f, floorPlanModel.getFloorPlan());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			String StackTrace = "";
@@ -732,7 +733,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     protected void onResume() {
         super.onResume();
         if (taskManager == null) {
-            taskManager = new WebServiceTaskManager(this);
+            taskManager = new ASyncIOTaskManager(this);
         }
     }
 
@@ -766,15 +767,20 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
     private String getRawData(ExportRawDataType exportType) {
         // TODO toStrings van klassen fixen
+        DeusResult dr = floorPlanModel.getDeusResult();
         switch(exportType){
             case NORMALIZED_PLAN:
-                return floorPlanModel.getDeusResult().getNormalizedPlan().toString();
+                return dr.getNormalizedPlan()==null?"":FloorPlanIO.getXMLAsString(dr.getNormalizedPlan());
             case OPTIMIZED_PLAN:
-                return floorPlanModel.getDeusResult().getOptimizedPlan().toString();
+                return dr.getOptimizedPlan()==null?"":FloorPlanIO.getXMLAsString(dr.getOptimizedPlan());
             case COVERAGE_DATA:
-                return floorPlanModel.getDeusResult().getCsv().toString();
+                String result = "";
+                for(CSVResult csvResult : floorPlanModel.getDeusResult().getCsv()){
+                    result+=FloorPlanIO.getXMLAsString(csvResult)+"\n";
+                }
+                return result;
             case EXPOSURE_INFO:
-                return floorPlanModel.getDeusResult().getInfo().toString();
+                return floorPlanModel.getDeusResult().getInfoAsString();
             case BENCHMARK:
                 return floorPlanModel.getDeusResult().getBenchmarks();
         }

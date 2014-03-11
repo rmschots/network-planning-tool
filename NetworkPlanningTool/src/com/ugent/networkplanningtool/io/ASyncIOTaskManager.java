@@ -1,13 +1,13 @@
-package com.ugent.networkplanningtool.io.ksoap2;
+package com.ugent.networkplanningtool.io;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 
-public class WebServiceTaskManager {
+public class ASyncIOTaskManager {
 	
 	private final ProgressDialog progressDialog;
 
-	public WebServiceTaskManager(Context context) {
+	public ASyncIOTaskManager(Context context) {
 		this.progressDialog = new ProgressDialog(context);
         this.progressDialog.setCancelable(false);
         this.progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -17,7 +17,7 @@ public class WebServiceTaskManager {
      * Executes a task in the background thread, while displaying a busy dialog (non cancellable).
      * 
      * @param task
-     *            {@link com.ugent.networkplanningtool.io.ksoap2.AbstractWebServiceTask}
+     *            {@link AbstractASyncTask}
      * @param request
      *            request for the background task
      * @param progressLabel
@@ -26,7 +26,7 @@ public class WebServiceTaskManager {
      *            {@link OnAsyncTaskCompleteListener} to be notified once the task is completed.
      */
     @SuppressWarnings("unchecked")
-	public <T, P> void executeTask(AbstractWebServiceTask<P, T> task, P request, CharSequence progressLabel,
+	public <T, P> void executeTask(AbstractASyncTask<P, T> task, P request, CharSequence progressLabel,
             OnAsyncTaskCompleteListener<T> onTaskCompletedListener) {
         this.progressDialog.setMessage(progressLabel);
 

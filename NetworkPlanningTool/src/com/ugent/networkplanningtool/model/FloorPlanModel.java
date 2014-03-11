@@ -10,7 +10,7 @@ import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
-import com.ugent.networkplanningtool.io.FloorPlanIO;
+import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
 import com.ugent.networkplanningtool.utils.Couple;
 import com.ugent.networkplanningtool.utils.Utils;
 

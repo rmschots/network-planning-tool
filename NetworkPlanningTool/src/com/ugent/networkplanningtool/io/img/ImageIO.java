@@ -1,4 +1,4 @@
-package com.ugent.networkplanningtool.io;
+package com.ugent.networkplanningtool.io.img;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
