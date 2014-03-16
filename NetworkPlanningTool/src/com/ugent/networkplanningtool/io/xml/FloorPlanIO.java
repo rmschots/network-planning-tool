@@ -6,7 +6,6 @@ import android.util.Log;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.XMLTransformable;
@@ -23,7 +22,6 @@ import com.ugent.networkplanningtool.data.enums.WallType;
 import com.ugent.networkplanningtool.utils.Utils;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -133,16 +131,6 @@ public class FloorPlanIO {
             dataActivityList.add(new DataActivity(new Point(x, y), activityType));
         }
         return new FloorPlan(wallList, connectionPointList, accessPointList, dataActivityList);
-    }
-
-    public static void saveXML(File file, XMLTransformable xmlTransformable) throws ParserConfigurationException, TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        StreamResult result = new StreamResult(file);
-
-        DOMSource source = new DOMSource(getDocument(xmlTransformable));
-        transformer.transform(source, result);
-        Log.i("DEBUG", "File saved");
     }
 
     public static String getXMLAsString(XMLTransformable xmlTransformable) {

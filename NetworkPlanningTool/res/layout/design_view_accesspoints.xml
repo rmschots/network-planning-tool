@@ -6,6 +6,20 @@
     android:orientation="vertical"
     android:tag="accesspoints">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:id="@+id/textView" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/accessPointNameEditText"
+        android:text="Enter access point name"
+        android:singleLine="true"
+        android:selectAllOnFocus="true" />
+
     <Spinner
         android:id="@+id/networkSignalTypeSpinner"
         android:layout_width="fill_parent"

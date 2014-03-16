@@ -30,6 +30,8 @@ public class AccessPoint extends DataObject implements XMLTransformable{
     private double power;
     private Network network;
 
+    private RealAccessPoint rap;
+
     public AccessPoint(AccessPoint accessPoint) {
         super(accessPoint);
         DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
@@ -113,6 +115,7 @@ public class AccessPoint extends DataObject implements XMLTransformable{
     }
 
     public void setFrequency(Frequency frequency) {
+        System.out.println("freq set to " + frequency);
         this.frequency = frequency;
     }
 
@@ -146,6 +149,14 @@ public class AccessPoint extends DataObject implements XMLTransformable{
 
     public void setNetwork(Network network) {
         this.network = network;
+    }
+
+    public RealAccessPoint getRap() {
+        return rap;
+    }
+
+    public void setRap(RealAccessPoint rap) {
+        this.rap = rap;
     }
 
     @Override
@@ -262,18 +273,15 @@ public class AccessPoint extends DataObject implements XMLTransformable{
         return apElement;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return "AccessPoint [name=" + name + ", height=" + height + ", type="
-                + type + ", model=" + model + ", frequency=" + frequency
-                + ", frequencyband=" + frequencyband + ", gain=" + gain
-                + ", power=" + power + ", network=" + network
-                + ", DATA_OBJECT_TYPE=" + DATA_OBJECT_TYPE + ", point1="
-                + point1 + "]";
+        if (name.isEmpty()) {
+            return getPoint1() +
+                    ", " + type +
+                    ", " + model +
+                    ", " + frequency;
+        } else {
+            return name;
+        }
     }
-
-
 }

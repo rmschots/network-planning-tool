@@ -10,14 +10,9 @@ import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
-import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
 import com.ugent.networkplanningtool.utils.Couple;
 import com.ugent.networkplanningtool.utils.Utils;
 
-import org.xml.sax.SAXException;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Stack;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class FloorPlanModel extends Observable {
 
@@ -58,7 +51,7 @@ public class FloorPlanModel extends Observable {
         return model;
     }
 
-    public FloorPlan getFloorPlan(){
+    public FloorPlan getFloorPlan() {
         return floorPlan;
     }
 
@@ -115,8 +108,8 @@ public class FloorPlanModel extends Observable {
         model.notifyObservers();
     }
 
-    public void loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException {
-        this.floorPlan = FloorPlanIO.loadFloorPlan(file);
+    public void setFloorPlan(FloorPlan floorPlan) {
+        this.floorPlan = floorPlan;
         undoStack = new Stack<FloorPlanModel>();
         redoStack = new Stack<FloorPlanModel>();
         model.setChanged();

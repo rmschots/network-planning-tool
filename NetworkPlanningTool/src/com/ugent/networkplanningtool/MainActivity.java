@@ -2,11 +2,17 @@ package com.ugent.networkplanningtool;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -25,19 +31,25 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
 
+import com.ugent.networkplanningtool.data.FloorPlan;
+import com.ugent.networkplanningtool.data.RealAccessPoint;
 import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
+import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
 import com.ugent.networkplanningtool.io.ASyncIOTaskManager;
-import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
-import com.ugent.networkplanningtool.io.img.ImageIO;
 import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
+import com.ugent.networkplanningtool.io.img.ImageIO;
 import com.ugent.networkplanningtool.io.ksoap2.services.EstimateSARTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.ExposureReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.NetworkReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.OptimalPlacementTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.PredictCoverageTask;
+import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
+import com.ugent.networkplanningtool.io.xml.LoadFloorPlanTask;
+import com.ugent.networkplanningtool.io.xml.SaveXMLParams;
+import com.ugent.networkplanningtool.io.xml.SaveXMLTask;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.components.MyScrollBar;
@@ -45,6 +57,7 @@ import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
 import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
 import com.ugent.networkplanningtool.layout.dataobject.WallView;
+import com.ugent.networkplanningtool.layout.measure.ApLinkingView;
 import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
 import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
 import com.ugent.networkplanningtool.layout.parameters.MarginsView;
@@ -62,6 +75,8 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -397,13 +412,20 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 			public void onFileSelected(Dialog source, File file) {
 				Log.d("DEBUG",file.getAbsolutePath());
 				source.dismiss();
-				try {
-					floorPlanModel.loadFloorPlan(file);
-				} catch (Exception e) {
-					Log.d("DEBUG","Error loading file: "+e);
-					e.printStackTrace();
-				}
-			}
+                taskManager.executeTask(new LoadFloorPlanTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<FloorPlan>() {
+                    @Override
+                    public void onTaskCompleteSuccess(FloorPlan result) {
+                        floorPlanModel.setFloorPlan(result);
+                        Toast.makeText(MainActivity.this, "Floorplan loaded", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onTaskFailed(Exception cause) {
+                        Log.e(TAG, cause.getMessage(), cause);
+                        Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
 		});
 		dialog.setFilter(".*xml|.*XML");
 		displayNewDialog(dialog);
@@ -464,22 +486,58 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void saveTofile(File f){
-		try {
-			FloorPlanIO.saveXML(f, floorPlanModel.getFloorPlan());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			String StackTrace = "";
-			for(StackTraceElement s : e.getStackTrace()){
-				StackTrace+=" "+s.toString();
-			}
-			Log.d("DEBUG","error saving to "+f.getAbsolutePath()+" "+StackTrace);
-			e.printStackTrace();
-		}
-	}
+        SaveXMLParams params = new SaveXMLParams(floorPlanModel.getFloorPlan(), f);
+        taskManager.executeTask(new SaveXMLTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
+            @Override
+            public void onTaskCompleteSuccess(File result) {
+                Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 	
 	public void handleNewFileClick(View v){
-        floorPlanModel.resetModel();
-        onMainFlipClick(findViewById(R.id.designButton));
+        System.out.println("Starting Scan");
+        final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                System.out.println("HOIZZZZZZZZ");
+                final List<RealAccessPoint> rapList = new ArrayList<RealAccessPoint>();
+                final List<ScanResult> results = wifi.getScanResults();//list of access points from the last scan
+                for (final ScanResult result : results) {
+                    rapList.add(new RealAccessPoint(result.SSID, result.BSSID, result.capabilities, Frequency.getFreqByNumber(result.frequency), result.level));
+                    System.out.println(result.SSID + ", " + result.BSSID + ", " + result.capabilities + ", " + result.describeContents() + ", " + result.frequency + ", " + result.level + ", " + result.timestamp);
+                }
+                final Dialog d = new Dialog(MainActivity.this);
+                d.setContentView(new ApLinkingView(MainActivity.this, rapList));
+                displayNewDialog(d);
+            }
+        }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifi.startScan();//request a scan for access points
+        /*TelephonyManager telManager;
+        telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telManager.listen(new PhoneStateListener(){
+            *//* Get the Signal strength from the provider, each time there is an update *//*
+            @Override
+            public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+                super.onSignalStrengthsChanged(signalStrength);
+                System.out.println("GSM Cinr: " + signalStrength.getGsmSignalStrength());
+            }
+        },PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        System.out.println("iso: "+telManager.getSimCountryIso());
+        System.out.println("operator: "+telManager.getSimOperator());
+        System.out.println("operatorName: "+telManager.getSimSerialNumber());*/
+
+
+        //floorPlanModel.resetModel();
+        //onMainFlipClick(findViewById(R.id.designButton));
     }
 	
 	public static MainActivity getInstance(){
@@ -774,11 +832,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
             case OPTIMIZED_PLAN:
                 return dr.getOptimizedPlan()==null?"":FloorPlanIO.getXMLAsString(dr.getOptimizedPlan());
             case COVERAGE_DATA:
-                String result = "";
+                StringBuilder sb = new StringBuilder();
                 for(CSVResult csvResult : floorPlanModel.getDeusResult().getCsv()){
-                    result+=FloorPlanIO.getXMLAsString(csvResult)+"\n";
+                    sb.append("\n" + FloorPlanIO.getXMLAsString(csvResult));
                 }
-                return result;
+                return sb.toString();
             case EXPOSURE_INFO:
                 return floorPlanModel.getDeusResult().getInfoAsString();
             case BENCHMARK:
