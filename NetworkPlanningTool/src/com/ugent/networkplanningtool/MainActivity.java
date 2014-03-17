@@ -2,16 +2,12 @@ package com.ugent.networkplanningtool;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,16 +33,17 @@ import com.ugent.networkplanningtool.data.RealAccessPoint;
 import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
-import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
 import com.ugent.networkplanningtool.io.ASyncIOTaskManager;
 import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
-import com.ugent.networkplanningtool.io.img.ImageIO;
+import com.ugent.networkplanningtool.io.img.SaveImageParams;
+import com.ugent.networkplanningtool.io.img.SaveImageTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.EstimateSARTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.ExposureReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.NetworkReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.OptimalPlacementTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.PredictCoverageTask;
+import com.ugent.networkplanningtool.io.wifi.WifiDetectTask;
 import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
 import com.ugent.networkplanningtool.io.xml.LoadFloorPlanTask;
 import com.ugent.networkplanningtool.io.xml.SaveXMLParams;
@@ -75,7 +73,6 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -502,42 +499,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     }
 	
 	public void handleNewFileClick(View v){
-        System.out.println("Starting Scan");
-        final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                System.out.println("HOIZZZZZZZZ");
-                final List<RealAccessPoint> rapList = new ArrayList<RealAccessPoint>();
-                final List<ScanResult> results = wifi.getScanResults();//list of access points from the last scan
-                for (final ScanResult result : results) {
-                    rapList.add(new RealAccessPoint(result.SSID, result.BSSID, result.capabilities, Frequency.getFreqByNumber(result.frequency), result.level));
-                    System.out.println(result.SSID + ", " + result.BSSID + ", " + result.capabilities + ", " + result.describeContents() + ", " + result.frequency + ", " + result.level + ", " + result.timestamp);
-                }
-                final Dialog d = new Dialog(MainActivity.this);
-                d.setContentView(new ApLinkingView(MainActivity.this, rapList));
-                displayNewDialog(d);
-            }
-        }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        wifi.startScan();//request a scan for access points
-        /*TelephonyManager telManager;
-        telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        telManager.listen(new PhoneStateListener(){
-            *//* Get the Signal strength from the provider, each time there is an update *//*
-            @Override
-            public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-                super.onSignalStrengthsChanged(signalStrength);
-                System.out.println("GSM Cinr: " + signalStrength.getGsmSignalStrength());
-            }
-        },PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        System.out.println("iso: "+telManager.getSimCountryIso());
-        System.out.println("operator: "+telManager.getSimOperator());
-        System.out.println("operatorName: "+telManager.getSimSerialNumber());*/
-
-
-        //floorPlanModel.resetModel();
-        //onMainFlipClick(findViewById(R.id.designButton));
+        floorPlanModel.resetModel();
+        onMainFlipClick(findViewById(R.id.designButton));
     }
 	
 	public static MainActivity getInstance(){
@@ -549,10 +512,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleScreenshot(View v){
+        final Bitmap bm = designView.getDrawingCache();
 		
 		final Dialog d = new Dialog(this);
 		d.setTitle(R.string.saveScreenshot);
 		d.setContentView(R.layout.save_name);
+        d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
 		Button saveButton = (Button)d.findViewById(R.id.saveButton);
 		saveButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -576,16 +542,25 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 							Log.e("DEBUG","cannot create new file");
 						}
 					}
-					try {
-						ImageIO.saveImage(designView.getDrawingCache(), f);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
+
+                    SaveImageParams params = new SaveImageParams(bm, f);
+                    taskManager.executeTask(new SaveImageTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
+                        @Override
+                        public void onTaskCompleteSuccess(File result) {
+                            Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onTaskFailed(Exception cause) {
+                            Log.e(TAG, cause.getMessage(), cause);
+                            Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
 				}else{
 					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
 					dialog.addListener(new OnFileSelectedListener() {
-						
+
 						@Override
 						public void onFileSelected(Dialog source, File folder, String name) {
 						}
@@ -594,13 +569,19 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 						public void onFileSelected(Dialog source, File file) {
 							source.dismiss();
 							File f = new File(file, fileName);
-							try {
-								ImageIO.saveImage(designView.getDrawingCache(), f);
-								Log.d("DEBUG","JJJJJGKLDHNGKPFJKSDBGKLJMSNDBJFKPBGNKSJDNG");
-							} catch (FileNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+                            SaveImageParams params = new SaveImageParams(designView.getDrawingCache(), f);
+                            taskManager.executeTask(new SaveImageTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
+                                @Override
+                                public void onTaskCompleteSuccess(File result) {
+                                    Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onTaskFailed(Exception cause) {
+                                    Log.e(TAG, cause.getMessage(), cause);
+                                    Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
 						}
 					});
 					dialog.setFolderMode(true);
@@ -650,6 +631,24 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		dialog.setShowOnlySelectable(true);
 		displayNewDialog(dialog);
 	}
+
+    public void handleLinkingConfig(final View view){
+        final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        taskManager.executeTask(new WifiDetectTask(this), wifi, "Detecting wifi signals...", new OnAsyncTaskCompleteListener<List<RealAccessPoint>>() {
+            @Override
+            public void onTaskCompleteSuccess(List<RealAccessPoint> result) {
+                final Dialog d = new Dialog(MainActivity.this);
+                d.setContentView(new ApLinkingView(MainActivity.this, result));
+                displayNewDialog(d);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     public void onPredictClick(final View v) {
         DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.PREDICT_COVERAGE);

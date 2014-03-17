@@ -7,6 +7,8 @@ import com.ugent.networkplanningtool.data.enums.Frequency;
  */
 public class RealAccessPoint {
 
+    private static RealAccessPoint emptyDummy = new RealAccessPoint("","","",null,0);
+
     private String ssid;
     private String BSSID;
     private String capabilities;
@@ -19,6 +21,10 @@ public class RealAccessPoint {
         this.capabilities = capabilities;
         this.frequency = frequency;
         this.signalStrength = signalStrength;
+    }
+
+    public static RealAccessPoint getEmptyDummy() {
+        return emptyDummy;
     }
 
     public String getSsid() {
@@ -68,9 +74,8 @@ public class RealAccessPoint {
 
         RealAccessPoint that = (RealAccessPoint) o;
 
-        if (!BSSID.equals(that.BSSID)) return false;
+        return BSSID.equals(that.BSSID);
 
-        return true;
     }
 
     @Override
@@ -80,6 +85,9 @@ public class RealAccessPoint {
 
     @Override
     public String toString() {
+        if(this == emptyDummy){
+            return "";
+        }
         return ssid + ", " + signalStrength + " dBm";
     }
 }

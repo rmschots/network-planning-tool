@@ -72,6 +72,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:src="@drawable/info" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton"
+                android:onClick="handleLinkingConfig" />
         </LinearLayout>
     </HorizontalScrollView>
 

@@ -21,7 +21,7 @@ import java.util.List;
 public class ApLinkingView extends LinearLayout {
 
     private ListView lv;
-    private ArrayAdapter<ApLinkingRowItem> la;
+    private List<ApLinkingRowItem> rvList;
     private List<RealAccessPoint> realAccessPointList;
 
     public ApLinkingView(Context context, List<RealAccessPoint> realAccessPointList) {
@@ -41,21 +41,29 @@ public class ApLinkingView extends LinearLayout {
         FloorPlanModel.getInstance().getAccessPointList();
 
 
-        List<ApLinkingRowItem> rvList = new ArrayList<ApLinkingRowItem>();
+        rvList = new ArrayList<ApLinkingRowItem>();
 
         List<AccessPoint> apList = FloorPlanModel.getInstance().getAccessPointList();
 
         for (AccessPoint ap : apList) {
             List<RealAccessPoint> links = new ArrayList<RealAccessPoint>();
-            if (ap.getRap() != null) {
+            if(!realAccessPointList.contains(ap.getRap())){
                 links.add(ap.getRap());
+                if(!ap.getRap().equals(RealAccessPoint.getEmptyDummy())){
+                    links.add(RealAccessPoint.getEmptyDummy());
+                }
+            }else{
+                links.add(RealAccessPoint.getEmptyDummy());
             }
+
             for (RealAccessPoint rap : realAccessPointList) {
-                if (!rap.equals(ap.getRap()) && ap.getFrequency().equals(rap.getFrequency())) {
+                if (ap.getFrequency().equals(rap.getFrequency())) {
                     links.add(rap);
                 }
             }
             ArrayAdapter<RealAccessPoint> apAdapter = new ArrayAdapter<RealAccessPoint>(getContext(), android.R.layout.simple_spinner_dropdown_item, links);
+
+
             rvList.add(new ApLinkingRowItem(ap, apAdapter));
         }
 

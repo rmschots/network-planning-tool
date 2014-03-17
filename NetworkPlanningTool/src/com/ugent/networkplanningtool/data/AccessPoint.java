@@ -44,6 +44,8 @@ public class AccessPoint extends DataObject implements XMLTransformable{
         this.gain = accessPoint.gain;
         this.power = accessPoint.power;
         this.network = accessPoint.network;
+
+        this.rap = RealAccessPoint.getEmptyDummy();
     }
 
     public AccessPoint(String name, int height, RadioType type,
@@ -60,6 +62,8 @@ public class AccessPoint extends DataObject implements XMLTransformable{
         this.gain = gain;
         this.power = power;
         this.network = network;
+
+        this.rap = RealAccessPoint.getEmptyDummy();
     }
 
     public AccessPoint(Point point, String name, int height, RadioType type,
@@ -76,6 +80,8 @@ public class AccessPoint extends DataObject implements XMLTransformable{
         this.gain = gain;
         this.power = power;
         this.network = network;
+
+        this.rap = RealAccessPoint.getEmptyDummy();
     }
 
     public String getName() {

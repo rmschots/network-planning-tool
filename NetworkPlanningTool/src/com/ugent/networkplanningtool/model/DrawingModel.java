@@ -29,8 +29,8 @@ public class DrawingModel extends Observable {
     private boolean drawResult;
 
     public boolean isDrawResult() {
-        if(drawResult){
-            System.out.println("LOLZ "+FloorPlanModel.getInstance().getDeusResult());
+        if (drawResult) {
+            System.out.println("LOLZ " + FloorPlanModel.getInstance().getDeusResult());
         }
         return drawResult;
     }
@@ -44,7 +44,7 @@ public class DrawingModel extends Observable {
     }
 
     public void setDrawAccessPoints(boolean drawAccessPoints) {
-        if(this.drawAccessPoints != drawAccessPoints){
+        if (this.drawAccessPoints != drawAccessPoints) {
             this.drawAccessPoints = drawAccessPoints;
             setChanged();
             notifyObservers();
@@ -57,7 +57,7 @@ public class DrawingModel extends Observable {
     }
 
     public void setDrawActivities(boolean drawActivities) {
-        if(this.drawActivities != drawActivities){
+        if (this.drawActivities != drawActivities) {
             this.drawActivities = drawActivities;
             setChanged();
             notifyObservers();
@@ -69,7 +69,7 @@ public class DrawingModel extends Observable {
     }
 
     public void setDrawLabels(boolean drawLabels) {
-        if(this.drawLabels != drawLabels){
+        if (this.drawLabels != drawLabels) {
             this.drawLabels = drawLabels;
             setChanged();
             notifyObservers();
@@ -81,7 +81,7 @@ public class DrawingModel extends Observable {
     }
 
     public void setDrawGridPoints(boolean drawGridPoints) {
-        if(this.drawGridPoints != drawGridPoints){
+        if (this.drawGridPoints != drawGridPoints) {
             this.drawGridPoints = drawGridPoints;
             setChanged();
             notifyObservers();
@@ -423,6 +423,7 @@ public class DrawingModel extends Observable {
     }
 
     public void setViewSize(int width, int height) {
+        System.out.println("setViewSize: "+width+" "+height);
         this.viewWidth = width;
         this.viewHeight = height;
         setPixelsPerInterval(this.pixelsPerInterval);
