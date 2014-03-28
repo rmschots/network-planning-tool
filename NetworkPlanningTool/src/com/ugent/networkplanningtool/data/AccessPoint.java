@@ -17,7 +17,7 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AccessPoint extends DataObject implements XMLTransformable{
+public class AccessPoint extends DataObject implements XMLTransformable {
 
     private String name;
     private int height;
@@ -122,6 +122,9 @@ public class AccessPoint extends DataObject implements XMLTransformable{
 
     public void setFrequency(Frequency frequency) {
         System.out.println("freq set to " + frequency);
+        if (!frequency.equals(rap.getFrequency())) {
+            rap = RealAccessPoint.getEmptyDummy();
+        }
         this.frequency = frequency;
     }
 

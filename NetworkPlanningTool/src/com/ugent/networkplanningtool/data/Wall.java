@@ -15,7 +15,7 @@ import com.ugent.networkplanningtool.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class Wall extends DataObject implements XMLTransformable{
+public class Wall extends DataObject implements XMLTransformable {
 
     private Point point2;
 
@@ -108,6 +108,7 @@ public class Wall extends DataObject implements XMLTransformable{
      * @param thickness the thickness to set
      */
     public void setThickness(Thickness thickness) {
+        System.out.println("set " + thickness);
         if (thickness != null) {
             this.thickness = thickness;
         }
@@ -178,7 +179,7 @@ public class Wall extends DataObject implements XMLTransformable{
                 canvas.drawRect(pixelsX1 - circleRadius, pixelsY1 - circleRadius, pixelsX1 + circleRadius, pixelsY1 + circleRadius, paint);
                 canvas.drawRect(pixelsX2 - circleRadius, pixelsY2 - circleRadius, pixelsX2 + circleRadius, pixelsY2 + circleRadius, paint);
             }
-            if(drawingModel.isDrawLabels()){
+            if (drawingModel.isDrawLabels()) {
                 String textToDraw = Math.round(Utils.pointToPointDistance(point1, point2)) / 100.0 + " m";
                 paint.setTextSize(20);
                 if (paint.measureText(textToDraw) < drawingModel.getPixelsPerInterval() * 2) {

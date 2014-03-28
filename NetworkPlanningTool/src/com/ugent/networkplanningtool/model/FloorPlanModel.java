@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.util.Log;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
@@ -31,6 +32,8 @@ public class FloorPlanModel extends Observable {
 //	private List<DataActivity> dataActivityList;
     private FloorPlan floorPlan;
     private DeusResult deusResult;
+    private List<ApMeasurement> apMeasurements;
+
 
     private Stack<FloorPlanModel> undoStack;
     private Stack<FloorPlanModel> redoStack;
@@ -39,12 +42,14 @@ public class FloorPlanModel extends Observable {
         floorPlan = new FloorPlan(wallList, connectionPointList, accessPointList, dataActivityList);
         undoStack = new Stack<FloorPlanModel>();
         redoStack = new Stack<FloorPlanModel>();
+        apMeasurements = new ArrayList<ApMeasurement>();
     }
 
     private FloorPlanModel() {
         floorPlan = new FloorPlan();
         undoStack = new Stack<FloorPlanModel>();
         redoStack = new Stack<FloorPlanModel>();
+        apMeasurements = new ArrayList<ApMeasurement>();
     }
 
     public static FloorPlanModel getInstance() {
@@ -79,6 +84,10 @@ public class FloorPlanModel extends Observable {
         floorPlan.setWallList(wallList);
     }
 
+    public List<ApMeasurement> getApMeasurements() {
+        return apMeasurements;
+    }
+
     private void setConnectionPointList(List<ConnectionPoint> connectionPointList) {
         floorPlan.setConnectionPointList(connectionPointList);
     }
@@ -104,6 +113,7 @@ public class FloorPlanModel extends Observable {
         model.undoStack = new Stack<FloorPlanModel>();
         model.redoStack = new Stack<FloorPlanModel>();
         model.deusResult = null;
+        model.apMeasurements = new ArrayList<ApMeasurement>();
         model.setChanged();
         model.notifyObservers();
     }
@@ -118,8 +128,10 @@ public class FloorPlanModel extends Observable {
 
     public void addDataObject(DataObject touchDataObject) {
         if (touchDataObject.isComplete()) {
-            pushStateToStack(undoStack);
-            redoStack.clear();
+            if (!(touchDataObject instanceof ApMeasurement)) {
+                pushStateToStack(undoStack);
+                redoStack.clear();
+            }
             if (touchDataObject instanceof Wall) {
                 Wall newWall = (Wall) touchDataObject;
                 Map<Double, Point> splitPoints = new HashMap<Double, Point>();
@@ -234,14 +246,18 @@ public class FloorPlanModel extends Observable {
             getConnectionPointList().add((ConnectionPoint) dataObject);
         } else if (dataObject instanceof DataActivity) {
             getDataActivityList().add((DataActivity) dataObject);
+        } else if (dataObject instanceof ApMeasurement) {
+            apMeasurements.add((ApMeasurement) dataObject);
         } else {
             Log.e("DEBUG", "Trying to add an invalid type of DataObject");
         }
     }
 
     public void removeDataObject(DataObject touchDataObject) {
-        pushStateToStack(undoStack);
-        redoStack.clear();
+        if (!(touchDataObject instanceof ApMeasurement)) {
+            pushStateToStack(undoStack);
+            redoStack.clear();
+        }
         removeDataObjectFromList(touchDataObject);
         setChanged();
         notifyObservers();
@@ -257,6 +273,8 @@ public class FloorPlanModel extends Observable {
             getConnectionPointList().remove(dataobject);
         } else if (dataobject instanceof DataActivity) {
             getDataActivityList().remove(dataobject);
+        } else if (dataobject instanceof ApMeasurement) {
+            getApMeasurements().remove(dataobject);
         } else {
             Log.e("DEBUG", "Trying to add an invalid type of DataObject");
         }
@@ -381,30 +399,42 @@ public class FloorPlanModel extends Observable {
         model.setAccessPointList(fpm.getAccessPointList());
     }
 
-    public Couple<Double, DataObject> getClosestDataObjectToPoint(Point touchPoint) {
-        Couple<Double, Wall> couple = getClosestWallToPoint(touchPoint, false);
-        double minDist = couple == null ? Double.POSITIVE_INFINITY : couple.getA();
-        Log.d("DEBUG", "mindist: " + minDist);
-        DataObject closest = couple == null ? null : couple.getB();
-        for (DataObject dObj : getAccessPointList()) {
-            double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
-            if (dist < minDist) {
-                minDist = dist;
-                closest = dObj;
+    public Couple<Double, DataObject> getClosestDataObjectToPoint(Point touchPoint, boolean select) {
+        double minDist = Double.POSITIVE_INFINITY;
+        DataObject closest = null;
+        if (select) {
+            Couple<Double, Wall> couple = getClosestWallToPoint(touchPoint, false);
+            minDist = couple == null ? Double.POSITIVE_INFINITY : couple.getA();
+            Log.d("DEBUG", "mindist: " + minDist);
+            closest = couple == null ? null : couple.getB();
+            for (DataObject dObj : getAccessPointList()) {
+                double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = dObj;
+                }
             }
-        }
-        for (DataObject dObj : getDataActivityList()) {
-            double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
-            if (dist < minDist) {
-                minDist = dist;
-                closest = dObj;
+            for (DataObject dObj : getDataActivityList()) {
+                double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = dObj;
+                }
             }
-        }
-        for (DataObject dObj : getConnectionPointList()) {
-            double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
-            if (dist < minDist) {
-                minDist = dist;
-                closest = dObj;
+            for (DataObject dObj : getConnectionPointList()) {
+                double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = dObj;
+                }
+            }
+        } else {
+            for (ApMeasurement dObj : apMeasurements) {
+                double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = dObj;
+                }
             }
         }
 

@@ -16,12 +16,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
+import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
+import com.ugent.networkplanningtool.io.wifi.MeasureParams;
+import com.ugent.networkplanningtool.io.wifi.MeasureSignalStrengthTask;
 import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
 import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
 import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
@@ -37,6 +42,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class DrawingView extends View implements Observer {
+
+    private static final String TAG = DrawingView.class.getName();
 
     private Paint paint = new Paint();
 
@@ -68,6 +75,11 @@ public class DrawingView extends View implements Observer {
                 if(drawingModel.isDrawAccessPoints()){
                     drawAccessPoints(canvas);
                 }
+                for (ApMeasurement apMeasurement : FloorPlanModel.getInstance().getApMeasurements()) {
+                    apMeasurement.drawOnCanvas(canvas, drawingModel, paint, false);
+                }
+                drawTouch(canvas);
+
             }else{
                 drawGrid(canvas);
                 drawWalls(canvas);
@@ -175,7 +187,10 @@ public class DrawingView extends View implements Observer {
                     case PRE_SELECTING_EDIT:
                     case PRE_SELECTING_INFO:
                     case PRE_SELECTING_REMOVE:
-                        drawingModel.startSelect(movedEvent.getX(0), movedEvent.getY(0));
+                        drawingModel.startSelect(movedEvent.getX(0), movedEvent.getY(0), true);
+                        break;
+                    case PRE_MEASURE_REMOVE:
+                        drawingModel.startSelect(movedEvent.getX(0), movedEvent.getY(0), false);
                         break;
                     case PRE_PLACE:
                     case PLACING:
@@ -188,6 +203,7 @@ public class DrawingView extends View implements Observer {
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (drawingModel.isMoving()) {
+                    System.out.println("ISMOVINg");
                     drawingModel.move(event.getX(0), event.getY(0), event.getX(1), event.getY(1));
                 } else {
                     switch (drawingModel.getState()) {
@@ -197,7 +213,10 @@ public class DrawingView extends View implements Observer {
                         case SELECTING_EDIT:
                         case SELECTING_INFO:
                         case SELECTING_REMOVE:
-                            drawingModel.select(movedEvent.getX(0), movedEvent.getY(0));
+                            drawingModel.select(movedEvent.getX(0), movedEvent.getY(0), true);
+                            break;
+                        case MEASURE_REMOVE:
+                            drawingModel.select(movedEvent.getX(0), movedEvent.getY(0), false);
                             break;
                         default:
                             break;
@@ -207,9 +226,51 @@ public class DrawingView extends View implements Observer {
             case MotionEvent.ACTION_UP:
                 switch (drawingModel.getState()) {
                     case PLACING:
-                        PlaceResult pr = drawingModel.place();
-                        if (!pr.equals(PlaceResult.SUCCESS)) {
-                            Toast.makeText(getContext(), pr.getErrorMessage(), Toast.LENGTH_SHORT).show();
+                        if (drawingModel.getTouchDataObject() instanceof ApMeasurement) {
+                            final ApMeasurement apm = (ApMeasurement) drawingModel.getTouchDataObject();
+
+                            final AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+                            adb.setMessage(apm.getSamplePoolSize() + " signal strength samples will be taken at your current location.\n" +
+                                    "Each sample measured can take several seconds.\n" +
+                                    "Please do not move the device during the sampling.");
+                            adb.setTitle("Sampling info");
+                            adb.setIcon(android.R.drawable.ic_dialog_alert);
+                            adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    MeasureParams mp = new MeasureParams(2, FloorPlanModel.getInstance().getAccessPointList());
+                                    MainActivity.getInstance().getTaskManager().executeTask(new MeasureSignalStrengthTask(getContext()), mp, "Sampling...", new OnAsyncTaskCompleteListener<Integer>() {
+                                        @Override
+                                        public void onTaskCompleteSuccess(Integer result) {
+                                            apm.setSignalStrength(result);
+                                            PlaceResult pr = drawingModel.place();
+                                            if (!pr.equals(PlaceResult.SUCCESS)) {
+                                                Toast.makeText(getContext(), pr.getErrorMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onTaskFailed(Exception cause) {
+                                            drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
+                                            Log.e(TAG, cause.getMessage(), cause);
+                                            Toast.makeText(getContext(), cause.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            });
+
+
+                            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
+                                }
+                            });
+                            adb.setCancelable(false);
+                            adb.show();
+                        } else {
+                            PlaceResult pr = drawingModel.place();
+                            if (!pr.equals(PlaceResult.SUCCESS)) {
+                                Toast.makeText(getContext(), pr.getErrorMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                         break;
                     case SELECTING_EDIT:
@@ -280,6 +341,7 @@ public class DrawingView extends View implements Observer {
                         drawingModel.deselect();
                         break;
                     case SELECTING_REMOVE:
+                    case MEASURE_REMOVE:
                         dObj = drawingModel.getSelected();
                         if (dObj != null) {
                             FloorPlanModel.getInstance().removeDataObject(dObj);

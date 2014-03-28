@@ -119,7 +119,7 @@ public class DrawingModel extends Observable {
 
     // states the drawing area can be in
     public static enum STATE {
-        IDLE, PRE_PLACE, PLACING, SELECTING_INFO, PRE_SELECTING_INFO, SELECTING_EDIT, PRE_SELECTING_EDIT, SELECTING_REMOVE, PRE_SELECTING_REMOVE
+        IDLE, PRE_PLACE, PLACING, SELECTING_INFO, PRE_SELECTING_INFO, SELECTING_EDIT, PRE_SELECTING_EDIT, SELECTING_REMOVE, PRE_SELECTING_REMOVE, PRE_MEASURE_REMOVE, MEASURE_REMOVE
     }
 
     private STATE state;
@@ -239,6 +239,7 @@ public class DrawingModel extends Observable {
             case SELECTING_EDIT:
             case SELECTING_INFO:
             case SELECTING_REMOVE:
+            case MEASURE_REMOVE:
                 deselect();
                 break;
             default:
@@ -488,6 +489,14 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    public void setMeasureRemoveMode() {
+        Log.d("DEBUG", "MEASUREREMOVE MODE");
+        state = STATE.PRE_MEASURE_REMOVE;
+        touchDataObject = null;
+        setChanged();
+        notifyObservers();
+    }
+
     public void setPlaceMode() {
         state = STATE.PRE_PLACE;
         setChanged();
@@ -502,7 +511,7 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
-    public void startSelect(float x, float y) {
+    public void startSelect(float x, float y, boolean select) {
         switch (state) {
             case PRE_SELECTING_EDIT:
                 state = STATE.SELECTING_EDIT;
@@ -513,16 +522,19 @@ public class DrawingModel extends Observable {
             case PRE_SELECTING_REMOVE:
                 state = STATE.SELECTING_REMOVE;
                 break;
+            case PRE_MEASURE_REMOVE:
+                state = STATE.MEASURE_REMOVE;
+                break;
             default:
                 break;
         }
-        select(x, y);
+        select(x, y, select);
     }
 
-    public void select(float x, float y) {
+    public void select(float x, float y, boolean select) {
         touchLocation = getActualTouchLocation(x, y);
         // get closest
-        Couple<Double, DataObject> closestCouple = FloorPlanModel.getInstance().getClosestDataObjectToPoint(touchLocation);
+        Couple<Double, DataObject> closestCouple = FloorPlanModel.getInstance().getClosestDataObjectToPoint(touchLocation, select);
         if (closestCouple == null) {
             touchDataObject = null;
             return;
@@ -543,6 +555,7 @@ public class DrawingModel extends Observable {
             case SELECTING_EDIT:
             case SELECTING_INFO:
             case SELECTING_REMOVE:
+            case MEASURE_REMOVE:
                 return touchDataObject;
             default:
                 return null;
@@ -567,6 +580,12 @@ public class DrawingModel extends Observable {
                 break;
             case SELECTING_REMOVE:
                 state = STATE.PRE_SELECTING_REMOVE;
+                touchDataObject = null;
+                setChanged();
+                notifyObservers();
+                break;
+            case MEASURE_REMOVE:
+                state = STATE.PRE_MEASURE_REMOVE;
                 touchDataObject = null;
                 setChanged();
                 notifyObservers();

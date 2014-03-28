@@ -17,6 +17,10 @@ public enum Material {
     METAL(MainActivity.getInstance().getResources().getString(R.string.metalText), Color.rgb(102, 102, 153)),
     ZERO_DB(MainActivity.getInstance().getResources().getString(R.string.zeroDbText), Color.rgb(221, 221, 221));
 
+    private static Material[] doorMaterials = new Material[]{GLASS, WOOD};
+    private static Material[] wallMaterials = new Material[]{BRICK, LAYERED_DRYWALL, CONCRETE, WOOD, GLASS, METAL, ZERO_DB};
+    private static Material[] windowMaterials = new Material[]{GLASS};
+
     private String text;
     private int color;
 
@@ -49,4 +53,18 @@ public enum Material {
     public String getText() {
         return text;
     }
+
+    public static Material[] getMaterialsForWallType(WallType wt) {
+        switch (wt) {
+            case WALL:
+                return wallMaterials;
+            case DOOR:
+                return doorMaterials;
+            case WINDOW:
+                return windowMaterials;
+            default:
+                return new Material[0];
+        }
+    }
+
 }

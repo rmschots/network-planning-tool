@@ -16,9 +16,6 @@ import com.ugent.networkplanningtool.layout.measure.ApLinkingRowItem;
 
 import java.util.List;
 
-/**
- * Created by Roel on 15/03/14.
- */
 public class ApLinkingAdapter extends BaseAdapter {
     private Context context;
     private List<ApLinkingRowItem> rowItems;
@@ -54,7 +51,8 @@ public class ApLinkingAdapter extends BaseAdapter {
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {}
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
             });
             convertView.setTag(holder);
         } else {
@@ -83,18 +81,18 @@ public class ApLinkingAdapter extends BaseAdapter {
         return rowItems.indexOf(getItem(position));
     }
 
-    public void updateLink(ApLinkingRowItem apLinkingRowItem, RealAccessPoint rap){
+    public void updateLink(ApLinkingRowItem apLinkingRowItem, RealAccessPoint rap) {
         boolean updateOtherLink = false;
-        if(!rap.equals(RealAccessPoint.getEmptyDummy())){
-            for(ApLinkingRowItem apLinkingRowItem1 : rowItems){
-                if(!apLinkingRowItem1.equals(apLinkingRowItem) && apLinkingRowItem1.getAp().getRap().equals(rap)){
+        if (!rap.equals(RealAccessPoint.getEmptyDummy())) {
+            for (ApLinkingRowItem apLinkingRowItem1 : rowItems) {
+                if (!apLinkingRowItem1.equals(apLinkingRowItem) && apLinkingRowItem1.getAp().getRap().equals(rap)) {
                     apLinkingRowItem1.getAp().setRap(RealAccessPoint.getEmptyDummy());
                     updateOtherLink = true;
                 }
             }
         }
         apLinkingRowItem.getAp().setRap(rap);
-        if(updateOtherLink){
+        if (updateOtherLink) {
             notifyDataSetChanged();
         }
     }

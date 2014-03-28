@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -61,6 +60,7 @@ import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
 import com.ugent.networkplanningtool.layout.parameters.MarginsView;
 import com.ugent.networkplanningtool.layout.parameters.ReceiversView;
 import com.ugent.networkplanningtool.layout.results.ExportRawDataView;
+import com.ugent.networkplanningtool.layout.results.MeasureView;
 import com.ugent.networkplanningtool.layout.results.RenderDataView;
 import com.ugent.networkplanningtool.layout.results.VisualOptionsView;
 import com.ugent.networkplanningtool.layout.tools.EstimateSARView;
@@ -71,7 +71,6 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
@@ -122,6 +121,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private RenderDataView renderDataView;
     private VisualOptionsView visualOptionsView;
     private ExportRawDataView exportRawDataView;
+    private MeasureView measureView;
 
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
@@ -176,6 +176,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         renderDataView = (RenderDataView) findViewById(R.id.renderDataView);
         visualOptionsView = (VisualOptionsView) findViewById(R.id.visualOptionsView);
         exportRawDataView = (ExportRawDataView) findViewById(R.id.exportRawDataView);
+        measureView = (MeasureView) findViewById(R.id.measureMeasureView);
 
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
@@ -201,6 +202,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         accessPointView.setDrawingModel(drawingModel);
         dataActivityView.setDrawingModel(drawingModel);
         connectionPointView.setDrawingModel(drawingModel);
+        measureView.setDrawingModel(drawingModel);
 
 
 
@@ -842,5 +844,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 return floorPlanModel.getDeusResult().getBenchmarks();
         }
         return null;
+    }
+
+    public ASyncIOTaskManager getTaskManager() {
+        return taskManager;
     }
 }
