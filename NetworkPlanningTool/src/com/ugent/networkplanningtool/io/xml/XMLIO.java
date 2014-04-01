@@ -22,6 +22,7 @@ import com.ugent.networkplanningtool.data.enums.WallType;
 import com.ugent.networkplanningtool.utils.Utils;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -43,7 +44,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-public class FloorPlanIO {
+public class XmlIO {
 
     public static FloorPlan loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -156,6 +157,20 @@ public class FloorPlanIO {
         Document doc = docBuilder.newDocument();
         doc.appendChild(xmlTransformable.toXML(doc));
 
+        return doc;
+    }
+
+    public static Document getDocument(List<XMLTransformable> xmlTransformableList, String rootName) throws ParserConfigurationException, TransformerException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+        // root elements
+        Document doc = docBuilder.newDocument();
+        Element rootElem = doc.createElement(rootName);
+        for (XMLTransformable xmlTransformable : xmlTransformableList) {
+            rootElem.appendChild(xmlTransformable.toXML(doc));
+        }
+        doc.appendChild(rootElem);
         return doc;
     }
 }

@@ -20,11 +20,11 @@
     <string name="parametersText">2. Configure common parameters</string>
     <string name="toolsText">3. Run a prediction tool</string>
     <string name="resultsText">4. Review results</string>
-    
+
     <string name="drawDataObjectText">draw</string>
     <string name="infoDataObjectText">info</string>
     <string name="editDataObjectText">edit</string>
-    
+
     <string name="materialText">Material</string>
     <string name="brickText">Brick</string>
     <string name="layeredDrywallText">Layered Drywall</string>
@@ -33,7 +33,7 @@
     <string name="glassText">Glass</string>
     <string name="metalText">Metal</string>
     <string name="zeroDbText">0db</string>
-    
+
     <string-array name="wallMaterials">
         <item>@string/brickText</item>
         <item>@string/layeredDrywallText</item>
@@ -43,33 +43,33 @@
         <item>@string/metalText</item>
         <item>@string/zeroDbText</item>
     </string-array>
-    
+
     <string-array name="doorMaterials">
         <item>@string/glassText</item>
         <item>@string/woodText</item>
     </string-array>
-    
+
     <string-array name="windowMaterials">
         <item>@string/glassText</item>
     </string-array>
-    
+
     <string name="thinText">Thin</string>
     <string name="thickText">Thick</string>
-    
+
     <string-array name="thicknessArray">
         <item>@string/thinText</item>
         <item>@string/thickText</item>
     </string-array>
-    
+
     <string name="snapToText">Snap to</string>
     <string name="snapToWallsText">Walls</string>
     <string name="snapToGridText">Grid</string>
-    
+
     <string-array name="snapToArray">
         <item>@string/snapToGridText</item>
         <item>@string/snapToWallsText</item>
     </string-array>
-    
+
     <string name="wallText">Wall</string>
     <string name="doorText">Door</string>
     <string name="windowText">Window</string>
@@ -79,32 +79,32 @@
     <string name="eraserText">Eraser</string>
     <string name="editText">Edit</string>
     <string name="infoText">Info</string>
-    
+
     <string name="dlinkText">DLink</string>
     <string name="customText">Custom</string>
     <string name="cc2420Text">CC2420</string>
     <string name="jn516xtext">JN516x</string>
     <string name="huaweiText">Huawei</string>
-    
+
     <string-array name="wifiArray">
         <item>@string/dlinkText</item>
         <item>@string/customText</item>
     </string-array>
-    
+
     <string-array name="sensorArray">
         <item>@string/cc2420Text</item>
         <item>@string/jn516xtext</item>
     </string-array>
-    
+
     <string-array name="lteFemtocellArray">
         <item>@string/customText</item>
     </string-array>
-    
+
     <string-array name="umtsFemtocellArray">
         <item>@string/huaweiText</item>
         <item>@string/customText</item>
     </string-array>
-    
+
     <string name="wifiText">WiFi</string>
     <string name="sensorText">Sensor</string>
     <string name="lteFemtocellText">LTE Femtocell</string>
@@ -119,15 +119,15 @@
         <item>@string/lteFemtocellText</item>
         <item>@string/umtsFemtocellText</item>
     </string-array>
-    
+
     <string name="frequencyBand2100">2100</string>
     <string name="frequencyBand2400">2400</string>
     <string name="frequencyBand2600">2600</string>
-    
+
     <string-array name="frequencyArray">
         <item>@string/frequencyBand2400</item>
     </string-array>
-    
+
     <string name="frequency1">1</string>
     <string name="frequency2">2</string>
     <string name="frequency3">3</string>
@@ -139,7 +139,7 @@
     <string name="frequency9">9</string>
     <string name="frequency10">10</string>
     <string name="frequency11">11</string>
-    
+
     <string name="channel1">1</string>
     <string name="channel2">2</string>
     <string name="channel3">3</string>
@@ -151,7 +151,7 @@
     <string name="channel9">9</string>
     <string name="channel10">10</string>
     <string name="channel11">11</string>
-    
+
     <string-array name="channelArray">
         <item>@string/channel1</item>
         <item>@string/channel2</item>
@@ -165,7 +165,7 @@
         <item>@string/channel10</item>
         <item>@string/channel11</item>
     </string-array>
-    
+
     <string name="hdVideotext">HD video</string>
     <string name="actionGamesText">Action games</string>
     <string name="youtubeText">YouTube</string>
@@ -179,7 +179,7 @@
         <item>@string/surfingText</item>
         <item>@string/noCoverageText</item>
     </string-array>
-    
+
     <string name="networkAText">Network A</string>
     <string name="networkBText">Network B</string>
     <string name="networkCText">Network C</string>
@@ -188,7 +188,7 @@
     <string name="networkFText">Network F</string>
     <string name="networkGText">Network G</string>
     <string name="networkHText">Network H</string>
-    
+
     <string-array name="networksArray">
         <item>@string/networkAText</item>
         <item>@string/networkBText</item>
@@ -235,29 +235,30 @@
         <item>@string/anywhereText</item>
         <item>@string/onWallText</item>
     </string-array>
-    
+
     <string name="thicknessText">Thickness</string>
-    
+
     <string name="dataConnectionPointText">Data</string>
     <string name="powerConnectionPointText">Power</string>
-    
+
     <string name="stopDrawingText">Stop Drawing</string>
-    
+
     <string name="eraserInfoText">Click on a wall, intersection or accesspoint to erase it.</string>
     <string name="quickEraseText">Quick Erase</string>
     <string name="eraseAccessPointsText">Erase Access Points</string>
     <string name="eraseActivitiesText">Erase Activities</string>
     <string name="eraseConnectionPointsText">Erase Connection Points</string>
-    
+
     <string name="editObjectText">Click on an object to edit it.</string>
-    
+
     <string name="infoInfoText">Click on an object to get its properties.</string>
-    
+
     <string name="savePlanTitle">Save floorplan</string>
     <string name="saveScreenshot">Save screenshot</string>
-    
+    <string name="saveDataTitle">Save data</string>
+
     <string name="connectionPointNotAdjacentToWall">Could not place connection point. It needs to be adjacent to a wall.</string>
     <string name="nothingToPlace">There is no object to place.</string>
-    
+
 
 </resources>

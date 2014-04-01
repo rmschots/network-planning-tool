@@ -12,6 +12,6 @@ public class LoadFloorPlanTask extends AbstractASyncTask<File, FloorPlan> {
 
     @Override
     protected FloorPlan performTaskInBackground(File file) throws Exception {
-        return FloorPlanIO.loadFloorPlan(file);
+        return XmlIO.loadFloorPlan(file);
     }
 }

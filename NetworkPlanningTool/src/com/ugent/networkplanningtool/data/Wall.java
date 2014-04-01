@@ -31,6 +31,7 @@ public class Wall extends DataObject implements XMLTransformable {
         this.wallType = wall.wallType;
         this.thickness = wall.thickness;
         this.material = wall.material;
+        System.out.println("walltype: " + wallType);
     }
 
     public Wall(WallType wallType, Thickness thickness, Material material) {
@@ -40,6 +41,7 @@ public class Wall extends DataObject implements XMLTransformable {
         this.thickness = thickness;
         this.material = material;
         point2 = null;
+        System.out.println("walltype: " + wallType);
     }
 
     public Wall(Point point1, WallType wallType, Thickness thickness, Material material) {
@@ -49,12 +51,14 @@ public class Wall extends DataObject implements XMLTransformable {
         this.thickness = thickness;
         this.material = material;
         point2 = null;
+        System.out.println("walltype: " + wallType);
     }
 
     public Wall(Point point1, Point point2, WallType wallType, Thickness thickness, Material material) {
         this(point1, wallType, thickness, material);
         DATA_OBJECT_TYPE = DataObjectType.WALL;
         this.point2 = point2;
+        System.out.println("walltype: " + wallType);
     }
 
     /**
@@ -218,10 +222,10 @@ public class Wall extends DataObject implements XMLTransformable {
         wallElement.setAttribute("y1", "" + point1.y);
         wallElement.setAttribute("x2", "" + point2.x);
         wallElement.setAttribute("y2", "" + point2.y);
-        wallElement.setAttribute("type", wallType.getText());
-        wallElement.setAttribute("thickness", "" + thickness.getNumber());
+        wallElement.setAttribute("type", wallType == null ? "" : wallType.getText());
+        wallElement.setAttribute("thickness", thickness == null ? "" : "" + thickness.getNumber());
         Element materialElement = doc.createElement("material");
-        materialElement.setAttribute("name", material.getText());
+        materialElement.setAttribute("name", material == null ? "" : material.getText());
         wallElement.appendChild(materialElement);
         return wallElement;
     }

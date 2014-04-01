@@ -49,28 +49,12 @@
             android:text="Benchmarks" />
     </RadioGroup>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/saveRawDataButton"
+        style="@style/MyButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/saveRawDataButton"
-            style="@style/MyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Save"
-            android:onClick="handleSaveRawData" />
-
-        <Button
-            android:id="@+id/viewRawDataButton"
-            style="@style/MyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="View"
-            android:onClick="handleViewRawData" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:onClick="handleSaveRawData" />
 
 </LinearLayout>

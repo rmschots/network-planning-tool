@@ -1,6 +1,5 @@
 package com.ugent.networkplanningtool.io.xml;
 
-import com.ugent.networkplanningtool.data.XMLTransformable;
 import com.ugent.networkplanningtool.io.AbstractASyncTask;
 
 import java.io.File;
@@ -17,14 +16,21 @@ public class SaveXMLTask extends AbstractASyncTask<SaveXMLParams, File> {
 
     @Override
     protected File performTaskInBackground(SaveXMLParams parameters) throws Exception {
-        File file = parameters.getFile();
-        XMLTransformable xmlTransformable = parameters.getXmlTransformable();
+
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        StreamResult result = new StreamResult(file);
-
-        DOMSource source = new DOMSource(FloorPlanIO.getDocument(xmlTransformable));
+        File f = parameters.getFile();
+        StreamResult result = new StreamResult(parameters.getFile());
+        DOMSource source;
+        if (parameters.isList()) {
+            source = new DOMSource(XmlIO.getDocument(parameters.getXmlTransformableList(), parameters.getRootName()));
+        } else {
+            source = new DOMSource(XmlIO.getDocument(parameters.getXmlTransformable()));
+        }
         transformer.transform(source, result);
-        return file;
+
+        return parameters.getFile();
     }
+
+
 }

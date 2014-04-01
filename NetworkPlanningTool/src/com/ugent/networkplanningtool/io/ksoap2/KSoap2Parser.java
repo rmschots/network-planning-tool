@@ -12,7 +12,7 @@ import com.ugent.networkplanningtool.data.enums.FrequencyBand;
 import com.ugent.networkplanningtool.data.enums.RadioModel;
 import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.io.ASyncTaskException;
-import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
+import com.ugent.networkplanningtool.io.xml.XmlIO;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -54,7 +54,7 @@ public class KSoap2Parser {
         if (so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")) {
             System.out.println(so.getPropertyAsString("normalizedPlan"));
             try {
-                normalizedPlan = FloorPlanIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
+                normalizedPlan = XmlIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
             } catch (Exception e) {
                 throw new ASyncTaskException("Error parsing service response normalized xml");
             }
@@ -62,7 +62,7 @@ public class KSoap2Parser {
         FloorPlan optimizedPlan = null;
         if (so.hasProperty("optimizedPlan") && !so.getPropertyAsString("optimizedPlan").equals("anyType{}")) {
             try {
-                optimizedPlan = FloorPlanIO.loadFloorPlan(so.getPropertyAsString("optimizedPlan"));
+                optimizedPlan = XmlIO.loadFloorPlan(so.getPropertyAsString("optimizedPlan"));
             } catch (Exception e) {
                 throw new ASyncTaskException("Error parsing service response normalized xml");
             }

@@ -35,7 +35,7 @@
             android:layout_width="fill_parent"
             android:onClick="onResultsFlipClick"
             android:tag="export"
-            android:text="Export Raw Data"
+            android:text="Export Data"
             android:textColor="@color/toggle_text_color" />
 
         <Button

@@ -166,6 +166,8 @@ public class CSVResult extends DataObject implements XMLTransformable {
     @Override
     public Element toXML(Document doc) {
         Element resultElem = doc.createElement("result");
+        resultElem.setAttribute("x", "" + point1.x);
+        resultElem.setAttribute("y", "" + point1.y);
         resultElem.setAttribute("level",""+level);
         resultElem.setAttribute("download",""+download);
         resultElem.setAttribute("upload",""+upload);

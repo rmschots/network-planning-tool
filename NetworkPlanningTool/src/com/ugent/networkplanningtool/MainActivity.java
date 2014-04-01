@@ -29,9 +29,9 @@ import android.widget.ZoomControls;
 
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.RealAccessPoint;
-import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
+import com.ugent.networkplanningtool.data.XMLTransformable;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
 import com.ugent.networkplanningtool.io.ASyncIOTaskManager;
 import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
@@ -42,11 +42,13 @@ import com.ugent.networkplanningtool.io.ksoap2.services.ExposureReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.NetworkReductionTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.OptimalPlacementTask;
 import com.ugent.networkplanningtool.io.ksoap2.services.PredictCoverageTask;
+import com.ugent.networkplanningtool.io.plaintext.SavePlainTextParams;
+import com.ugent.networkplanningtool.io.plaintext.SavePlainTextTask;
 import com.ugent.networkplanningtool.io.wifi.WifiDetectTask;
-import com.ugent.networkplanningtool.io.xml.FloorPlanIO;
 import com.ugent.networkplanningtool.io.xml.LoadFloorPlanTask;
 import com.ugent.networkplanningtool.io.xml.SaveXMLParams;
 import com.ugent.networkplanningtool.io.xml.SaveXMLTask;
+import com.ugent.networkplanningtool.io.xml.XmlIO;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.components.MyScrollBar;
@@ -71,7 +73,7 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -449,17 +451,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				
 				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
 					File f = new File(Environment.getExternalStorageDirectory(),fileName);
-					if(!f.exists()){
-						try {
-							f.createNewFile();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							Log.e("DEBUG","cannot create new file");
-						}
-					}
-					saveTofile(f);
-				}else{
+                    saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), f));
+                }else{
 					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
 					dialog.addListener(new OnFileSelectedListener() {
 						@Override
@@ -469,8 +462,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 						public void onFileSelected(Dialog source, File file) {
 							source.dismiss();
 							File f = new File(file, fileName);
-							saveTofile(f);
-						}
+                            saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), f));
+                        }
 					});
 					dialog.setFolderMode(true);
 					dialog.setShowOnlySelectable(true);
@@ -483,9 +476,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		});
 		displayNewDialog(d);
 	}
-	
-	public void saveTofile(File f){
-        SaveXMLParams params = new SaveXMLParams(floorPlanModel.getFloorPlan(), f);
+
+    public void saveTofile(SaveXMLParams params) {
         taskManager.executeTask(new SaveXMLTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
             @Override
             public void onTaskCompleteSuccess(File result) {
@@ -499,8 +491,23 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
             }
         });
     }
-	
-	public void handleNewFileClick(View v){
+
+    public void saveTofile(SavePlainTextParams plainTextParams) {
+        taskManager.executeTask(new SavePlainTextTask(), plainTextParams, "saving...", new OnAsyncTaskCompleteListener<File>() {
+            @Override
+            public void onTaskCompleteSuccess(File result) {
+                Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void handleNewFileClick(View v){
         floorPlanModel.resetModel();
         onMainFlipClick(findViewById(R.id.designButton));
     }
@@ -535,16 +542,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
 					
 					File f = new File(Environment.getExternalStorageDirectory(),fileName);
-					if(!f.exists()){
-						try {
-							f.createNewFile();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							Log.e("DEBUG","cannot create new file");
-						}
-					}
-
 
                     SaveImageParams params = new SaveImageParams(bm, f);
                     taskManager.executeTask(new SaveImageTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
@@ -766,7 +763,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
         return new DeusRequest(
                 type,
-                FloorPlanIO.getXMLAsString(floorPlanModel.getFloorPlan()),
+                XmlIO.getXMLAsString(floorPlanModel.getFloorPlan()),
                 pathLossModel,
                 gridSize,
                 roomHeight,
@@ -815,35 +812,91 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     }
 
     public void handleSaveRawData(View view){
-        String s = getRawData(exportRawDataView.getExportType());
-        System.out.println("save: "+s);
+        final Dialog d = new Dialog(this);
+        d.setTitle(R.string.saveDataTitle);
+        d.setContentView(R.layout.save_name);
+        Button saveButton = (Button) d.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+                String fnTemp = ((EditText) d.findViewById(R.id.fileNameEditText)).getText().toString();
+                if (!fnTemp.toLowerCase().endsWith(".xml")) {
+                    fnTemp += ".xml";
+                }
+                final String fileName = fnTemp;
+
+                if (((CheckBox) d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()) {
+                    File f = new File(Environment.getExternalStorageDirectory(), fileName);
+                    saveRawData(exportRawDataView.getExportType(), f);
+                } else {
+                    FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
+                    dialog.addListener(new OnFileSelectedListener() {
+                        @Override
+                        public void onFileSelected(Dialog source, File folder, String name) {
+                        }
+
+                        @Override
+                        public void onFileSelected(Dialog source, File file) {
+                            source.dismiss();
+                            File f = new File(file, fileName);
+                            saveRawData(exportRawDataView.getExportType(), f);
+                        }
+                    });
+                    dialog.setFolderMode(true);
+                    dialog.setShowOnlySelectable(true);
+                    dialog.setCanCreateFiles(true);
+                    displayNewDialog(dialog);
+                }
+
+
+            }
+        });
+        displayNewDialog(d);
         // TODO deftig late gebeure
     }
 
-    public void handleViewRawData(View view){
-        // TODO deftig weergeven
-    }
-
-    private String getRawData(ExportRawDataType exportType) {
+    private void saveRawData(ExportRawDataType exportType, File f) {
         // TODO toStrings van klassen fixen
         DeusResult dr = floorPlanModel.getDeusResult();
         switch(exportType){
             case NORMALIZED_PLAN:
-                return dr.getNormalizedPlan()==null?"":FloorPlanIO.getXMLAsString(dr.getNormalizedPlan());
-            case OPTIMIZED_PLAN:
-                return dr.getOptimizedPlan()==null?"":FloorPlanIO.getXMLAsString(dr.getOptimizedPlan());
-            case COVERAGE_DATA:
-                StringBuilder sb = new StringBuilder();
-                for(CSVResult csvResult : floorPlanModel.getDeusResult().getCsv()){
-                    sb.append("\n" + FloorPlanIO.getXMLAsString(csvResult));
+                if (dr.getNormalizedPlan() != null) {
+                    saveTofile(new SaveXMLParams(dr.getNormalizedPlan(), f));
+                } else {
+                    Toast.makeText(MainActivity.this, "No normalized plan available.", Toast.LENGTH_SHORT).show();
                 }
-                return sb.toString();
+                break;
+            case OPTIMIZED_PLAN:
+                if (dr.getOptimizedPlan() != null) {
+                    saveTofile(new SaveXMLParams(dr.getOptimizedPlan(), f));
+                } else {
+                    Toast.makeText(MainActivity.this, "No optimized plan available.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case COVERAGE_DATA:
+                if (dr.getCsv() != null) {
+                    List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(dr.getCsv());
+                    saveTofile(new SaveXMLParams(tmp, "results", f));
+                } else {
+                    Toast.makeText(MainActivity.this, "No measure results available.", Toast.LENGTH_SHORT).show();
+                }
+                break;
             case EXPOSURE_INFO:
-                return floorPlanModel.getDeusResult().getInfoAsString();
+                if (dr.getInfoAsString() != null) {
+                    saveTofile(new SavePlainTextParams(dr.getInfoAsString(), f));
+                } else {
+                    Toast.makeText(MainActivity.this, "No info available.", Toast.LENGTH_SHORT).show();
+                }
+                break;
             case BENCHMARK:
-                return floorPlanModel.getDeusResult().getBenchmarks();
+                if (dr.getBenchmarks() != null) {
+                    saveTofile(new SavePlainTextParams(dr.getBenchmarks(), f));
+                } else {
+                    Toast.makeText(MainActivity.this, "No benchmarks available.", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
-        return null;
     }
 
     public ASyncIOTaskManager getTaskManager() {
