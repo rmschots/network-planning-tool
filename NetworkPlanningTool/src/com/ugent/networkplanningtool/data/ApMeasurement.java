@@ -16,17 +16,20 @@ import org.w3c.dom.Element;
  */
 public class ApMeasurement extends DataObject implements XMLTransformable {
     private Integer signalStrength = null;
-    private int samplePoolSize = 5;
+    public static int DEFAULT_SAMPLE_POOL_SIZE = 2;
+    private int samplePoolSize;
     private static int textSize = 1;
 
-    public ApMeasurement() {
+    public ApMeasurement(int samplePoolSize) {
         super();
         DATA_OBJECT_TYPE = DataObjectType.AP_MEASUREMENT;
+        this.samplePoolSize = samplePoolSize;
     }
 
     public ApMeasurement(Point p1) {
         super(p1);
         DATA_OBJECT_TYPE = DataObjectType.AP_MEASUREMENT;
+        samplePoolSize = DEFAULT_SAMPLE_POOL_SIZE;
     }
 
     public Integer getSignalStrength() {
@@ -75,8 +78,7 @@ public class ApMeasurement extends DataObject implements XMLTransformable {
 
     @Override
     public DataObject getPartialDeepCopy() {
-        ApMeasurement apm = new ApMeasurement();
-        apm.setSamplePoolSize(samplePoolSize);
+        ApMeasurement apm = new ApMeasurement(samplePoolSize);
         return apm;
     }
 

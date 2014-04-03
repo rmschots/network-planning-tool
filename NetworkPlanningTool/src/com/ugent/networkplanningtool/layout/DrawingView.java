@@ -22,6 +22,7 @@ import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
@@ -36,6 +37,7 @@ import com.ugent.networkplanningtool.layout.dataobject.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
+import com.ugent.networkplanningtool.utils.Utils;
 
 import java.util.List;
 import java.util.Observable;
@@ -237,13 +239,20 @@ public class DrawingView extends View implements Observer {
                             adb.setIcon(android.R.drawable.ic_dialog_alert);
                             adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    MeasureParams mp = new MeasureParams(2, FloorPlanModel.getInstance().getAccessPointList());
+                                    MeasureParams mp = new MeasureParams(apm.getSamplePoolSize(), FloorPlanModel.getInstance().getAccessPointList());
                                     MainActivity.getInstance().getTaskManager().executeTask(new MeasureSignalStrengthTask(getContext()), mp, "Sampling...", new OnAsyncTaskCompleteListener<Integer>() {
                                         @Override
                                         public void onTaskCompleteSuccess(Integer result) {
                                             apm.setSignalStrength(result);
                                             PlaceResult pr = drawingModel.place();
-                                            if (!pr.equals(PlaceResult.SUCCESS)) {
+                                            CSVResult closestResult = Utils.getResultAt(apm.getPoint1(), FloorPlanModel.getInstance().getDeusResult().getCsv());
+                                            if (pr.equals(PlaceResult.SUCCESS)) {
+                                                if (closestResult != null) {
+                                                    Toast.makeText(getContext(), "difference in RSSI is: " + (result - closestResult.getPowerRX()), Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    Toast.makeText(getContext(), "Cannot compare RSSI at this location", Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
                                                 Toast.makeText(getContext(), pr.getErrorMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         }

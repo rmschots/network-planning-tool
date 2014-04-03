@@ -1,6 +1,8 @@
 package com.ugent.networkplanningtool.layout.results;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ApMeasurement;
+import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
@@ -22,7 +25,6 @@ public class MeasureView extends LinearLayout {
     private Button drawButton;
     private Button selectButton;
     private EditText sampleAmountEditText;
-    private Button measureButton;
 
     public MeasureView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,25 +39,59 @@ public class MeasureView extends LinearLayout {
         drawButton = (Button) findViewById(R.id.measureDrawButton);
         selectButton = (Button) findViewById(R.id.measureSelectButton);
         sampleAmountEditText = (EditText) findViewById(R.id.measureAmountEditText);
-        measureButton = (Button) findViewById(R.id.measureMeasureButton);
 
         drawButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawingModel.setPlaceMode(new ApMeasurement());
+                drawingModel.setPlaceMode(new ApMeasurement(Integer.parseInt(sampleAmountEditText.getText().toString())));
+                drawButton.setEnabled(false);
+                selectButton.setEnabled(true);
             }
         });
         selectButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawingModel.setMeasureRemoveMode();
+                selectButton.setEnabled(false);
+                drawButton.setEnabled(true);
+            }
+        });
+        sampleAmountEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (drawingModel.getTouchDataObject() != null
+                        && drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObject.DataObjectType.AP_MEASUREMENT)) {
+                    ApMeasurement apm = (ApMeasurement) drawingModel.getTouchDataObject();
+                    int samplePoolSize;
+                    try {
+                        samplePoolSize = Integer.parseInt(editable.toString());
+                        if (samplePoolSize <= 0 || samplePoolSize > 10) {
+                            samplePoolSize = ApMeasurement.DEFAULT_SAMPLE_POOL_SIZE;
+                        }
+                    } catch (NumberFormatException ex) {
+                        samplePoolSize = ApMeasurement.DEFAULT_SAMPLE_POOL_SIZE;
+                    }
+                    apm.setSamplePoolSize(samplePoolSize);
+                }
             }
         });
 
-
+        drawButton.setEnabled(false);
     }
 
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
+    }
+
+    public void updateDrawingModel() {
+        drawingModel.setPlaceMode(new ApMeasurement(Integer.parseInt(sampleAmountEditText.getText().toString())));
     }
 }

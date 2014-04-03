@@ -330,9 +330,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	public void onParametersFlipClick(View v) {
 		parametersActive.setEnabled(true);
 		parametersActive = v;
-		onFlipClick(v, parametersFlip);
-		drawingModel.setIdle();
-	}
+        View flippedView = onFlipClick(v, parametersFlip);
+        flippedView.getTag();
+        drawingModel.setIdle();
+    }
 	
 	public void onToolsFlipClick(View v) {
 		toolsActive.setEnabled(true);
@@ -344,9 +345,15 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	public void onResultsFlipClick(View v) {
 		resultsActive.setEnabled(true);
 		resultsActive = v;
-		onFlipClick(v, resultsFlip);
-		drawingModel.setIdle();
-	}
+        View flippedView = onFlipClick(v, resultsFlip);
+        Object tag = flippedView.getTag();
+        System.out.println("TAG:::  " + tag.toString());
+        if (tag.equals(getResources().getString(R.string.measureText))) {
+            measureView.updateDrawingModel();
+        } else {
+            drawingModel.setIdle();
+        }
+    }
 	
 	private View onFlipClick(View v, ViewFlipper vf){
 		v.setEnabled(false);

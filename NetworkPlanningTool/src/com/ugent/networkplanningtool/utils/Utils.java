@@ -4,6 +4,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
+import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
+
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -164,4 +166,16 @@ public class Utils {
 		}
 		return null;
 	}
+
+    public static CSVResult getResultAt(Point point, List<CSVResult> csvResults) {
+        Point p;
+
+        for (CSVResult csvResult : csvResults) {
+            p = csvResult.getPoint1();
+            if (p.x - point.x < 10 && p.x - point.x >= -10 && p.y - point.y < 10 && p.y - point.y >= -10) {
+                return csvResult;
+            }
+        }
+        return null;
+    }
 }

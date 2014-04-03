@@ -16,8 +16,8 @@
             style="@style/MyButton"
             android:layout_width="fill_parent"
             android:onClick="onResultsFlipClick"
-            android:tag="renderdata"
-            android:text="Render Data"
+            android:tag="@string/renderDataText"
+            android:text="@string/renderDataText"
             android:textColor="@color/toggle_text_color" />
 
         <Button
@@ -25,8 +25,8 @@
             style="@style/MyButton"
             android:layout_width="fill_parent"
             android:onClick="onResultsFlipClick"
-            android:tag="visualoptions"
-            android:text="Visual Options"
+            android:tag="@string/visualOptionsText"
+            android:text="@string/visualOptionsText"
             android:textColor="@color/toggle_text_color" />
 
         <Button
@@ -34,16 +34,16 @@
             style="@style/MyButton"
             android:layout_width="fill_parent"
             android:onClick="onResultsFlipClick"
-            android:tag="export"
-            android:text="Export Data"
+            android:tag="@string/exportDataText"
+            android:text="@string/exportDataText"
             android:textColor="@color/toggle_text_color" />
 
         <Button
             android:layout_width="fill_parent"
-            android:text="Measure RSSI"
+            android:text="@string/measureText"
             android:onClick="onResultsFlipClick"
-            android:tag="measure"
-            android:id="@+id/button"
+            android:tag="@string/measureText"
+            android:id="@+id/measureButton"
             style="@style/MyButton"
             android:textColor="@color/toggle_text_color" />
 
@@ -59,25 +59,25 @@
             android:id="@+id/renderDataView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="renderdata"></com.ugent.networkplanningtool.layout.results.RenderDataView>
+            android:tag="@string/renderDataText"></com.ugent.networkplanningtool.layout.results.RenderDataView>
 
         <com.ugent.networkplanningtool.layout.results.VisualOptionsView
             android:id="@+id/visualOptionsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="visualoptions"></com.ugent.networkplanningtool.layout.results.VisualOptionsView>
+            android:tag="@string/visualOptionsText"></com.ugent.networkplanningtool.layout.results.VisualOptionsView>
 
         <com.ugent.networkplanningtool.layout.results.ExportRawDataView
             android:id="@+id/exportRawDataView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="export"></com.ugent.networkplanningtool.layout.results.ExportRawDataView>
+            android:tag="@string/exportDataText"></com.ugent.networkplanningtool.layout.results.ExportRawDataView>
 
         <com.ugent.networkplanningtool.layout.results.MeasureView
             android:id="@+id/measureMeasureView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="measure"></com.ugent.networkplanningtool.layout.results.MeasureView>
+            android:tag="@string/measureText"></com.ugent.networkplanningtool.layout.results.MeasureView>
 
     </ViewFlipper>
 

@@ -80,6 +80,11 @@
     <string name="editText">Edit</string>
     <string name="infoText">Info</string>
 
+    <string name="renderDataText">Render Data</string>
+    <string name="visualOptionsText">Visual Options</string>
+    <string name="exportDataText">Export Data</string>
+    <string name="measureText">Measure</string>
+
     <string name="dlinkText">DLink</string>
     <string name="customText">Custom</string>
     <string name="cc2420Text">CC2420</string>
