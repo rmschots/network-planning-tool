@@ -184,7 +184,6 @@ public class AccessPoint extends DataObject implements XMLTransformable {
 
     @Override
     public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
-        // TODO display gain+power
         float x = convertCoordinateToLocation(drawingModel, true, point1.x);
         float y = convertCoordinateToLocation(drawingModel, false, point1.y);
         float circleRadius;

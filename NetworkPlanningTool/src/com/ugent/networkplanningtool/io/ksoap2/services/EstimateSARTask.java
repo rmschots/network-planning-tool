@@ -21,7 +21,6 @@ public class EstimateSARTask extends AbstractASyncTask<DeusRequest, DeusResult> 
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
     public EstimateSARTask() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override

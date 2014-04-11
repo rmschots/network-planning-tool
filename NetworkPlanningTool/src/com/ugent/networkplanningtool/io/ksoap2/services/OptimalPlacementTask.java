@@ -22,7 +22,6 @@ public class OptimalPlacementTask extends AbstractASyncTask<DeusRequest, DeusRes
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
     public OptimalPlacementTask() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override

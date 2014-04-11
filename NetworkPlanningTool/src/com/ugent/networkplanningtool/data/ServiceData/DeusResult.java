@@ -28,8 +28,7 @@ public class DeusResult {
         POWER_RX(new double[]{-20, -26, -32, -38, -44, -50, -56, -62, -68, -74, -80, -80},
                 new int[]{Color.rgb(0, 102, 255), Color.rgb(0, 153, 255), Color.rgb(0, 204, 255), Color.rgb(0, 255, 255), Color.rgb(0, 255, 153), Color.rgb(0, 255, 51), Color.rgb(51, 255, 0), Color.rgb(153, 255, 0), Color.rgb(255, 255, 51), Color.rgb(255, 204, 0), Color.rgb(255, 102, 0), Color.RED}),
         POWER_TX(new double[]{23, 15, 7, -1, -9, -17, -25, -33, -41, -49, -57, -57},
-                new int[]{Color.rgb(0, 102, 255), Color.rgb(0, 153, 255), Color.rgb(0, 204, 255), Color.rgb(0, 255, 255), Color.rgb(0, 255, 153), Color.rgb(0, 255, 51), Color.rgb(51, 255, 0), Color.rgb(153, 255, 0), Color.rgb(255, 255, 51), Color.rgb(255, 204, 0), Color.rgb(255, 102, 0), Color.RED}),
-        APPLICATION(new double[]{40, 21, 16, 10, 6, 6}, new int[]{Color.RED, Color.rgb(225, 130, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.GRAY});
+                new int[]{Color.rgb(0, 102, 255), Color.rgb(0, 153, 255), Color.rgb(0, 204, 255), Color.rgb(0, 255, 255), Color.rgb(0, 255, 153), Color.rgb(0, 255, 51), Color.rgb(51, 255, 0), Color.rgb(153, 255, 0), Color.rgb(255, 255, 51), Color.rgb(255, 204, 0), Color.rgb(255, 102, 0), Color.RED});
 
         private double[] legends;
         private int[] colors;
@@ -125,10 +124,6 @@ public class DeusResult {
 
             p.setColor(ResultType.POWER_TX.getColor(csvR.getPowerTX()));
             canvases[ResultType.POWER_TX.ordinal()].drawRect(x1, y1, x2, y2, p);
-
-            // TODO
-            p.setColor(ResultType.APPLICATION.getColor(csvR.getPowerTX()));
-            canvases[ResultType.APPLICATION.ordinal()].drawRect(x1, y1, x2, y2, p);
         }
     }
 

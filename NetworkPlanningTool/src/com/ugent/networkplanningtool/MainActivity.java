@@ -441,7 +441,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleSaveClick(View v){
-		// TODO gemeenschappelijke delen screenshot & xml eruit halen.
 		final Dialog d = new Dialog(this);
 		d.setTitle(R.string.savePlanTitle);
 		d.setContentView(R.layout.save_name);
@@ -860,11 +859,9 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
             }
         });
         displayNewDialog(d);
-        // TODO deftig late gebeure
     }
 
     private void saveRawData(ExportRawDataType exportType, File f) {
-        // TODO toStrings van klassen fixen
         DeusResult dr = floorPlanModel.getDeusResult();
         switch(exportType){
             case NORMALIZED_PLAN:

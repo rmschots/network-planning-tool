@@ -57,7 +57,6 @@ public abstract class DataObjectView extends LinearLayout {
 
 	public DataObjectView(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public DataObjectView(Context context, ViewType type){

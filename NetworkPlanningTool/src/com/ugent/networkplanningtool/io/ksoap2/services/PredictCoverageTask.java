@@ -22,7 +22,6 @@ public class PredictCoverageTask extends AbstractASyncTask<DeusRequest, DeusResu
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
     public PredictCoverageTask() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override

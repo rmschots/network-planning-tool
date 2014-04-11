@@ -21,7 +21,6 @@ public class ExposureReductionTask extends AbstractASyncTask<DeusRequest, DeusRe
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
     public ExposureReductionTask() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override
