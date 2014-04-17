@@ -126,6 +126,12 @@ public class FloorPlanModel extends Observable {
         model.notifyObservers();
     }
 
+    public void setApMeasurements(List<ApMeasurement> measurements) {
+        this.apMeasurements = measurements;
+        model.setChanged();
+        model.notifyObservers();
+    }
+
     public void addDataObject(DataObject touchDataObject) {
         if (touchDataObject.isComplete()) {
             if (!(touchDataObject instanceof ApMeasurement)) {

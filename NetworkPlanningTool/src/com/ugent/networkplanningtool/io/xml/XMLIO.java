@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.util.Log;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
+import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
 import com.ugent.networkplanningtool.data.FloorPlan;
@@ -52,6 +53,28 @@ public class XmlIO {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(file);
         return transformFloorPlan(doc);
+    }
+
+    public static List<ApMeasurement> loadMeasurements(File file) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setIgnoringElementContentWhitespace(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(file);
+
+        List<ApMeasurement> measurementList = new ArrayList<ApMeasurement>();
+        NodeList measureNodes = doc.getElementsByTagName("measurement");
+        for (int i = 0; i < measureNodes.getLength(); i++) {
+            Node wallNode = measureNodes.item(i);
+            NamedNodeMap attributes = wallNode.getAttributes();
+
+            int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
+            int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
+            int signalStrength = Integer.parseInt(attributes.getNamedItem("rssi").getTextContent());
+
+            measurementList.add(new ApMeasurement(new Point(x, y), signalStrength));
+        }
+
+        return measurementList;
     }
 
     public static FloorPlan loadFloorPlan(String xmlAsString) throws ParserConfigurationException, IOException, SAXException {

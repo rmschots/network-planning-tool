@@ -47,4 +47,18 @@
             android:id="@+id/measureAmountEditText" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save measurements"
+        android:id="@+id/saveMeasurementsButton"
+        android:onClick="onSaveMeasurementsClick" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Load measurements"
+        android:id="@+id/loadMeasurementsButton"
+        android:onClick="onLoadMeasurementsClick" />
+
 </LinearLayout>

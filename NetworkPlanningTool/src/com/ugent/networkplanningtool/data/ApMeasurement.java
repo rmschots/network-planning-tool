@@ -32,6 +32,11 @@ public class ApMeasurement extends DataObject implements XMLTransformable {
         samplePoolSize = DEFAULT_SAMPLE_POOL_SIZE;
     }
 
+    public ApMeasurement(Point p1, int signalStrength) {
+        this(p1);
+        this.signalStrength = signalStrength;
+    }
+
     public Integer getSignalStrength() {
         return signalStrength;
     }

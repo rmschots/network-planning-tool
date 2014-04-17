@@ -27,6 +27,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ZoomControls;
 
+import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.RealAccessPoint;
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
@@ -46,6 +47,7 @@ import com.ugent.networkplanningtool.io.plaintext.SavePlainTextParams;
 import com.ugent.networkplanningtool.io.plaintext.SavePlainTextTask;
 import com.ugent.networkplanningtool.io.wifi.WifiDetectTask;
 import com.ugent.networkplanningtool.io.xml.LoadFloorPlanTask;
+import com.ugent.networkplanningtool.io.xml.LoadMeasurementsTask;
 import com.ugent.networkplanningtool.io.xml.SaveXMLParams;
 import com.ugent.networkplanningtool.io.xml.SaveXMLTask;
 import com.ugent.networkplanningtool.io.xml.XmlIO;
@@ -743,6 +745,28 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void onLoadMeasurementsClick(final View v) {
+        File file = new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml");
+        taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
+            @Override
+            public void onTaskCompleteSuccess(List<ApMeasurement> result) {
+                floorPlanModel.setApMeasurements(result);
+                Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void onSaveMeasurementsClick(final View v) {
+        List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
+        saveTofile(new SaveXMLParams(tmp, "measurements", new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml")));
     }
 
     private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {
