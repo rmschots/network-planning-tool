@@ -108,7 +108,7 @@ public class AccessPointView extends DataObjectView {
                 transmitPowerEditText.setEnabled(false);
                 elevationEditText.setEnabled(false);
             } else {
-                nameEditText.addTextChangedListener(new TextWatcher() {
+                TextWatcher tw = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                     }
@@ -122,7 +122,12 @@ public class AccessPointView extends DataObjectView {
                         System.out.println("UPDATE 1");
                         updateDrawingModel();
                     }
-                });
+                };
+                nameEditText.addTextChangedListener(tw);
+                antennaGainEditText.addTextChangedListener(tw);
+                transmitPowerEditText.addTextChangedListener(tw);
+                elevationEditText.addTextChangedListener(tw);
+
                 OnItemSelectedListener listener = new OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -207,6 +212,10 @@ public class AccessPointView extends DataObjectView {
         networkMHzSpinner.setSelection(freqBandAdapter.getPosition(ap.getFrequencyband()));
         networkModelSpinner.setSelection(modelAdapter.getPosition(ap.getModel()));
         networkIDSpinner.setSelection(networkAdapter.getPosition(ap.getNetwork()));
+
+        antennaGainEditText.setText(""+ap.getGain());
+        transmitPowerEditText.setText(""+ap.getPower());
+        elevationEditText.setText(""+ap.getHeight());
     }
 
 

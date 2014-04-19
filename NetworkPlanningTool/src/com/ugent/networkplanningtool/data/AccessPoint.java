@@ -27,7 +27,7 @@ public class AccessPoint extends DataObject implements XMLTransformable {
     private Frequency frequency;
     private FrequencyBand frequencyband;
     private int gain;
-    private double power;
+    private int power;
     private Network network;
 
     private RealAccessPoint rap;
@@ -50,7 +50,7 @@ public class AccessPoint extends DataObject implements XMLTransformable {
 
     public AccessPoint(String name, int height, RadioType type,
                        RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
-                       double power, Network network) {
+                       int power, Network network) {
         super();
         DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
         this.name = name;
@@ -68,7 +68,7 @@ public class AccessPoint extends DataObject implements XMLTransformable {
 
     public AccessPoint(Point point, String name, int height, RadioType type,
                        RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
-                       double power, Network network) {
+                       int power, Network network) {
         super(point);
         DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
         this.name = name;
@@ -144,7 +144,7 @@ public class AccessPoint extends DataObject implements XMLTransformable {
         this.gain = gain;
     }
 
-    public double getPower() {
+    public int getPower() {
         return power;
     }
 

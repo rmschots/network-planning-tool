@@ -30,6 +30,7 @@ import android.widget.ZoomControls;
 import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.RealAccessPoint;
+import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusRequest;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.XMLTransformable;
@@ -50,7 +51,7 @@ import com.ugent.networkplanningtool.io.xml.LoadFloorPlanTask;
 import com.ugent.networkplanningtool.io.xml.LoadMeasurementsTask;
 import com.ugent.networkplanningtool.io.xml.SaveXMLParams;
 import com.ugent.networkplanningtool.io.xml.SaveXMLTask;
-import com.ugent.networkplanningtool.io.xml.XmlIO;
+import com.ugent.networkplanningtool.io.xml.XMLIO;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.components.MyScrollBar;
@@ -73,6 +74,7 @@ import com.ugent.networkplanningtool.layout.tools.NetworkReductionView;
 import com.ugent.networkplanningtool.layout.tools.OptimalPlacementView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
+import com.ugent.networkplanningtool.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -752,6 +754,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
             @Override
             public void onTaskCompleteSuccess(List<ApMeasurement> result) {
+                List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
+                for(ApMeasurement apMeasurement : result){
+                    CSVResult closestResult = Utils.getResultAt(apMeasurement.getPoint1(), floorPlanModel.getDeusResult().getCsv());
+                    compareList.add(closestResult);
+                }
+                SaveXMLParams saveXMLParams = new SaveXMLParams(compareList,"comparelist", new File(Environment.getExternalStorageDirectory(), "compare_"+algorithmsView.getPathLossModel().getValue()+".xml"));
+                saveTofile(saveXMLParams);
                 floorPlanModel.setApMeasurements(result);
                 Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
             }
@@ -784,7 +793,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         int apFrequency = Integer.parseInt(generatedAPsView.getGeneratedAPFrequencyBand().getText());
         double apPower = generatedAPsView.getTransmitPower();
         double apGain = generatedAPsView.getAntennaGain();
-        double apHeight = generatedAPsView.getHeight() * 100;
+        double apHeight = generatedAPsView.getHeight();
         double maxEField = 3; //TODO
         int distanceToAP = 10; // TODO
         int function = 0;
@@ -793,7 +802,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
         return new DeusRequest(
                 type,
-                XmlIO.getXMLAsString(floorPlanModel.getFloorPlan()),
+                XMLIO.getXMLAsString(floorPlanModel.getFloorPlan()),
                 pathLossModel,
                 gridSize,
                 roomHeight,

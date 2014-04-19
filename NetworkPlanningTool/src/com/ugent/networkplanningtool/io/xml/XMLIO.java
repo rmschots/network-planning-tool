@@ -45,7 +45,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-public class XmlIO {
+public class XMLIO {
 
     public static FloorPlan loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -137,8 +137,10 @@ public class XmlIO {
             RadioModel model = RadioModel.getRadioModelByText(attributeList.getNamedItem("model").getTextContent());
             FrequencyBand freqBand = FrequencyBand.getFrequencyBandByText(attributeList.getNamedItem("frequencyband").getTextContent());
             Frequency freq = Frequency.getFreqByNumber(Integer.parseInt(attributeList.getNamedItem("frequency").getTextContent()));
+            System.out.println("gain: "+attributeList.getNamedItem("gain").getTextContent());
+            System.out.println("power: "+attributeList.getNamedItem("power").getTextContent());
             int gain = Integer.parseInt(attributeList.getNamedItem("gain").getTextContent());
-            double power = Double.parseDouble(attributeList.getNamedItem("power").getTextContent());
+            int power = (int) Double.parseDouble(attributeList.getNamedItem("power").getTextContent());
             Network network = Network.getNetworkByText(attributeList.getNamedItem("network").getTextContent());
             AccessPoint ap = new AccessPoint(new Point(x, y), name, height, type, model, freqBand, freq, gain, power, network);
             accessPointList.add(ap);

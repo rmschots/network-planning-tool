@@ -23,9 +23,9 @@ public class SaveXMLTask extends AbstractASyncTask<SaveXMLParams, File> {
         StreamResult result = new StreamResult(parameters.getFile());
         DOMSource source;
         if (parameters.isList()) {
-            source = new DOMSource(XmlIO.getDocument(parameters.getXmlTransformableList(), parameters.getRootName()));
+            source = new DOMSource(XMLIO.getDocument(parameters.getXmlTransformableList(), parameters.getRootName()));
         } else {
-            source = new DOMSource(XmlIO.getDocument(parameters.getXmlTransformable()));
+            source = new DOMSource(XMLIO.getDocument(parameters.getXmlTransformable()));
         }
         transformer.transform(source, result);
 

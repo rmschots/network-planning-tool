@@ -12,7 +12,7 @@ import com.ugent.networkplanningtool.data.enums.FrequencyBand;
 import com.ugent.networkplanningtool.data.enums.RadioModel;
 import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.io.ASyncTaskException;
-import com.ugent.networkplanningtool.io.xml.XmlIO;
+import com.ugent.networkplanningtool.io.xml.XMLIO;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -54,7 +54,7 @@ public class KSoap2Parser {
         if (so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")) {
             System.out.println(so.getPropertyAsString("normalizedPlan"));
             try {
-                normalizedPlan = XmlIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
+                normalizedPlan = XMLIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
             } catch (Exception e) {
                 throw new ASyncTaskException("Error parsing service response normalized xml");
             }
@@ -62,7 +62,7 @@ public class KSoap2Parser {
         FloorPlan optimizedPlan = null;
         if (so.hasProperty("optimizedPlan") && !so.getPropertyAsString("optimizedPlan").equals("anyType{}")) {
             try {
-                optimizedPlan = XmlIO.loadFloorPlan(so.getPropertyAsString("optimizedPlan"));
+                optimizedPlan = XMLIO.loadFloorPlan(so.getPropertyAsString("optimizedPlan"));
             } catch (Exception e) {
                 throw new ASyncTaskException("Error parsing service response normalized xml");
             }
@@ -118,8 +118,8 @@ public class KSoap2Parser {
             double y = Double.parseDouble(attrs[1]);
             int height = Integer.parseInt(attrs[2]);
             RadioType type = RadioType.getRadioTypeByText(radioAttrs[0]);
-            double gain = Double.parseDouble(radioAttrs[1]);
-            double power = Double.parseDouble(radioAttrs[2]);
+            int gain = Integer.parseInt(radioAttrs[1]);
+            int power = Integer.parseInt(radioAttrs[2]);
             RadioModel model = RadioModel.getRadioModelByText(radioAttrs[3]);
             FrequencyBand frequency = FrequencyBand
                     .getFrequencyBandByText(radioAttrs[4]);

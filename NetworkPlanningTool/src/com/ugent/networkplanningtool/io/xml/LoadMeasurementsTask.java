@@ -12,6 +12,6 @@ import java.util.List;
 public class LoadMeasurementsTask extends AbstractASyncTask<File, List<ApMeasurement>> {
     @Override
     protected List<ApMeasurement> performTaskInBackground(File file) throws Exception {
-        return XmlIO.loadMeasurements(file);
+        return XMLIO.loadMeasurements(file);
     }
 }
