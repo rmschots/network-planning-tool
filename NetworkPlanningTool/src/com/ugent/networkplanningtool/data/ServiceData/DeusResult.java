@@ -88,10 +88,10 @@ public class DeusResult {
         this.normalizedPlan = normalizedPlan;
         this.optimizedPlan = optimizedPlan;
 
-        int width = DrawingModel.FLOOR_WIDTH / 20;
-        int height = DrawingModel.FLOOR_HEIGHT / 20;
+        int width = DrawingModel.FLOOR_WIDTH / 10;
+        int height = DrawingModel.FLOOR_HEIGHT / 10;
 
-        scale = (double) 1 / 20;
+        scale = 1.0 / 10.0;
         Canvas[] canvases = new Canvas[resultBitmaps.length];
         for (int i = 0; i < resultBitmaps.length; i++) {
             resultBitmaps[i] = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -99,10 +99,10 @@ public class DeusResult {
         }
         Paint p = new Paint();
         for (CSVResult csvR : csv) {
-            int x1 = (csvR.getPoint1().x - 10) / 20;
-            int x2 = (csvR.getPoint1().x + 10) / 20;
-            int y1 = (csvR.getPoint1().y - 10) / 20;
-            int y2 = (csvR.getPoint1().y + 10) / 20;
+            int x1 = (csvR.getPoint1().x - 10) / 10;
+            int x2 = (csvR.getPoint1().x + 10) / 10;
+            int y1 = (csvR.getPoint1().y - 10) / 10;
+            int y2 = (csvR.getPoint1().y + 10) / 10;
 
             p.setColor(ResultType.DOWNLOAD.getColor(csvR.getDownload()));
             canvases[ResultType.DOWNLOAD.ordinal()].drawRect(x1, y1, x2, y2, p);
