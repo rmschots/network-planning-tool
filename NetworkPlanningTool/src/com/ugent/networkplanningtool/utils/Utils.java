@@ -170,12 +170,19 @@ public class Utils {
     public static CSVResult getResultAt(Point point, List<CSVResult> csvResults) {
         Point p;
 
+        CSVResult closest = csvResults.get(0);
+        double dist = Double.POSITIVE_INFINITY;
         for (CSVResult csvResult : csvResults) {
             p = csvResult.getPoint1();
-            if (p.x - point.x < 10 && p.x - point.x >= -10 && p.y - point.y < 10 && p.y - point.y >= -10) {
-                return csvResult;
+            double tmpDist = pointToPointDistance(p,point);
+            if(tmpDist < dist){
+                dist = tmpDist;
+                closest = csvResult;
             }
+            /*if (p.x - point.x < 10 && p.x - point.x >= -10 && p.y - point.y < 10 && p.y - point.y >= -10) {
+                return csvResult;
+            }*/
         }
-        return null;
+        return closest;
     }
 }
