@@ -52,7 +52,6 @@ public class KSoap2Parser {
 
         FloorPlan normalizedPlan = null;
         if (so.hasProperty("normalizedPlan") && !so.getPropertyAsString("normalizedPlan").equals("anyType{}")) {
-            System.out.println(so.getPropertyAsString("normalizedPlan"));
             try {
                 normalizedPlan = XMLIO.loadFloorPlan(so.getPropertyAsString("normalizedPlan"));
             } catch (Exception e) {

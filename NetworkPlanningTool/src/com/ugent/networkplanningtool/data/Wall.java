@@ -31,7 +31,6 @@ public class Wall extends DataObject implements XMLTransformable {
         this.wallType = wall.wallType;
         this.thickness = wall.thickness;
         this.material = wall.material;
-        System.out.println("walltype: " + wallType);
     }
 
     public Wall(WallType wallType, Thickness thickness, Material material) {
@@ -41,7 +40,6 @@ public class Wall extends DataObject implements XMLTransformable {
         this.thickness = thickness;
         this.material = material;
         point2 = null;
-        System.out.println("walltype: " + wallType);
     }
 
     public Wall(Point point1, WallType wallType, Thickness thickness, Material material) {
@@ -51,14 +49,12 @@ public class Wall extends DataObject implements XMLTransformable {
         this.thickness = thickness;
         this.material = material;
         point2 = null;
-        System.out.println("walltype: " + wallType);
     }
 
     public Wall(Point point1, Point point2, WallType wallType, Thickness thickness, Material material) {
         this(point1, wallType, thickness, material);
         DATA_OBJECT_TYPE = DataObjectType.WALL;
         this.point2 = point2;
-        System.out.println("walltype: " + wallType);
     }
 
     /**
@@ -112,7 +108,6 @@ public class Wall extends DataObject implements XMLTransformable {
      * @param thickness the thickness to set
      */
     public void setThickness(Thickness thickness) {
-        System.out.println("set " + thickness);
         if (thickness != null) {
             this.thickness = thickness;
         }

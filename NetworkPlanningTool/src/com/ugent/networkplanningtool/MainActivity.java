@@ -77,10 +77,21 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
+import java.util.Set;
 
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
@@ -351,7 +362,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 		resultsActive = v;
         View flippedView = onFlipClick(v, resultsFlip);
         Object tag = flippedView.getTag();
-        System.out.println("TAG:::  " + tag.toString());
         if (tag.equals(getResources().getString(R.string.measureText))) {
             measureView.updateDrawingModel();
         } else {
@@ -675,6 +685,51 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+        /*File file = new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml");
+        taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
+            @Override
+            public void onTaskCompleteSuccess(List<ApMeasurement> result) {
+                floorPlanModel.setApMeasurements(result);
+                Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
+                predictRec(1.303715,result);
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });*/
+    }
+    private double amount;
+    private void predictRec(final double amount, final List<ApMeasurement> apMeasurements){
+        this.amount = amount;
+        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.PREDICT_COVERAGE);
+        taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
+            @Override
+            public void onTaskCompleteSuccess(DeusResult result) {
+                if(amount >= 1.303721){
+                    floorPlanModel.setDeusResult(result);
+                    onResultsFlipClick(findViewById(R.id.renderDataButton));
+                    onMainFlipClick(resultsButton);
+                }else{
+                    double totalErr = 0;
+                    for(ApMeasurement apMeasurement : apMeasurements){
+                        CSVResult csvResult = Utils.getResultAt(apMeasurement.getPoint1(),result.getCsv());
+                        totalErr+=(csvResult.getPowerRX()-apMeasurement.getSignalStrength());
+                    }
+                    System.out.println("amount: "+amount+" totalErr: "+Math.abs(totalErr));
+                    predictRec(amount+0.000001,apMeasurements);
+                }
+
+            }
+
+            @Override
+            public void onTaskFailed(Exception cause) {
+                Log.e(TAG, cause.getMessage(), cause);
+                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void onOptimalPlacementClick(final View v) {
@@ -757,8 +812,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
                 for(ApMeasurement apMeasurement : result){
                     CSVResult closestResult = Utils.getResultAt(apMeasurement.getPoint1(), floorPlanModel.getDeusResult().getCsv());
+                    closestResult.setApMeasurement(apMeasurement);
                     compareList.add(closestResult);
                 }
+                // saveStatsPerRoom(compareList);
+
                 SaveXMLParams saveXMLParams = new SaveXMLParams(compareList,"comparelist", new File(Environment.getExternalStorageDirectory(), "compare_"+algorithmsView.getPathLossModel().getValue()+".xml"));
                 saveTofile(saveXMLParams);
                 floorPlanModel.setApMeasurements(result);
@@ -773,13 +831,102 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         });
     }
 
+    private void saveStats(List<CSVResult> compareList){
+        Random randomGenerator = new Random();
+        File f = new File(Environment.getExternalStorageDirectory(), "permutations_"+algorithmsView.getPathLossModel().getValue()+".txt");
+        try {
+            PrintWriter fw = new PrintWriter(f,"UTF-8");
+
+            for (int i = 1; i < compareList.size(); i++) {
+                Set<Set<CSVResult>> seen = new HashSet<Set<CSVResult>>();
+                for (int j = 0; j < compareList.size(); ++j) {
+                    Set<CSVResult> items;
+                    do {
+                        items = new HashSet<CSVResult>();
+                        for (int k = 0; k < i; k++) {
+                            int index;
+                            do{
+                                index = randomGenerator.nextInt(compareList.size());
+                            } while(!items.add(compareList.get(index)));
+
+                        }
+                    } while (!seen.add(items));
+                    double total = 0;
+                    for(CSVResult csvResult : items){
+                        total+=csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX();
+                    }
+                    double shift = total/items.size();
+                    total = 0;
+                    for(CSVResult csvResult : compareList){
+                        total+=Math.abs(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
+                    }
+                    fw.print(total/compareList.size()+";");
+                }
+                fw.println();
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveStatsPerRoom(List<CSVResult> compareList){
+        HashMap<Integer, List<CSVResult>> roomMap = new HashMap<Integer, List<CSVResult>>();
+        for(CSVResult csvResult : compareList){
+            int roomNr = csvResult.getDrawingSize();
+            if(!roomMap.containsKey(roomNr)){
+                roomMap.put(roomNr,new ArrayList<CSVResult>());
+            }
+            roomMap.get(roomNr).add(csvResult);
+        }
+        List<Integer> roomNrList = new ArrayList<Integer>(roomMap.keySet());
+
+        Random randomGenerator = new Random();
+        File f = new File(Environment.getExternalStorageDirectory(), "room_permutations_"+algorithmsView.getPathLossModel().getValue()+".txt");
+        try {
+            PrintWriter fw = new PrintWriter(f,"UTF-8");
+
+            for (int i = 1; i <= roomNrList.size(); i++) {
+
+                Set<Set<CSVResult>> seen = new HashSet<Set<CSVResult>>();
+                for (int j = 0; j < compareList.size(); ++j) {
+                    Set<CSVResult> items;
+                    do {
+                        items = new HashSet<CSVResult>();
+                        Collections.shuffle(roomNrList,randomGenerator);
+                        for(int k = 0; k < i; k++){
+                            List<CSVResult> roomList = roomMap.get(roomNrList.get(k));
+                            items.add(roomList.get(randomGenerator.nextInt(roomList.size())));
+                        }
+                    } while (!seen.add(items));
+                    double total = 0;
+                    for(CSVResult csvResult : items){
+                        System.out.println("nr: "+csvResult.getDrawingSize());
+                        total+=csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX();
+                    }
+                    System.out.println("++++++++++++++++++++");
+                    double shift = total/items.size();
+                    total = 0;
+                    for(CSVResult csvResult : compareList){
+                        total+=Math.abs(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
+                    }
+                    fw.print(total/compareList.size()+";");
+                }
+                fw.println();
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void onSaveMeasurementsClick(final View v) {
         List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
         saveTofile(new SaveXMLParams(tmp, "measurements", new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml")));
     }
 
     private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {
-        String pathLossModel = algorithmsView.getPathLossModel().getValue();
+        String pathLossModel = algorithmsView.getPathLossModel().getValue()/*+amount*/;
         double gridSize = recieversView.getGridSize() * 100;
         double roomHeight = estimateSARView.getRoomHeight();
         String defaultActivity = optimalPlacementeView.getDefaultActivity().getText();

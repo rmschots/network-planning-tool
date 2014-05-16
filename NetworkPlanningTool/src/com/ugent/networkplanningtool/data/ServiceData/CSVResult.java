@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RadialGradient;
 
+import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.DataObject;
 import com.ugent.networkplanningtool.data.XMLTransformable;
 import com.ugent.networkplanningtool.model.DrawingModel;
@@ -15,6 +16,7 @@ import org.w3c.dom.Element;
 
 public class CSVResult extends DataObject implements XMLTransformable {
 
+    private ApMeasurement apMeasurement;
     private final Integer level;
     private final Double download; // (mbps)
     private final Double upload; // (mbps)
@@ -42,6 +44,14 @@ public class CSVResult extends DataObject implements XMLTransformable {
         this.pdDif = pdDif;
         this.roomNumber = roomNumber;
         this.drawingSize = drawingSize;
+    }
+
+    public ApMeasurement getApMeasurement() {
+        return apMeasurement;
+    }
+
+    public void setApMeasurement(ApMeasurement apMeasurement) {
+        this.apMeasurement = apMeasurement;
     }
 
     /**
@@ -168,6 +178,10 @@ public class CSVResult extends DataObject implements XMLTransformable {
         Element resultElem = doc.createElement("result");
         resultElem.setAttribute("x", "" + point1.x);
         resultElem.setAttribute("y", "" + point1.y);
+        if(apMeasurement != null){
+            resultElem.setAttribute("realX",""+apMeasurement.getPoint1().x);
+            resultElem.setAttribute("realY",""+apMeasurement.getPoint1().y);
+        }
         resultElem.setAttribute("level",""+level);
         resultElem.setAttribute("download",""+download);
         resultElem.setAttribute("upload",""+upload);

@@ -1,7 +1,6 @@
 package com.ugent.networkplanningtool.io.xml;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ApMeasurement;
@@ -103,7 +102,6 @@ public class XMLIO {
             Thickness thickness = Thickness.getThicknessByNumber((int) Double.parseDouble(attributes.getNamedItem("thickness").getTextContent()));
             Material material = Material.getMaterialByText(Utils.getChildrenWithName(wallNode, "material").get(0).getAttributes().getNamedItem("name").getTextContent());
             Wall w = new Wall(new Point(wallX1, wallY1), new Point(wallX2, wallY2), wallType, thickness, material);
-            Log.d("ZZZZZ", "" + w.getMaterial() + " " + w.getThickness() + " " + w.getWallType());
             wallList.add(new Wall(new Point(wallX1, wallY1), new Point(wallX2, wallY2), wallType, thickness, material));
         }
         // parse connectionPoints
@@ -137,14 +135,11 @@ public class XMLIO {
             RadioModel model = RadioModel.getRadioModelByText(attributeList.getNamedItem("model").getTextContent());
             FrequencyBand freqBand = FrequencyBand.getFrequencyBandByText(attributeList.getNamedItem("frequencyband").getTextContent());
             Frequency freq = Frequency.getFreqByNumber(Integer.parseInt(attributeList.getNamedItem("frequency").getTextContent()));
-            System.out.println("gain: "+attributeList.getNamedItem("gain").getTextContent());
-            System.out.println("power: "+attributeList.getNamedItem("power").getTextContent());
             int gain = Integer.parseInt(attributeList.getNamedItem("gain").getTextContent());
             int power = (int) Double.parseDouble(attributeList.getNamedItem("power").getTextContent());
             Network network = Network.getNetworkByText(attributeList.getNamedItem("network").getTextContent());
             AccessPoint ap = new AccessPoint(new Point(x, y), name, height, type, model, freqBand, freq, gain, power, network);
             accessPointList.add(ap);
-            System.out.println(ap);
         }
         // parse dataActivities
         NodeList dataActivities = doc.getElementsByTagName("activity");

@@ -121,7 +121,6 @@ public class AccessPoint extends DataObject implements XMLTransformable {
     }
 
     public void setFrequency(Frequency frequency) {
-        System.out.println("freq set to " + frequency);
         if (!frequency.equals(rap.getFrequency())) {
             rap = RealAccessPoint.getEmptyDummy();
         }
