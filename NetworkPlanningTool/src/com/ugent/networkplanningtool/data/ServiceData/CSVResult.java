@@ -154,8 +154,8 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
     public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
         float circleRadius = drawingModel.getPixelsPerInterval() / 3;
 
-        float x = convertCoordinateToLocation(drawingModel, true, point1.x);
-        float y = convertCoordinateToLocation(drawingModel, false, point1.y);
+        float x = drawingModel.convertCoordinateToLocation(true, point1.x);
+        float y = drawingModel.convertCoordinateToLocation(false, point1.y);
 
         //paint.setStyle(Style.FILL);
         RadialGradient gradient = new RadialGradient(x, y, circleRadius, Color.rgb((int) (eField * 50), (int) (eField * 50), (int) (eField * 50)),

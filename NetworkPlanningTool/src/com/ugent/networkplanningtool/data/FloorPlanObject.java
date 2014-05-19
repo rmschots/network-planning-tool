@@ -70,9 +70,4 @@ public abstract class FloorPlanObject {
     }
 
     public abstract FloorPlanObject getPartialDeepCopy();
-
-    static protected float convertCoordinateToLocation(DrawingModel drawingModel, boolean isXCoord, float coordinate) {
-        return (coordinate - (isXCoord ? drawingModel.getOffsetX() : drawingModel.getOffsetY()))
-                * drawingModel.getPixelsPerInterval() / DrawingModel.INTERVAL;
-    }
 }

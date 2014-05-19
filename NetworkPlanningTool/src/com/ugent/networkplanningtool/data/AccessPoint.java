@@ -183,8 +183,8 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
 
     @Override
     public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
-        float x = convertCoordinateToLocation(drawingModel, true, point1.x);
-        float y = convertCoordinateToLocation(drawingModel, false, point1.y);
+        float x = drawingModel.convertCoordinateToLocation(true, point1.x);
+        float y = drawingModel.convertCoordinateToLocation(false, point1.y);
         float circleRadius;
         switch (type) {
             case WIFI:

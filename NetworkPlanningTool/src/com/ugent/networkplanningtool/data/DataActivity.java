@@ -60,8 +60,8 @@ public class DataActivity extends FloorPlanObject implements XMLTransformable {
         float circleRadius = drawingModel.getPixelsPerInterval() / 3;
         float rectHeight = circleRadius / 2;
 
-        float x = convertCoordinateToLocation(drawingModel, true, point1.x);
-        float y = convertCoordinateToLocation(drawingModel, false, point1.y);
+        float x = drawingModel.convertCoordinateToLocation(true, point1.x);
+        float y = drawingModel.convertCoordinateToLocation(false, point1.y);
 
         String textToDraw = type.getText();
         int textSize = Utils.determineMaxTextSize(textToDraw, rectHeight * 2 * 2 / 3, type.getTextSize());

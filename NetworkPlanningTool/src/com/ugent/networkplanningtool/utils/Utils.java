@@ -179,9 +179,6 @@ public class Utils {
                 dist = tmpDist;
                 closest = csvResult;
             }
-            /*if (p.x - point.x < 10 && p.x - point.x >= -10 && p.y - point.y < 10 && p.y - point.y >= -10) {
-                return csvResult;
-            }*/
         }
         return closest;
     }

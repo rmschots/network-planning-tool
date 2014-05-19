@@ -31,20 +31,20 @@ public class FloorPlanModel extends Observable {
     private List<ApMeasurement> apMeasurements;
 
 
-    private Stack<FloorPlanModel> undoStack;
-    private Stack<FloorPlanModel> redoStack;
+    private Stack<FloorPlan> undoStack;
+    private Stack<FloorPlan> redoStack;
 
     private FloorPlanModel(ArrayList<Wall> wallList, ArrayList<ConnectionPoint> connectionPointList, ArrayList<AccessPoint> accessPointList, ArrayList<DataActivity> dataActivityList) {
         floorPlan = new FloorPlan(wallList, connectionPointList, accessPointList, dataActivityList);
-        undoStack = new Stack<FloorPlanModel>();
-        redoStack = new Stack<FloorPlanModel>();
+        undoStack = new Stack<FloorPlan>();
+        redoStack = new Stack<FloorPlan>();
         apMeasurements = new ArrayList<ApMeasurement>();
     }
 
     private FloorPlanModel() {
         floorPlan = new FloorPlan();
-        undoStack = new Stack<FloorPlanModel>();
-        redoStack = new Stack<FloorPlanModel>();
+        undoStack = new Stack<FloorPlan>();
+        redoStack = new Stack<FloorPlan>();
         apMeasurements = new ArrayList<ApMeasurement>();
     }
 
@@ -102,8 +102,8 @@ public class FloorPlanModel extends Observable {
 
     public void resetModel() {
         floorPlan = new FloorPlan();
-        undoStack = new Stack<FloorPlanModel>();
-        redoStack = new Stack<FloorPlanModel>();
+        undoStack = new Stack<FloorPlan>();
+        redoStack = new Stack<FloorPlan>();
         deusResult = null;
         apMeasurements = new ArrayList<ApMeasurement>();
         setChanged();
@@ -112,8 +112,8 @@ public class FloorPlanModel extends Observable {
 
     public void setFloorPlan(FloorPlan floorPlan) {
         this.floorPlan = floorPlan;
-        undoStack = new Stack<FloorPlanModel>();
-        redoStack = new Stack<FloorPlanModel>();
+        undoStack = new Stack<FloorPlan>();
+        redoStack = new Stack<FloorPlan>();
         setChanged();
         notifyObservers();
     }
@@ -364,7 +364,7 @@ public class FloorPlanModel extends Observable {
         return new Couple<Double, Wall>(distance, closest);
     }
 
-    private void pushStateToStack(Stack<FloorPlanModel> stack) {
+    private void pushStateToStack(Stack<FloorPlan> stack) {
         ArrayList<Wall> wallsClone = new ArrayList<Wall>();
         for (Wall w : getWallList()) {
             wallsClone.add(new Wall(w));
@@ -381,7 +381,7 @@ public class FloorPlanModel extends Observable {
         for (DataActivity da : getDataActivityList()) {
             dataActivitiesClone.add(new DataActivity(da));
         }
-        FloorPlanModel fpm = new FloorPlanModel(
+        FloorPlan fpm = new FloorPlan(
                 wallsClone,
                 connectionPointsClone,
                 accessPointsClone,
@@ -389,15 +389,15 @@ public class FloorPlanModel extends Observable {
         stack.push(fpm);
     }
 
-    private void restoreStateFromStack(Stack<FloorPlanModel> stack) {
-        FloorPlanModel fpm = stack.pop();
+    private void restoreStateFromStack(Stack<FloorPlan> stack) {
+        FloorPlan fpm = stack.pop();
         setWallList(fpm.getWallList());
         setDataActivityList(fpm.getDataActivityList());
         setConnectionPointList(fpm.getConnectionPointList());
         setAccessPointList(fpm.getAccessPointList());
     }
 
-    public Couple<Double, FloorPlanObject> getClosestDataObjectToPoint(Point touchPoint, boolean select) {
+    public Couple<Double, FloorPlanObject> getClosestFloorPlanObjectToPoint(Point touchPoint, boolean select) {
         double minDist = Double.POSITIVE_INFINITY;
         FloorPlanObject closest = null;
         if (select) {

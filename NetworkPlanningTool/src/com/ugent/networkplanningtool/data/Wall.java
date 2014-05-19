@@ -147,12 +147,12 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
     @Override
     public void drawOnCanvas(Canvas canvas, DrawingModel drawingModel, Paint paint, boolean touch) {
         paint.reset();
-        float pixelsX1 = convertCoordinateToLocation(drawingModel, true, point1.x);
-        float pixelsY1 = convertCoordinateToLocation(drawingModel, false, point1.y);
+        float pixelsX1 = drawingModel.convertCoordinateToLocation(true, point1.x);
+        float pixelsY1 = drawingModel.convertCoordinateToLocation(false, point1.y);
         float circleRadius = drawingModel.getPixelsPerInterval() / 4;
         if (isComplete()) {
-            float pixelsX2 = convertCoordinateToLocation(drawingModel, true, point2.x);
-            float pixelsY2 = convertCoordinateToLocation(drawingModel, false, point2.y);
+            float pixelsX2 = drawingModel.convertCoordinateToLocation(true, point2.x);
+            float pixelsY2 = drawingModel.convertCoordinateToLocation(false, point2.y);
 
 
             paint.setStrokeWidth(drawingModel.getPixelsPerInterval() * thickness.getNumber() / DrawingModel.INTERVAL);
