@@ -12,7 +12,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.ugent.networkplanningtool.R;
-import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.enums.Material;
 import com.ugent.networkplanningtool.data.enums.SnapTo;
@@ -39,7 +39,7 @@ public class WallView extends DataObjectView {
     public WallView(Context context, ViewType type, DrawingModel drawingModel) {
         super(context, type);
         this.drawingModel = drawingModel;
-        this.tag = ((Wall) drawingModel.getTouchDataObject()).getWallType().getText();
+        this.tag = ((Wall) drawingModel.getTouchFloorPlanObject()).getWallType().getText();
         init();
         loadData();
         initComponents();
@@ -174,13 +174,13 @@ public class WallView extends DataObjectView {
     }
 
     public void updateDrawingModel() {
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         WallType wallType = getWallType();
         Material material = getSelectedMaterial();
         Thickness thickness = getSelectedThickness();
-        if (drawingModel.getTouchDataObject() != null
-                && drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObjectType.WALL)) {
-            Wall wall = (Wall) drawingModel.getTouchDataObject();
+        if (drawingModel.getTouchFloorPlanObject() != null
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.WALL)) {
+            Wall wall = (Wall) drawingModel.getTouchFloorPlanObject();
             wall.setWallType(wallType);
             wall.setMaterial(material);
             wall.setThickness(thickness);

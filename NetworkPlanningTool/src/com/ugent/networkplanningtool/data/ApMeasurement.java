@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 /**
  * Created by Roel on 24/03/14.
  */
-public class ApMeasurement extends DataObject implements XMLTransformable {
+public class ApMeasurement extends FloorPlanObject implements XMLTransformable {
     private Integer signalStrength = null;
     public static int DEFAULT_SAMPLE_POOL_SIZE = 2;
     private int samplePoolSize;
@@ -82,7 +82,7 @@ public class ApMeasurement extends DataObject implements XMLTransformable {
     }
 
     @Override
-    public DataObject getPartialDeepCopy() {
+    public FloorPlanObject getPartialDeepCopy() {
         ApMeasurement apm = new ApMeasurement(samplePoolSize);
         return apm;
     }

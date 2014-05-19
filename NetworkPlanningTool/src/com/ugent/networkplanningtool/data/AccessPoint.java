@@ -17,7 +17,7 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AccessPoint extends DataObject implements XMLTransformable {
+public class AccessPoint extends FloorPlanObject implements XMLTransformable {
 
     private String name;
     private int height;
@@ -45,7 +45,7 @@ public class AccessPoint extends DataObject implements XMLTransformable {
         this.power = accessPoint.power;
         this.network = accessPoint.network;
 
-        this.rap = RealAccessPoint.getEmptyDummy();
+        this.rap = new RealAccessPoint(accessPoint.getRap());
     }
 
     public AccessPoint(String name, int height, RadioType type,
@@ -256,7 +256,7 @@ public class AccessPoint extends DataObject implements XMLTransformable {
 
 
     @Override
-    public DataObject getPartialDeepCopy() {
+    public FloorPlanObject getPartialDeepCopy() {
         return new AccessPoint(name, height, type, model, frequencyband, frequency, gain, power, network);
     }
 

@@ -8,7 +8,7 @@ import android.graphics.Point;
 
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public abstract class DataObject {
+public abstract class FloorPlanObject {
 
     public static enum DataObjectType {
         WALL,
@@ -23,15 +23,15 @@ public abstract class DataObject {
     protected static PathEffect dottedLineEffect = new DashPathEffect(new float[]{10, 5}, 0);
     protected Point point1;
 
-    public DataObject() {
+    public FloorPlanObject() {
         point1 = null;
     }
 
-    public DataObject(DataObject dataObject) {
-        this.point1 = new Point(dataObject.point1);
+    public FloorPlanObject(FloorPlanObject floorPlanObject) {
+        this.point1 = new Point(floorPlanObject.point1);
     }
 
-    public DataObject(Point point) {
+    public FloorPlanObject(Point point) {
         this.point1 = point;
     }
 
@@ -69,9 +69,9 @@ public abstract class DataObject {
         return point1 != null;
     }
 
-    public abstract DataObject getPartialDeepCopy();
+    public abstract FloorPlanObject getPartialDeepCopy();
 
-    protected float convertCoordinateToLocation(DrawingModel drawingModel, boolean isXCoord, float coordinate) {
+    static protected float convertCoordinateToLocation(DrawingModel drawingModel, boolean isXCoord, float coordinate) {
         return (coordinate - (isXCoord ? drawingModel.getOffsetX() : drawingModel.getOffsetY()))
                 * drawingModel.getPixelsPerInterval() / DrawingModel.INTERVAL;
     }

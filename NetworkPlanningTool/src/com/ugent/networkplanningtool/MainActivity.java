@@ -77,16 +77,12 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import com.ugent.networkplanningtool.utils.Utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -160,7 +156,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         designView = (DrawingView) findViewById(R.id.drawingView);
         drawingModel = new DrawingModel(designView.getWidth(), designView.getHeight());
-        floorPlanModel = FloorPlanModel.getInstance();
+        floorPlanModel = FloorPlanModel.INSTANCE;
 
         MyScrollBar hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
         MyScrollBar vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
@@ -446,7 +442,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                         Log.e(TAG, cause.getMessage(), cause);
                         Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                });
+                }, false);
             }
 		});
 		dialog.setFilter(".*xml|.*XML");
@@ -509,7 +505,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void saveTofile(SavePlainTextParams plainTextParams) {
@@ -524,7 +520,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void handleNewFileClick(View v){
@@ -537,10 +533,15 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     }
 	
 	public void handleStopDrawing(View view){
-		drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
+		drawingModel.setTouchFloorPlanObject(drawingModel.getTouchFloorPlanObject());
 	}
 	
 	public void handleScreenshot(View v){
+        designView.invalidate();
+        designView.destroyDrawingCache();
+        designView.setDrawingCacheEnabled(false);
+        designView.setDrawingCacheEnabled(true);
+        designView.buildDrawingCache();
         final Bitmap bm = designView.getDrawingCache();
 		
 		final Dialog d = new Dialog(this);
@@ -575,7 +576,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                             Log.e(TAG, cause.getMessage(), cause);
                             Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    });
+                    }, true);
 				}else{
 					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
 					dialog.addListener(new OnFileSelectedListener() {
@@ -600,7 +601,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                                     Log.e(TAG, cause.getMessage(), cause);
                                     Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            });
+                            }, true);
 						}
 					});
 					dialog.setFolderMode(true);
@@ -666,7 +667,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void onPredictClick(final View v) {
@@ -684,7 +685,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
         /*File file = new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml");
         taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
             @Override
@@ -729,7 +730,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void onOptimalPlacementClick(final View v) {
@@ -747,7 +748,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void onExposureReductionClick(final View v) {
@@ -765,7 +766,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void onNetworkReductionClick(final View v) {
@@ -783,7 +784,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void onEstimateSARClick(final View v) {
@@ -801,7 +802,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     public void onLoadMeasurementsClick(final View v) {
@@ -809,7 +810,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
             @Override
             public void onTaskCompleteSuccess(List<ApMeasurement> result) {
-                List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
+                /*List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
                 for(ApMeasurement apMeasurement : result){
                     CSVResult closestResult = Utils.getResultAt(apMeasurement.getPoint1(), floorPlanModel.getDeusResult().getCsv());
                     closestResult.setApMeasurement(apMeasurement);
@@ -818,7 +819,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 // saveStatsPerRoom(compareList);
 
                 SaveXMLParams saveXMLParams = new SaveXMLParams(compareList,"comparelist", new File(Environment.getExternalStorageDirectory(), "compare_"+algorithmsView.getPathLossModel().getValue()+".xml"));
-                saveTofile(saveXMLParams);
+                saveTofile(saveXMLParams);*/
                 floorPlanModel.setApMeasurements(result);
                 Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
             }
@@ -828,7 +829,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.e(TAG, cause.getMessage(), cause);
                 Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }, false);
     }
 
     private void saveStats(List<CSVResult> compareList){

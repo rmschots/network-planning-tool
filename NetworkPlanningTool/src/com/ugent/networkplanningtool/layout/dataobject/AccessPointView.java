@@ -15,7 +15,7 @@ import android.widget.Spinner;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
 import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.data.enums.FrequencyBand;
 import com.ugent.networkplanningtool.data.enums.Network;
@@ -174,7 +174,7 @@ public class AccessPointView extends DataObjectView {
     }
 
     public void updateDrawingModel() {
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         String name = nameEditText.getText().toString();
         RadioType signalType = getSelectedSignalType();
         Frequency freq = getSelectedFrequency();
@@ -186,9 +186,9 @@ public class AccessPointView extends DataObjectView {
         int antennaGain = Integer.parseInt(antennaGainEditText.getText().toString());
         int elevation = Integer.parseInt(elevationEditText.getText().toString());
 
-        if (drawingModel.getTouchDataObject() != null
-                && drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObjectType.ACCESS_POINT)) {
-            AccessPoint ap = (AccessPoint) drawingModel.getTouchDataObject();
+        if (drawingModel.getTouchFloorPlanObject() != null
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.ACCESS_POINT)) {
+            AccessPoint ap = (AccessPoint) drawingModel.getTouchFloorPlanObject();
             ap.setName(name);
             ap.setType(signalType);
             ap.setFrequency(freq);
@@ -201,7 +201,7 @@ public class AccessPointView extends DataObjectView {
         } else {
             drawingModel.setPlaceMode(new AccessPoint(name, elevation, signalType, model, freqBand, freq, antennaGain, transmitPower, network));
         }
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
     }
 
     private void loadData() {

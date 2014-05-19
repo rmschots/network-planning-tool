@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ApMeasurement;
-import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
@@ -67,9 +67,9 @@ public class MeasureView extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (drawingModel.getTouchDataObject() != null
-                        && drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObject.DataObjectType.AP_MEASUREMENT)) {
-                    ApMeasurement apm = (ApMeasurement) drawingModel.getTouchDataObject();
+                if (drawingModel.getTouchFloorPlanObject() != null
+                        && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.DataObjectType.AP_MEASUREMENT)) {
+                    ApMeasurement apm = (ApMeasurement) drawingModel.getTouchFloorPlanObject();
                     int samplePoolSize;
                     try {
                         samplePoolSize = Integer.parseInt(editable.toString());

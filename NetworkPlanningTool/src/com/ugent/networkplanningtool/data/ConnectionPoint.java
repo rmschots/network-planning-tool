@@ -12,7 +12,7 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class ConnectionPoint extends DataObject implements XMLTransformable{
+public class ConnectionPoint extends FloorPlanObject implements XMLTransformable{
 
     private ConnectionPointType type;
 
@@ -77,7 +77,7 @@ public class ConnectionPoint extends DataObject implements XMLTransformable{
     }
 
     @Override
-    public DataObject getPartialDeepCopy() {
+    public FloorPlanObject getPartialDeepCopy() {
         return new ConnectionPoint(type);
     }
 

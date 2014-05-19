@@ -2,6 +2,7 @@ package com.ugent.networkplanningtool.io;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.view.WindowManager;
 
 public class ASyncIOTaskManager {
 
@@ -23,7 +24,10 @@ public class ASyncIOTaskManager {
      */
     @SuppressWarnings("unchecked")
     public <T, P> void executeTask(AbstractASyncTask<P, T> task, P request, CharSequence progressLabel,
-                                   OnAsyncTaskCompleteListener<T> onTaskCompletedListener) {
+                                   OnAsyncTaskCompleteListener<T> onTaskCompletedListener, boolean darkenBackground) {
+        if(darkenBackground){
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
         this.progressDialog.setMessage(progressLabel);
 
         task.setOnTaskCompletionListener(onTaskCompletedListener);

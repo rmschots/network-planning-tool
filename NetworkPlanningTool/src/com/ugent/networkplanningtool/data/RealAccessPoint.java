@@ -15,6 +15,14 @@ public class RealAccessPoint {
     private Frequency frequency;
     private int signalStrength;
 
+    public RealAccessPoint(RealAccessPoint rap) {
+        this.ssid = rap.getSsid();
+        this.BSSID = rap.getBSSID();
+        this.capabilities = rap.getCapabilities();
+        this.frequency = rap.getFrequency();
+        this.signalStrength = rap.getSignalStrength();
+    }
+
     public RealAccessPoint(String ssid, String BSSID, String capabilities, Frequency frequency, int signalStrength) {
         this.ssid = ssid;
         this.BSSID = BSSID;

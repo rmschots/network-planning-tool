@@ -21,7 +21,7 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.ServiceData.CSVResult;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
@@ -53,7 +53,7 @@ public class DrawingView extends View implements Observer {
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        FloorPlanModel.getInstance().addObserver(this);
+        FloorPlanModel.INSTANCE.addObserver(this);
         setDrawingCacheEnabled(true);
     }
 
@@ -65,7 +65,7 @@ public class DrawingView extends View implements Observer {
                 if(drawingModel.isDrawGridPoints()){
                     drawGrid(canvas);
                 }
-                DeusResult dr = FloorPlanModel.getInstance().getDeusResult();
+                DeusResult dr = FloorPlanModel.INSTANCE.getDeusResult();
                 if(dr != null && drawingModel.getResultRenderType() != null){
                     dr.drawResult(canvas, drawingModel, drawingModel.getResultRenderType());
                 }
@@ -77,7 +77,7 @@ public class DrawingView extends View implements Observer {
                 if(drawingModel.isDrawAccessPoints()){
                     drawAccessPoints(canvas);
                 }
-                for (ApMeasurement apMeasurement : FloorPlanModel.getInstance().getApMeasurements()) {
+                for (ApMeasurement apMeasurement : FloorPlanModel.INSTANCE.getApMeasurements()) {
                     apMeasurement.drawOnCanvas(canvas, drawingModel, paint, false);
                 }
                 drawTouch(canvas);
@@ -122,14 +122,14 @@ public class DrawingView extends View implements Observer {
     }
 
     private void drawAccessPoints(Canvas canvas) {
-        List<AccessPoint> accessPointList = FloorPlanModel.getInstance().getAccessPointList();
+        List<AccessPoint> accessPointList = FloorPlanModel.INSTANCE.getAccessPointList();
         for (AccessPoint ap : accessPointList) {
             ap.drawOnCanvas(canvas, drawingModel, paint, false);
         }
     }
 
     private void drawConnectionPoints(Canvas canvas) {
-        List<ConnectionPoint> connectionPointList = FloorPlanModel.getInstance().getConnectionPointList();
+        List<ConnectionPoint> connectionPointList = FloorPlanModel.INSTANCE.getConnectionPointList();
         for (ConnectionPoint cp : connectionPointList) {
             cp.drawOnCanvas(canvas, drawingModel, paint, false);
         }
@@ -137,21 +137,21 @@ public class DrawingView extends View implements Observer {
     }
 
     private void drawActivities(Canvas canvas) {
-        List<DataActivity> activityList = FloorPlanModel.getInstance().getDataActivityList();
+        List<DataActivity> activityList = FloorPlanModel.INSTANCE.getDataActivityList();
         for (DataActivity cp : activityList) {
             cp.drawOnCanvas(canvas, drawingModel, paint, false);
         }
     }
 
     private void drawWalls(Canvas canvas) {
-        List<Wall> wallList = FloorPlanModel.getInstance().getWallList();
+        List<Wall> wallList = FloorPlanModel.INSTANCE.getWallList();
         for (Wall w : wallList) {
             w.drawOnCanvas(canvas, drawingModel, paint, false);
         }
     }
 
     private void drawTouch(Canvas canvas) {
-        DataObject tw = drawingModel.getTouchDataObject();
+        FloorPlanObject tw = drawingModel.getTouchFloorPlanObject();
         if (tw != null && tw.canDraw()) {
             tw.drawOnCanvas(canvas, drawingModel, paint, true);
         }
@@ -228,8 +228,8 @@ public class DrawingView extends View implements Observer {
             case MotionEvent.ACTION_UP:
                 switch (drawingModel.getState()) {
                     case PLACING:
-                        if (drawingModel.getTouchDataObject() instanceof ApMeasurement) {
-                            final ApMeasurement apm = (ApMeasurement) drawingModel.getTouchDataObject();
+                        if (drawingModel.getTouchFloorPlanObject() instanceof ApMeasurement) {
+                            final ApMeasurement apm = (ApMeasurement) drawingModel.getTouchFloorPlanObject();
 
                             final AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
                             adb.setMessage(apm.getSamplePoolSize() + " signal strength samples will be taken at your current location.\n" +
@@ -239,13 +239,13 @@ public class DrawingView extends View implements Observer {
                             adb.setIcon(android.R.drawable.ic_dialog_alert);
                             adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    MeasureParams mp = new MeasureParams(apm.getSamplePoolSize(), FloorPlanModel.getInstance().getAccessPointList());
+                                    MeasureParams mp = new MeasureParams(apm.getSamplePoolSize(), FloorPlanModel.INSTANCE.getAccessPointList());
                                     MainActivity.getInstance().getTaskManager().executeTask(new MeasureSignalStrengthTask(getContext()), mp, "Sampling...", new OnAsyncTaskCompleteListener<Integer>() {
                                         @Override
                                         public void onTaskCompleteSuccess(Integer result) {
                                             apm.setSignalStrength(result);
                                             PlaceResult pr = drawingModel.place();
-                                            CSVResult closestResult = Utils.getResultAt(apm.getPoint1(), FloorPlanModel.getInstance().getDeusResult().getCsv());
+                                            CSVResult closestResult = Utils.getResultAt(apm.getPoint1(), FloorPlanModel.INSTANCE.getDeusResult().getCsv());
                                             if (pr.equals(PlaceResult.SUCCESS)) {
                                                 if (closestResult != null) {
                                                     Toast.makeText(getContext(), "difference in RSSI is: " + (result - closestResult.getPowerRX()), Toast.LENGTH_LONG).show();
@@ -259,18 +259,18 @@ public class DrawingView extends View implements Observer {
 
                                         @Override
                                         public void onTaskFailed(Exception cause) {
-                                            drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
+                                            drawingModel.setTouchFloorPlanObject(drawingModel.getTouchFloorPlanObject());
                                             Log.e(TAG, cause.getMessage(), cause);
                                             Toast.makeText(getContext(), cause.getMessage(), Toast.LENGTH_LONG).show();
                                         }
-                                    });
+                                    }, false);
                                 }
                             });
 
 
                             adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    drawingModel.setTouchDataObject(drawingModel.getTouchDataObject());
+                                    drawingModel.setTouchFloorPlanObject(drawingModel.getTouchFloorPlanObject());
                                 }
                             });
                             adb.setCancelable(false);
@@ -283,7 +283,7 @@ public class DrawingView extends View implements Observer {
                         }
                         break;
                     case SELECTING_EDIT:
-                        DataObject dObj = drawingModel.getSelected();
+                        FloorPlanObject dObj = drawingModel.getSelected();
                         if (dObj != null) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                             alert.setTitle("Edit");
@@ -353,7 +353,7 @@ public class DrawingView extends View implements Observer {
                     case MEASURE_REMOVE:
                         dObj = drawingModel.getSelected();
                         if (dObj != null) {
-                            FloorPlanModel.getInstance().removeDataObject(dObj);
+                            FloorPlanModel.INSTANCE.removeFloorPlanObject(dObj);
                         }
                         drawingModel.deselect();
                         break;

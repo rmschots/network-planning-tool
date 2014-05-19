@@ -8,7 +8,7 @@ import android.util.Log;
 import com.ugent.networkplanningtool.MainActivity;
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
-import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.enums.Material;
@@ -30,7 +30,7 @@ public class DrawingModel extends Observable {
 
     public boolean isDrawResult() {
         if (drawResult) {
-            System.out.println("LOLZ " + FloorPlanModel.getInstance().getDeusResult());
+            System.out.println("LOLZ " + FloorPlanModel.INSTANCE.getDeusResult());
         }
         return drawResult;
     }
@@ -149,7 +149,7 @@ public class DrawingModel extends Observable {
     private int viewHeight;
 
     // Touch object info
-    private DataObject touchDataObject = new Wall(WallType.WALL, Thickness.THIN, Material.BRICK);
+    private FloorPlanObject touchFloorPlanObject = new Wall(WallType.WALL, Thickness.THIN, Material.BRICK);
 
     private boolean zoomInMaxed;
     private boolean zoomOutMaxed;
@@ -234,7 +234,7 @@ public class DrawingModel extends Observable {
     public void moveStart(float x1, float y1, float x2, float y2) {
         switch (state) {
             case PLACING:
-                touchDataObject = touchDataObject.getPartialDeepCopy();
+                touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
                 break;
             case SELECTING_EDIT:
             case SELECTING_INFO:
@@ -263,42 +263,42 @@ public class DrawingModel extends Observable {
     public PlaceResult place() {
         Log.d("debug", "place");
         state = STATE.PRE_PLACE;
-        if (touchDataObject != null) {
-            if (touchDataObject instanceof Wall) {
-                Wall wall = (Wall) touchDataObject;
+        if (touchFloorPlanObject != null) {
+            if (touchFloorPlanObject instanceof Wall) {
+                Wall wall = (Wall) touchFloorPlanObject;
                 if (wall.isComplete()) {
                     if (!(wall.getPoint1().x == wall.getPoint2().x && wall.getPoint1().y == wall.getPoint2().y)) {
-                        FloorPlanModel.getInstance().addDataObject(wall);
+                        FloorPlanModel.INSTANCE.addFloorPlanObject(wall);
                     }
-                    touchDataObject = touchDataObject.getPartialDeepCopy();
+                    touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
                 } else {
                     wall.setPoint2(new Point(wall.getPoint1()));
                 }
             } else {
-                if (touchDataObject.isComplete()) {
-                    if (touchDataObject instanceof ConnectionPoint) {
-                        Couple<Double, Wall> closestWallCouple = FloorPlanModel.getInstance().getClosestWallToPoint(touchDataObject.getPoint1(), true);
+                if (touchFloorPlanObject.isComplete()) {
+                    if (touchFloorPlanObject instanceof ConnectionPoint) {
+                        Couple<Double, Wall> closestWallCouple = FloorPlanModel.INSTANCE.getClosestWallToPoint(touchFloorPlanObject.getPoint1(), true);
                         if (closestWallCouple != null) {
                             double dist = closestWallCouple.getA();
                             if (dist <= INTERVAL / 4 && dist != 0) {
-                                FloorPlanModel.getInstance().addDataObject(touchDataObject);
-                                touchDataObject = touchDataObject.getPartialDeepCopy();
+                                FloorPlanModel.INSTANCE.addFloorPlanObject(touchFloorPlanObject);
+                                touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
                                 setChanged();
                                 notifyObservers();
                                 return PlaceResult.SUCCESS;
                             }
                         }
-                        touchDataObject = touchDataObject.getPartialDeepCopy();
+                        touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
                         setChanged();
                         notifyObservers();
                         return PlaceResult.CONNECTION_POINT_NOT_ADJACENT_TO_WALL;
                     }
-                    FloorPlanModel.getInstance().addDataObject(touchDataObject);
-                    touchDataObject = touchDataObject.getPartialDeepCopy();
+                    FloorPlanModel.INSTANCE.addFloorPlanObject(touchFloorPlanObject);
+                    touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
                 } else {
                     // should not happen (trying to place non-complete non-wall)
                     Log.e("DEBUG", "error: trying to place non-complete non-wall");
-                    touchDataObject = touchDataObject.getPartialDeepCopy();
+                    touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
                 }
 
             }
@@ -370,11 +370,11 @@ public class DrawingModel extends Observable {
     }
 
     public void setTouchLocation(float x, float y) {
-        if (touchDataObject != null) {
+        if (touchFloorPlanObject != null) {
             state = STATE.PLACING;
             Point wallPoint = getActualTouchLocation(x, y);
-            if (touchDataObject instanceof Wall) {
-                Point closestCorner = FloorPlanModel.getInstance().getClosestCornerToPoint(wallPoint);
+            if (touchFloorPlanObject instanceof Wall) {
+                Point closestCorner = FloorPlanModel.INSTANCE.getClosestCornerToPoint(wallPoint);
                 if (closestCorner != null && Utils.pointToPointDistance(wallPoint, closestCorner) <= INTERVAL / 2) {
                     wallPoint = closestCorner;
                 } else {
@@ -394,7 +394,7 @@ public class DrawingModel extends Observable {
                             }
                             break;
                         case WALLS:
-                            Couple<Double, Wall> closestWallCouple = FloorPlanModel.getInstance().getClosestWallToPoint(wallPoint, false);
+                            Couple<Double, Wall> closestWallCouple = FloorPlanModel.INSTANCE.getClosestWallToPoint(wallPoint, false);
                             if (closestWallCouple != null && closestWallCouple.getA() <= INTERVAL / 2) {
                                 Wall closestWall = closestWallCouple.getB();
                                 Point p = Utils.pointProjectionOnLine(closestWall.getPoint1(), closestWall.getPoint2(), wallPoint);
@@ -408,14 +408,14 @@ public class DrawingModel extends Observable {
                             break;
                     }
                 }
-                if ((touchDataObject).isComplete()) {
-                    Wall wall = (Wall) touchDataObject;
+                if ((touchFloorPlanObject).isComplete()) {
+                    Wall wall = (Wall) touchFloorPlanObject;
                     wall.setPoint2(wallPoint);
                 } else {
-                    touchDataObject.setPoint1(wallPoint);
+                    touchFloorPlanObject.setPoint1(wallPoint);
                 }
             } else {
-                touchDataObject.setPoint1(wallPoint);
+                touchFloorPlanObject.setPoint1(wallPoint);
             }
             touchLocation = wallPoint;
             setChanged();
@@ -447,15 +447,15 @@ public class DrawingModel extends Observable {
     /**
      * @return the touchWall
      */
-    public DataObject getTouchDataObject() {
-        return touchDataObject;
+    public FloorPlanObject getTouchFloorPlanObject() {
+        return touchFloorPlanObject;
     }
 
-    public void setTouchDataObject(DataObject drawItem) {
-        if (touchDataObject == drawItem) {
-            touchDataObject = touchDataObject.getPartialDeepCopy();
+    public void setTouchFloorPlanObject(FloorPlanObject drawItem) {
+        if (touchFloorPlanObject == drawItem) {
+            touchFloorPlanObject = touchFloorPlanObject.getPartialDeepCopy();
         } else {
-            touchDataObject = drawItem;
+            touchFloorPlanObject = drawItem;
         }
         setChanged();
         notifyObservers();
@@ -468,7 +468,7 @@ public class DrawingModel extends Observable {
     public void setInfoSelectionMode() {
         Log.d("DEBUG", "INFOSELECTION MODE");
         state = STATE.PRE_SELECTING_INFO;
-        touchDataObject = null;
+        touchFloorPlanObject = null;
         setChanged();
         notifyObservers();
     }
@@ -476,7 +476,7 @@ public class DrawingModel extends Observable {
     public void setEditSelectionMode() {
         Log.d("DEBUG", "INFOEDIT MODE");
         state = STATE.PRE_SELECTING_EDIT;
-        touchDataObject = null;
+        touchFloorPlanObject = null;
         setChanged();
         notifyObservers();
     }
@@ -484,7 +484,7 @@ public class DrawingModel extends Observable {
     public void setRemoveSelectionMode() {
         Log.d("DEBUG", "INFOREMOVE MODE");
         state = STATE.PRE_SELECTING_REMOVE;
-        touchDataObject = null;
+        touchFloorPlanObject = null;
         setChanged();
         notifyObservers();
     }
@@ -492,7 +492,7 @@ public class DrawingModel extends Observable {
     public void setMeasureRemoveMode() {
         Log.d("DEBUG", "MEASUREREMOVE MODE");
         state = STATE.PRE_MEASURE_REMOVE;
-        touchDataObject = null;
+        touchFloorPlanObject = null;
         setChanged();
         notifyObservers();
     }
@@ -503,10 +503,10 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
-    public void setPlaceMode(DataObject dataObject) {
+    public void setPlaceMode(FloorPlanObject floorPlanObject) {
         System.out.println("PREPACCCCEE");
         state = STATE.PRE_PLACE;
-        setTouchDataObject(dataObject);
+        setTouchFloorPlanObject(floorPlanObject);
         setChanged();
         notifyObservers();
     }
@@ -534,29 +534,29 @@ public class DrawingModel extends Observable {
     public void select(float x, float y, boolean select) {
         touchLocation = getActualTouchLocation(x, y);
         // get closest
-        Couple<Double, DataObject> closestCouple = FloorPlanModel.getInstance().getClosestDataObjectToPoint(touchLocation, select);
+        Couple<Double, FloorPlanObject> closestCouple = FloorPlanModel.INSTANCE.getClosestDataObjectToPoint(touchLocation, select);
         if (closestCouple == null) {
-            touchDataObject = null;
+            touchFloorPlanObject = null;
             return;
         }
         double distance = closestCouple.getA();
         if (distance < 40) {
-            touchDataObject = closestCouple.getB();
-            touchLocation = touchDataObject.getPoint1();
+            touchFloorPlanObject = closestCouple.getB();
+            touchLocation = touchFloorPlanObject.getPoint1();
         } else {
-            touchDataObject = null;
+            touchFloorPlanObject = null;
         }
         setChanged();
         notifyObservers();
     }
 
-    public DataObject getSelected() {
+    public FloorPlanObject getSelected() {
         switch (state) {
             case SELECTING_EDIT:
             case SELECTING_INFO:
             case SELECTING_REMOVE:
             case MEASURE_REMOVE:
-                return touchDataObject;
+                return touchFloorPlanObject;
             default:
                 return null;
 
@@ -568,25 +568,25 @@ public class DrawingModel extends Observable {
         switch (state) {
             case SELECTING_EDIT:
                 state = STATE.PRE_SELECTING_EDIT;
-                touchDataObject = null;
+                touchFloorPlanObject = null;
                 setChanged();
                 notifyObservers();
                 break;
             case SELECTING_INFO:
                 state = STATE.PRE_SELECTING_INFO;
-                touchDataObject = null;
+                touchFloorPlanObject = null;
                 setChanged();
                 notifyObservers();
                 break;
             case SELECTING_REMOVE:
                 state = STATE.PRE_SELECTING_REMOVE;
-                touchDataObject = null;
+                touchFloorPlanObject = null;
                 setChanged();
                 notifyObservers();
                 break;
             case MEASURE_REMOVE:
                 state = STATE.PRE_MEASURE_REMOVE;
-                touchDataObject = null;
+                touchFloorPlanObject = null;
                 setChanged();
                 notifyObservers();
                 break;
@@ -597,7 +597,7 @@ public class DrawingModel extends Observable {
 
     public void setIdle() {
         state = STATE.IDLE;
-        touchDataObject = null;
+        touchFloorPlanObject = null;
         setChanged();
         notifyObservers();
     }

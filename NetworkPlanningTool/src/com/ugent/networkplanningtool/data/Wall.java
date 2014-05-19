@@ -15,7 +15,7 @@ import com.ugent.networkplanningtool.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class Wall extends DataObject implements XMLTransformable {
+public class Wall extends FloorPlanObject implements XMLTransformable {
 
     private Point point2;
 
@@ -206,7 +206,7 @@ public class Wall extends DataObject implements XMLTransformable {
     }
 
     @Override
-    public DataObject getPartialDeepCopy() {
+    public FloorPlanObject getPartialDeepCopy() {
         return new Wall(wallType, thickness, material);
     }
 

@@ -10,7 +10,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
 import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
@@ -73,17 +73,17 @@ public class DataActivityView extends DataObjectView {
     }
 
     public void updateDrawingModel() {
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         ActivityType activityType = getSelectedConnectionType();
 
-        if (drawingModel.getTouchDataObject() != null
-                && drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObjectType.DATA_ACTIVITY)) {
-            DataActivity cp = (DataActivity) drawingModel.getTouchDataObject();
+        if (drawingModel.getTouchFloorPlanObject() != null
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.DATA_ACTIVITY)) {
+            DataActivity cp = (DataActivity) drawingModel.getTouchFloorPlanObject();
             cp.setType(activityType);
         } else {
             drawingModel.setPlaceMode(new DataActivity(activityType));
         }
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
     }
 
     private void loadData() {

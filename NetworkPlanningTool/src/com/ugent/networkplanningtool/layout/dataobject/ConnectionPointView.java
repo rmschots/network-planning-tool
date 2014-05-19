@@ -10,7 +10,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
-import com.ugent.networkplanningtool.data.DataObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
 import com.ugent.networkplanningtool.data.enums.ConnectionPointType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
@@ -73,17 +73,17 @@ public class ConnectionPointView extends DataObjectView {
     }
 
     public void updateDrawingModel() {
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         ConnectionPointType connectionPointType = getSelectedConnectionType();
 
-        if (drawingModel.getTouchDataObject() != null
-                && drawingModel.getTouchDataObject().DATA_OBJECT_TYPE.equals(DataObjectType.CONNECTION_POINT)) {
-            ConnectionPoint cp = (ConnectionPoint) drawingModel.getTouchDataObject();
+        if (drawingModel.getTouchFloorPlanObject() != null
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.CONNECTION_POINT)) {
+            ConnectionPoint cp = (ConnectionPoint) drawingModel.getTouchFloorPlanObject();
             cp.setType(connectionPointType);
         } else {
             drawingModel.setPlaceMode(new ConnectionPoint(connectionPointType));
         }
-        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchDataObject());
+        Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
     }
 
     private void loadData() {

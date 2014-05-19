@@ -7,14 +7,14 @@ import android.graphics.Point;
 import android.graphics.RadialGradient;
 
 import com.ugent.networkplanningtool.data.ApMeasurement;
-import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.XMLTransformable;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class CSVResult extends DataObject implements XMLTransformable {
+public class CSVResult extends FloorPlanObject implements XMLTransformable {
 
     private ApMeasurement apMeasurement;
     private final Integer level;
@@ -169,7 +169,7 @@ public class CSVResult extends DataObject implements XMLTransformable {
     }
 
     @Override
-    public DataObject getPartialDeepCopy() {
+    public FloorPlanObject getPartialDeepCopy() {
         return new CSVResult(point1, level, download, upload, pathloss, powerRX, powerTX, absorption, eField, pdLos, pdDif, roomNumber, drawingSize);
     }
 

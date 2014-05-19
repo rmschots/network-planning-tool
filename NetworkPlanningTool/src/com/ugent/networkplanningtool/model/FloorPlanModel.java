@@ -7,7 +7,7 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.DataObject;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.FloorPlan;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
@@ -24,12 +24,8 @@ import java.util.Stack;
 
 public class FloorPlanModel extends Observable {
 
-    private static FloorPlanModel model = new FloorPlanModel();
+    public static FloorPlanModel INSTANCE = new FloorPlanModel();
 
-    //	private List<Wall> wallList;
-//	private List<ConnectionPoint> connectionPointList;
-//	private List<AccessPoint> accessPointList;
-//	private List<DataActivity> dataActivityList;
     private FloorPlan floorPlan;
     private DeusResult deusResult;
     private List<ApMeasurement> apMeasurements;
@@ -50,10 +46,6 @@ public class FloorPlanModel extends Observable {
         undoStack = new Stack<FloorPlanModel>();
         redoStack = new Stack<FloorPlanModel>();
         apMeasurements = new ArrayList<ApMeasurement>();
-    }
-
-    public static FloorPlanModel getInstance() {
-        return model;
     }
 
     public FloorPlan getFloorPlan() {
@@ -108,38 +100,38 @@ public class FloorPlanModel extends Observable {
         }
     }
 
-    public static void resetModel() {
-        model.floorPlan = new FloorPlan();
-        model.undoStack = new Stack<FloorPlanModel>();
-        model.redoStack = new Stack<FloorPlanModel>();
-        model.deusResult = null;
-        model.apMeasurements = new ArrayList<ApMeasurement>();
-        model.setChanged();
-        model.notifyObservers();
+    public void resetModel() {
+        floorPlan = new FloorPlan();
+        undoStack = new Stack<FloorPlanModel>();
+        redoStack = new Stack<FloorPlanModel>();
+        deusResult = null;
+        apMeasurements = new ArrayList<ApMeasurement>();
+        setChanged();
+        notifyObservers();
     }
 
     public void setFloorPlan(FloorPlan floorPlan) {
         this.floorPlan = floorPlan;
         undoStack = new Stack<FloorPlanModel>();
         redoStack = new Stack<FloorPlanModel>();
-        model.setChanged();
-        model.notifyObservers();
+        setChanged();
+        notifyObservers();
     }
 
     public void setApMeasurements(List<ApMeasurement> measurements) {
         this.apMeasurements = measurements;
-        model.setChanged();
-        model.notifyObservers();
+        setChanged();
+        notifyObservers();
     }
 
-    public void addDataObject(DataObject touchDataObject) {
-        if (touchDataObject.isComplete()) {
-            if (!(touchDataObject instanceof ApMeasurement)) {
+    public void addFloorPlanObject(FloorPlanObject touchFloorPlanObject) {
+        if (touchFloorPlanObject.isComplete()) {
+            if (!(touchFloorPlanObject instanceof ApMeasurement)) {
                 pushStateToStack(undoStack);
                 redoStack.clear();
             }
-            if (touchDataObject instanceof Wall) {
-                Wall newWall = (Wall) touchDataObject;
+            if (touchFloorPlanObject instanceof Wall) {
+                Wall newWall = (Wall) touchFloorPlanObject;
                 Map<Double, Point> splitPoints = new HashMap<Double, Point>();
                 List<Wall> wallListCopy = new ArrayList<Wall>(getWallList());
                 for (Wall w : wallListCopy) {
@@ -230,7 +222,7 @@ public class FloorPlanModel extends Observable {
                 setChanged();
                 notifyObservers();
             } else {
-                addDataObjectToList(touchDataObject);
+                addFloorPlanObjectToList(touchFloorPlanObject);
                 setChanged();
                 notifyObservers();
             }
@@ -243,34 +235,34 @@ public class FloorPlanModel extends Observable {
     }
 
 
-    private void addDataObjectToList(DataObject dataObject) {
-        if (dataObject instanceof AccessPoint) {
-            getAccessPointList().add((AccessPoint) dataObject);
-        } else if (dataObject instanceof Wall) {
-            getWallList().add((Wall) dataObject);
-        } else if (dataObject instanceof ConnectionPoint) {
-            getConnectionPointList().add((ConnectionPoint) dataObject);
-        } else if (dataObject instanceof DataActivity) {
-            getDataActivityList().add((DataActivity) dataObject);
-        } else if (dataObject instanceof ApMeasurement) {
-            apMeasurements.add((ApMeasurement) dataObject);
+    private void addFloorPlanObjectToList(FloorPlanObject floorPlanObject) {
+        if (floorPlanObject instanceof AccessPoint) {
+            getAccessPointList().add((AccessPoint) floorPlanObject);
+        } else if (floorPlanObject instanceof Wall) {
+            getWallList().add((Wall) floorPlanObject);
+        } else if (floorPlanObject instanceof ConnectionPoint) {
+            getConnectionPointList().add((ConnectionPoint) floorPlanObject);
+        } else if (floorPlanObject instanceof DataActivity) {
+            getDataActivityList().add((DataActivity) floorPlanObject);
+        } else if (floorPlanObject instanceof ApMeasurement) {
+            apMeasurements.add((ApMeasurement) floorPlanObject);
         } else {
             Log.e("DEBUG", "Trying to add an invalid type of DataObject");
         }
     }
 
-    public void removeDataObject(DataObject touchDataObject) {
-        if (!(touchDataObject instanceof ApMeasurement)) {
+    public void removeFloorPlanObject(FloorPlanObject touchFloorPlanObject) {
+        if (!(touchFloorPlanObject instanceof ApMeasurement)) {
             pushStateToStack(undoStack);
             redoStack.clear();
         }
-        removeDataObjectFromList(touchDataObject);
+        removeFloorPlanObjectFromList(touchFloorPlanObject);
         setChanged();
         notifyObservers();
     }
 
-    private void removeDataObjectFromList(DataObject dataobject) {
-        Log.d("DEBUG", "removeDataObjectFromList");
+    private void removeFloorPlanObjectFromList(FloorPlanObject dataobject) {
+        Log.d("DEBUG", "removeFloorPlanObjectFromList");
         if (dataobject instanceof AccessPoint) {
             getAccessPointList().remove(dataobject);
         } else if (dataobject instanceof Wall) {
@@ -399,35 +391,35 @@ public class FloorPlanModel extends Observable {
 
     private void restoreStateFromStack(Stack<FloorPlanModel> stack) {
         FloorPlanModel fpm = stack.pop();
-        model.setWallList(fpm.getWallList());
-        model.setDataActivityList(fpm.getDataActivityList());
-        model.setConnectionPointList(fpm.getConnectionPointList());
-        model.setAccessPointList(fpm.getAccessPointList());
+        setWallList(fpm.getWallList());
+        setDataActivityList(fpm.getDataActivityList());
+        setConnectionPointList(fpm.getConnectionPointList());
+        setAccessPointList(fpm.getAccessPointList());
     }
 
-    public Couple<Double, DataObject> getClosestDataObjectToPoint(Point touchPoint, boolean select) {
+    public Couple<Double, FloorPlanObject> getClosestDataObjectToPoint(Point touchPoint, boolean select) {
         double minDist = Double.POSITIVE_INFINITY;
-        DataObject closest = null;
+        FloorPlanObject closest = null;
         if (select) {
             Couple<Double, Wall> couple = getClosestWallToPoint(touchPoint, false);
             minDist = couple == null ? Double.POSITIVE_INFINITY : couple.getA();
             Log.d("DEBUG", "mindist: " + minDist);
             closest = couple == null ? null : couple.getB();
-            for (DataObject dObj : getAccessPointList()) {
+            for (FloorPlanObject dObj : getAccessPointList()) {
                 double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
                 if (dist < minDist) {
                     minDist = dist;
                     closest = dObj;
                 }
             }
-            for (DataObject dObj : getDataActivityList()) {
+            for (FloorPlanObject dObj : getDataActivityList()) {
                 double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
                 if (dist < minDist) {
                     minDist = dist;
                     closest = dObj;
                 }
             }
-            for (DataObject dObj : getConnectionPointList()) {
+            for (FloorPlanObject dObj : getConnectionPointList()) {
                 double dist = Utils.pointToPointDistance(touchPoint, dObj.getPoint1());
                 if (dist < minDist) {
                     minDist = dist;
@@ -447,6 +439,6 @@ public class FloorPlanModel extends Observable {
         if (minDist == Double.POSITIVE_INFINITY) {
             return null;
         }
-        return new Couple<Double, DataObject>(minDist, closest);
+        return new Couple<Double, FloorPlanObject>(minDist, closest);
     }
 }

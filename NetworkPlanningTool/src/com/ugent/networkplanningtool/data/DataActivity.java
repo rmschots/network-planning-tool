@@ -14,7 +14,7 @@ import com.ugent.networkplanningtool.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class DataActivity extends DataObject implements XMLTransformable {
+public class DataActivity extends FloorPlanObject implements XMLTransformable {
 
     private ActivityType type;
 
@@ -105,7 +105,7 @@ public class DataActivity extends DataObject implements XMLTransformable {
     }
 
     @Override
-    public DataObject getPartialDeepCopy() {
+    public FloorPlanObject getPartialDeepCopy() {
         return new DataActivity(type);
     }
 

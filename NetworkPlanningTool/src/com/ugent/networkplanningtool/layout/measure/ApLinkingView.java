@@ -38,12 +38,12 @@ public class ApLinkingView extends LinearLayout {
 
         lv = (ListView) findViewById(R.id.apLinkingListView);
 
-        FloorPlanModel.getInstance().getAccessPointList();
+        FloorPlanModel.INSTANCE.getAccessPointList();
 
 
         rvList = new ArrayList<ApLinkingRowItem>();
 
-        List<AccessPoint> apList = FloorPlanModel.getInstance().getAccessPointList();
+        List<AccessPoint> apList = FloorPlanModel.INSTANCE.getAccessPointList();
 
         for (AccessPoint ap : apList) {
             List<RealAccessPoint> links = new ArrayList<RealAccessPoint>();
