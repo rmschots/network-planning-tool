@@ -374,9 +374,9 @@ public class DrawingModel extends Observable {
             state = STATE.PLACING;
             Point wallPoint = getActualTouchLocation(x, y);
             if (touchFloorPlanObject instanceof Wall) {
-                Point closestCorner = FloorPlanModel.INSTANCE.getClosestCornerToPoint(wallPoint);
-                if (closestCorner != null && Utils.pointToPointDistance(wallPoint, closestCorner) <= INTERVAL / 2) {
-                    wallPoint = closestCorner;
+                Couple<Double, Point> closestCouple = FloorPlanModel.INSTANCE.getClosestCornerToPoint(wallPoint);
+                if (closestCouple.getB() != null && closestCouple.getA() <= INTERVAL / 2) {
+                    wallPoint = closestCouple.getB();
                 } else {
                     switch (snapTo) {
                         case GRID:

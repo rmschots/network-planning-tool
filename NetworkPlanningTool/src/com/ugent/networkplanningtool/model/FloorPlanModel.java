@@ -330,7 +330,7 @@ public class FloorPlanModel extends Observable {
         }
     }
 
-    public Point getClosestCornerToPoint(Point p) {
+    public Couple<Double, Point> getClosestCornerToPoint(Point p) {
         Point closest = null;
         double distance = Double.POSITIVE_INFINITY;
         for (Wall w : getWallList()) {
@@ -345,7 +345,7 @@ public class FloorPlanModel extends Observable {
                 closest = w.getPoint2();
             }
         }
-        return closest;
+        return new Couple<Double, Point>(distance,closest);
     }
 
     public Couple<Double, Wall> getClosestWallToPoint(Point p, boolean upright) {
