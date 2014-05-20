@@ -28,12 +28,12 @@ import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.io.OnAsyncTaskCompleteListener;
 import com.ugent.networkplanningtool.io.wifi.MeasureParams;
 import com.ugent.networkplanningtool.io.wifi.MeasureSignalStrengthTask;
-import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
-import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
-import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
-import com.ugent.networkplanningtool.layout.dataobject.DataObjectView;
-import com.ugent.networkplanningtool.layout.dataobject.DataObjectView.ViewType;
-import com.ugent.networkplanningtool.layout.dataobject.WallView;
+import com.ugent.networkplanningtool.layout.design.AccessPointView;
+import com.ugent.networkplanningtool.layout.design.ConnectionPointView;
+import com.ugent.networkplanningtool.layout.design.DataActivityView;
+import com.ugent.networkplanningtool.layout.design.DataObjectView;
+import com.ugent.networkplanningtool.layout.design.DataObjectView.ViewType;
+import com.ugent.networkplanningtool.layout.design.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
 import com.ugent.networkplanningtool.model.FloorPlanModel;
@@ -81,7 +81,6 @@ public class DrawingView extends View implements Observer {
                     apMeasurement.drawOnCanvas(canvas, drawingModel, paint, false);
                 }
                 drawTouch(canvas);
-
             }else{
                 drawGrid(canvas);
                 drawWalls(canvas);

@@ -55,10 +55,10 @@ import com.ugent.networkplanningtool.io.xml.XMLIO;
 import com.ugent.networkplanningtool.layout.DrawingView;
 import com.ugent.networkplanningtool.layout.ImportImage;
 import com.ugent.networkplanningtool.layout.components.MyScrollBar;
-import com.ugent.networkplanningtool.layout.dataobject.AccessPointView;
-import com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView;
-import com.ugent.networkplanningtool.layout.dataobject.DataActivityView;
-import com.ugent.networkplanningtool.layout.dataobject.WallView;
+import com.ugent.networkplanningtool.layout.design.AccessPointView;
+import com.ugent.networkplanningtool.layout.design.ConnectionPointView;
+import com.ugent.networkplanningtool.layout.design.DataActivityView;
+import com.ugent.networkplanningtool.layout.design.WallView;
 import com.ugent.networkplanningtool.layout.measure.ApLinkingView;
 import com.ugent.networkplanningtool.layout.parameters.AlgorithmsView;
 import com.ugent.networkplanningtool.layout.parameters.GeneratedAPsView;
@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	
 	private static MainActivity mContext;
 	
-	private DrawingView designView;
+	private DrawingView drawingView;
 	private TextView locationText;
 	private TextView coordinatesText;
 
@@ -154,8 +154,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         mContext = this;
         setContentView(R.layout.activity_main);
         
-        designView = (DrawingView) findViewById(R.id.drawingView);
-        drawingModel = new DrawingModel(designView.getWidth(), designView.getHeight());
+        drawingView = (DrawingView) findViewById(R.id.drawingView);
+        drawingModel = new DrawingModel(drawingView.getWidth(), drawingView.getHeight());
         floorPlanModel = FloorPlanModel.INSTANCE;
 
         MyScrollBar hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
@@ -227,32 +227,32 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         
         
         zoomControls.setOnZoomInClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				drawingModel.zoomIn();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                drawingModel.zoomIn();
+            }
+        });
         zoomControls.setOnZoomOutClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				drawingModel.zoomOut();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                drawingModel.zoomOut();
+            }
+        });
         
         undoButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				floorPlanModel.undo();
-				Log.d("DEBUG","undo");
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                floorPlanModel.undo();
+                Log.d("DEBUG", "undo");
+            }
+        });
         redoButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				floorPlanModel.redo();
-				Log.d("DEBUG","redo");
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                floorPlanModel.redo();
+                Log.d("DEBUG", "redo");
+            }
+        });
         
         eraseAccessPointsButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -273,7 +273,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
             }
         });
         
-        designView.setModel(drawingModel);
+        drawingView.setModel(drawingModel);
         hScrollBar.setModel(drawingModel);
         vScrollBar.setModel(drawingModel);
         renderDataView.setDrawingModel(drawingModel);
@@ -282,7 +282,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         floorPlanModel.addObserver(this);
         floorPlanModel.addObserver(renderDataView);
 
-        designView.setOnTouchListener(this);
+        drawingView.setOnTouchListener(this);
         
         taskManager = new ASyncIOTaskManager(this);
     }
@@ -404,7 +404,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		if(v == designView){
+		if(v == drawingView){
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 	        case MotionEvent.ACTION_MOVE:
@@ -419,11 +419,12 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleOpenFileClick(View v){
-		FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
+		FileChooserDialog dialog = new FileChooserDialog(this);
 		dialog.addListener(new OnFileSelectedListener() {
 			
 			@Override
 			public void onFileSelected(Dialog source, File folder, String name) {
+                // can not be reached
 			}
 			
 			@Override
@@ -446,51 +447,36 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
             }
 		});
 		dialog.setFilter(".*xml|.*XML");
+        dialog.setShowOnlySelectable(true);
+        dialog.setTitle("Select file to open");
 		displayNewDialog(dialog);
 		
 	}
 	
 	public void handleSaveClick(View v){
-		final Dialog d = new Dialog(this);
-		d.setTitle(R.string.savePlanTitle);
-		d.setContentView(R.layout.save_name);
-		Button saveButton = (Button)d.findViewById(R.id.saveButton);
-		saveButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				d.dismiss();
-				String fnTemp = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
-				if(!fnTemp.toLowerCase().endsWith(".xml")){
-					fnTemp+=".xml";
-				}
-				final String fileName = fnTemp;
-				
-				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
-					File f = new File(Environment.getExternalStorageDirectory(),fileName);
-                    saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), f));
-                }else{
-					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
-					dialog.addListener(new OnFileSelectedListener() {
-						@Override
-						public void onFileSelected(Dialog source, File folder, String name) {}
-						
-						@Override
-						public void onFileSelected(Dialog source, File file) {
-							source.dismiss();
-							File f = new File(file, fileName);
-                            saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), f));
-                        }
-					});
-					dialog.setFolderMode(true);
-					dialog.setShowOnlySelectable(true);
-					dialog.setCanCreateFiles(true);
-					displayNewDialog(dialog);
-				}
-				
-				
-			}
-		});
-		displayNewDialog(d);
+        FileChooserDialog dialog = new FileChooserDialog(this);
+        dialog.addListener(new OnFileSelectedListener() {
+            @Override
+            public void onFileSelected(Dialog source, File folder, String name) {
+                source.dismiss();
+                if(!name.toLowerCase().endsWith(".xml")){
+                    name+=".xml";
+                }
+                File file = new File(folder,name);
+                saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), file));
+            }
+
+            @Override
+            public void onFileSelected(Dialog source, File file) {
+                source.dismiss();
+                saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), file));
+            }
+        });
+        dialog.setFilter(".*xml|.*XML");
+        dialog.setShowOnlySelectable(true);
+        dialog.setCanCreateFiles(true);
+        dialog.setTitle("Select file to save to or create a new one");
+        displayNewDialog(dialog);
 	}
 
     public void saveTofile(SaveXMLParams params) {
@@ -537,91 +523,66 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void handleScreenshot(View v){
-        designView.invalidate();
-        designView.destroyDrawingCache();
-        designView.setDrawingCacheEnabled(false);
-        designView.setDrawingCacheEnabled(true);
-        designView.buildDrawingCache();
-        final Bitmap bm = designView.getDrawingCache();
+        drawingView.invalidate();
+        drawingView.destroyDrawingCache();
+        drawingView.setDrawingCacheEnabled(false);
+        drawingView.setDrawingCacheEnabled(true);
+        drawingView.buildDrawingCache();
+        final Bitmap bm = drawingView.getDrawingCache();
 		
 		final Dialog d = new Dialog(this);
 		d.setTitle(R.string.saveScreenshot);
 		d.setContentView(R.layout.save_name);
         d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
-		Button saveButton = (Button)d.findViewById(R.id.saveButton);
-		saveButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				d.dismiss();
-				String fnTemp = ((EditText)d.findViewById(R.id.fileNameEditText)).getText().toString();
-				if(!fnTemp.toLowerCase().endsWith(".png")){
-					fnTemp+=".png";
-				}
-				final String fileName = fnTemp;
-				
-				if(((CheckBox)d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()){
-					
-					File f = new File(Environment.getExternalStorageDirectory(),fileName);
+        FileChooserDialog dialog = new FileChooserDialog(this);
+        dialog.addListener(new OnFileSelectedListener() {
+            @Override
+            public void onFileSelected(Dialog source, File folder, String name) {
+                source.dismiss();
+                if (!name.toLowerCase().endsWith(".png")) {
+                    name += ".png";
+                }
+                File file = new File(folder, name);
+                performTask(file);
+            }
 
-                    SaveImageParams params = new SaveImageParams(bm, f);
-                    taskManager.executeTask(new SaveImageTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
-                        @Override
-                        public void onTaskCompleteSuccess(File result) {
-                            Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
-                        }
+            @Override
+            public void onFileSelected(Dialog source, File file) {
+                source.dismiss();
+                performTask(file);
+            }
 
-                        @Override
-                        public void onTaskFailed(Exception cause) {
-                            Log.e(TAG, cause.getMessage(), cause);
-                            Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }, true);
-				}else{
-					FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
-					dialog.addListener(new OnFileSelectedListener() {
+            private void performTask(File file) {
+                SaveImageParams params = new SaveImageParams(bm, file);
+                taskManager.executeTask(new SaveImageTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
+                    @Override
+                    public void onTaskCompleteSuccess(File result) {
+                        Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
+                    }
 
-						@Override
-						public void onFileSelected(Dialog source, File folder, String name) {
-						}
-						
-						@Override
-						public void onFileSelected(Dialog source, File file) {
-							source.dismiss();
-							File f = new File(file, fileName);
-                            SaveImageParams params = new SaveImageParams(designView.getDrawingCache(), f);
-                            taskManager.executeTask(new SaveImageTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
-                                @Override
-                                public void onTaskCompleteSuccess(File result) {
-                                    Toast.makeText(MainActivity.this, "Saved successful to " + result.getName(), Toast.LENGTH_LONG).show();
-                                }
-
-                                @Override
-                                public void onTaskFailed(Exception cause) {
-                                    Log.e(TAG, cause.getMessage(), cause);
-                                    Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }, true);
-						}
-					});
-					dialog.setFolderMode(true);
-					dialog.setShowOnlySelectable(true);
-					dialog.setCanCreateFiles(true);
-					displayNewDialog(dialog);
-				}
-				
-				
-			}
-		});
-		displayNewDialog(d);
+                    @Override
+                    public void onTaskFailed(Exception cause) {
+                        Log.e(TAG, cause.getMessage(), cause);
+                        Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }, true);
+            }
+        });
+        dialog.setFilter(".*png|.*PNG");
+        dialog.setShowOnlySelectable(true);
+        dialog.setCanCreateFiles(true);
+        dialog.setTitle("Select file to save to or create a new one");
+        displayNewDialog(dialog);
 	}
 	
 	public void handleImportImage(View v){
-		FileChooserDialog dialog = new FileChooserDialog(this,Environment.getExternalStorageDirectory().getAbsolutePath());
+		FileChooserDialog dialog = new FileChooserDialog(this);
 		dialog.addListener(new OnFileSelectedListener() {
 			
 			@Override
 			public void onFileSelected(Dialog source, File folder, String name) {
+                // can not be reached
 			}
 			
 			@Override
@@ -999,47 +960,49 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     }
 
     public void handleSaveRawData(View view){
-        final Dialog d = new Dialog(this);
-        d.setTitle(R.string.saveDataTitle);
-        d.setContentView(R.layout.save_name);
-        Button saveButton = (Button) d.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(new OnClickListener() {
+        FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
+        dialog.addListener(new OnFileSelectedListener() {
             @Override
-            public void onClick(View v) {
-                d.dismiss();
-                String fnTemp = ((EditText) d.findViewById(R.id.fileNameEditText)).getText().toString();
-                if (!fnTemp.toLowerCase().endsWith(".xml")) {
-                    fnTemp += ".xml";
+            public void onFileSelected(Dialog source, File folder, String name) {
+                String extension = "";
+                switch (exportRawDataView.getExportType()){
+                    case NORMALIZED_PLAN:
+                    case OPTIMIZED_PLAN:
+                    case COVERAGE_DATA:
+                        extension = ".xml";
+                        break;
+                    case EXPOSURE_INFO:
+                    case BENCHMARK:
+                        extension = ".txt";
+                        break;
                 }
-                final String fileName = fnTemp;
-
-                if (((CheckBox) d.findViewById(R.id.saveInDefaultFolderCheckBox)).isChecked()) {
-                    File f = new File(Environment.getExternalStorageDirectory(), fileName);
-                    saveRawData(exportRawDataView.getExportType(), f);
-                } else {
-                    FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
-                    dialog.addListener(new OnFileSelectedListener() {
-                        @Override
-                        public void onFileSelected(Dialog source, File folder, String name) {
-                        }
-
-                        @Override
-                        public void onFileSelected(Dialog source, File file) {
-                            source.dismiss();
-                            File f = new File(file, fileName);
-                            saveRawData(exportRawDataView.getExportType(), f);
-                        }
-                    });
-                    dialog.setFolderMode(true);
-                    dialog.setShowOnlySelectable(true);
-                    dialog.setCanCreateFiles(true);
-                    displayNewDialog(dialog);
+                if (!name.toLowerCase().endsWith(extension)) {
+                    name += extension;
                 }
+                File file = new File(folder,name);
+                saveRawData(exportRawDataView.getExportType(), file);
+            }
 
-
+            @Override
+            public void onFileSelected(Dialog source, File file) {
+                source.dismiss();
+                saveRawData(exportRawDataView.getExportType(), file);
             }
         });
-        displayNewDialog(d);
+        switch (exportRawDataView.getExportType()){
+            case NORMALIZED_PLAN:
+            case OPTIMIZED_PLAN:
+            case COVERAGE_DATA:
+                dialog.setFilter(".*xml|.*XML");
+                break;
+            case EXPOSURE_INFO:
+            case BENCHMARK:
+                dialog.setFilter(".*txt|.*TXT");
+                break;
+        }
+        dialog.setShowOnlySelectable(true);
+        dialog.setCanCreateFiles(true);
+        dialog.setTitle("Select file to save to or create a new one");
     }
 
     private void saveRawData(ExportRawDataType exportType, File f) {

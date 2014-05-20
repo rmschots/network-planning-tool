@@ -1,4 +1,4 @@
-package com.ugent.networkplanningtool.layout.dataobject;
+package com.ugent.networkplanningtool.layout.design;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -50,8 +50,6 @@ public class WallView extends DataObjectView {
         tag = getTag();
         init();
         initComponents();
-
-
     }
 
     private void init() {

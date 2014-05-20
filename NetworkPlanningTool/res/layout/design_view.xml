@@ -113,49 +113,49 @@
         android:layout_height="wrap_content"
         android:measureAllChildren="false" >
 
-        <com.ugent.networkplanningtool.layout.dataobject.WallView
+        <com.ugent.networkplanningtool.layout.design.WallView
             android:id="@+id/wallViewWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="@string/wallText"
             app:draw="@string/drawDataObjectText" >
 
-        </com.ugent.networkplanningtool.layout.dataobject.WallView>
+        </com.ugent.networkplanningtool.layout.design.WallView>
 
-        <com.ugent.networkplanningtool.layout.dataobject.WallView
+        <com.ugent.networkplanningtool.layout.design.WallView
             android:id="@+id/wallViewDoor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="@string/doorText"
             app:draw="@string/drawDataObjectText" >
 
-        </com.ugent.networkplanningtool.layout.dataobject.WallView>
+        </com.ugent.networkplanningtool.layout.design.WallView>
 
-        <com.ugent.networkplanningtool.layout.dataobject.WallView
+        <com.ugent.networkplanningtool.layout.design.WallView
             android:id="@+id/wallViewWindow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="@string/windowText"
             app:draw="@string/drawDataObjectText" >
 
-        </com.ugent.networkplanningtool.layout.dataobject.WallView>
+        </com.ugent.networkplanningtool.layout.design.WallView>
 
-        <com.ugent.networkplanningtool.layout.dataobject.AccessPointView
+        <com.ugent.networkplanningtool.layout.design.AccessPointView
             android:id="@+id/accessPointView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="@string/accessPointText"
             app:draw="@string/drawDataObjectText" >
-        </com.ugent.networkplanningtool.layout.dataobject.AccessPointView>
+        </com.ugent.networkplanningtool.layout.design.AccessPointView>
 
-        <com.ugent.networkplanningtool.layout.dataobject.DataActivityView
+        <com.ugent.networkplanningtool.layout.design.DataActivityView
             android:id="@+id/dataActivityView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="@string/dataActivityText"
             app:draw="@string/drawDataObjectText" />
 
-        <com.ugent.networkplanningtool.layout.dataobject.ConnectionPointView
+        <com.ugent.networkplanningtool.layout.design.ConnectionPointView
             android:id="@+id/connectionPointView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

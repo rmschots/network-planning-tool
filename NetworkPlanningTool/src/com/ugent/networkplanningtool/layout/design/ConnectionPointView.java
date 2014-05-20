@@ -1,4 +1,4 @@
-package com.ugent.networkplanningtool.layout.dataobject;
+package com.ugent.networkplanningtool.layout.design;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -42,7 +42,7 @@ public class DrawingModel extends Observable {
         IDLE, PRE_PLACE, PLACING, SELECTING_INFO, PRE_SELECTING_INFO, SELECTING_EDIT, PRE_SELECTING_EDIT, SELECTING_REMOVE, PRE_SELECTING_REMOVE, PRE_MEASURE_REMOVE, MEASURE_REMOVE
     }
 
-    // ground plan dimensions (in units)
+
     public static final int INTERVAL = 50;
     // maximum allowed zoom (in units)
     private static final int maxZoomIn = 200;
@@ -140,9 +140,6 @@ public class DrawingModel extends Observable {
     }
 
     public boolean isDrawResult() {
-        if (drawResult) {
-            System.out.println("LOLZ " + FloorPlanModel.INSTANCE.getDeusResult());
-        }
         return drawResult;
     }
 
