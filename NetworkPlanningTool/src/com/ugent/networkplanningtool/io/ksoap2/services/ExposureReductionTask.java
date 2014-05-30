@@ -52,7 +52,7 @@ public class ExposureReductionTask extends AbstractASyncTask<DeusRequest, DeusRe
         envelope.setOutputSoapObject(request);  //prepare request
         MarshalDouble md = new MarshalDouble();
         md.register(envelope);
-        HttpTransportSE httpTransport = new HttpTransportSE(URL);
+        HttpTransportSE httpTransport = new HttpTransportSE(URL,600000);
         httpTransport.debug = true;  //this is optional, use it if you don't want to use a packet sniffer to check what the sent message was (httpTransport.requestDump)
 
         ArrayList<HeaderProperty> headerPropertyArrayList = new ArrayList<HeaderProperty>();

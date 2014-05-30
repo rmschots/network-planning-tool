@@ -117,8 +117,8 @@ public class KSoap2Parser {
             double y = Double.parseDouble(attrs[1]);
             int height = Integer.parseInt(attrs[2]);
             RadioType type = RadioType.getRadioTypeByText(radioAttrs[0]);
-            int gain = Integer.parseInt(radioAttrs[1]);
-            int power = Integer.parseInt(radioAttrs[2]);
+            double gain = Double.parseDouble(radioAttrs[1]);
+            double power = Double.parseDouble(radioAttrs[2]);
             RadioModel model = RadioModel.getRadioModelByText(radioAttrs[3]);
             FrequencyBand frequency = FrequencyBand
                     .getFrequencyBandByText(radioAttrs[4]);

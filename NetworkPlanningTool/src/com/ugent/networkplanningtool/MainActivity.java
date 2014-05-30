@@ -136,6 +136,8 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private ExportRawDataView exportRawDataView;
     private MeasureView measureView;
 
+    private boolean canMeasure = false;
+
     private ZoomControls zoomControls;
 	private ImageButton undoButton;
 	private ImageButton redoButton;
@@ -354,6 +356,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 	}
 	
 	public void onResultsFlipClick(View v) {
+        if(!canMeasure&& v.equals(findViewById(R.id.measureButton))){
+            Toast.makeText(MainActivity.this, "Can only perform measurements for predicted coverage", Toast.LENGTH_LONG).show();
+            v = findViewById(R.id.renderDataButton);
+        }
 		resultsActive.setEnabled(true);
 		resultsActive = v;
         View flippedView = onFlipClick(v, resultsFlip);
@@ -636,54 +642,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
+                canMeasure = true;
                 floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
-            }
-
-            @Override
-            public void onTaskFailed(Exception cause) {
-                Log.e(TAG, cause.getMessage(), cause);
-                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }, false);
-        /*File file = new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml");
-        taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
-            @Override
-            public void onTaskCompleteSuccess(List<ApMeasurement> result) {
-                floorPlanModel.setApMeasurements(result);
-                Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
-                predictRec(1.303715,result);
-            }
-
-            @Override
-            public void onTaskFailed(Exception cause) {
-                Log.e(TAG, cause.getMessage(), cause);
-                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });*/
-    }
-    private double amount;
-    private void predictRec(final double amount, final List<ApMeasurement> apMeasurements){
-        this.amount = amount;
-        DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.PREDICT_COVERAGE);
-        taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
-            @Override
-            public void onTaskCompleteSuccess(DeusResult result) {
-                if(amount >= 1.303721){
-                    floorPlanModel.setDeusResult(result);
-                    onResultsFlipClick(findViewById(R.id.renderDataButton));
-                    onMainFlipClick(resultsButton);
-                }else{
-                    double totalErr = 0;
-                    for(ApMeasurement apMeasurement : apMeasurements){
-                        CSVResult csvResult = Utils.getResultAt(apMeasurement.getPoint1(),result.getCsv());
-                        totalErr+=(csvResult.getPowerRX()-apMeasurement.getSignalStrength());
-                    }
-                    System.out.println("amount: "+amount+" totalErr: "+Math.abs(totalErr));
-                    predictRec(amount+0.000001,apMeasurements);
-                }
-
             }
 
             @Override
@@ -699,6 +661,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new OptimalPlacementTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
+                canMeasure = false;
                 floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
@@ -717,6 +680,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new ExposureReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
+                canMeasure = false;
                 floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
@@ -735,6 +699,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new NetworkReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
+                canMeasure = false;
                 floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
@@ -753,6 +718,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new EstimateSARTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
             @Override
             public void onTaskCompleteSuccess(DeusResult result) {
+                canMeasure = false;
                 floorPlanModel.setDeusResult(result);
                 onResultsFlipClick(findViewById(R.id.renderDataButton));
                 onMainFlipClick(resultsButton);
@@ -885,6 +851,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     }
 
     public void onSaveMeasurementsClick(final View v) {
+        List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
+        saveTofile(new SaveXMLParams(tmp, "measurements", new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml")));
+    }
+
+    public void oneApplyMeasurementsClick(final View v) {
         List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
         saveTofile(new SaveXMLParams(tmp, "measurements", new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml")));
     }
