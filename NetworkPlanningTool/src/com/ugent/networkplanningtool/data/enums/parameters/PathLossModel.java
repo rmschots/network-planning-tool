@@ -14,7 +14,7 @@ public enum PathLossModel {
     TGN(MainActivity.getInstance().getResources().getString(R.string.tgnText), "tgn"),
     FREE_SPACE(MainActivity.getInstance().getResources().getString(R.string.freespaceText), "freespace"),
     MULTIWALL(MainActivity.getInstance().getResources().getString(R.string.multiwallText), "multiwall"),
-    ONESLOPE(MainActivity.getInstance().getResources().getString(R.string.oneslopeText), "oneslope-63-1-2");
+    ONESLOPE(MainActivity.getInstance().getResources().getString(R.string.oneslopeText), "oneslope-40-1-2");
 
     private String name;
     private String value;
