@@ -771,16 +771,19 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
             @Override
             public void onTaskCompleteSuccess(List<ApMeasurement> result) {
-                /*List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
+                floorPlanModel.setApMeasurements(result);
+                List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
+
                 for(ApMeasurement apMeasurement : result){
                     CSVResult closestResult = Utils.getResultAt(apMeasurement.getPoint1(), floorPlanModel.getDeusResult().getCsv());
                     closestResult.setApMeasurement(apMeasurement);
                     compareList.add(closestResult);
                 }
-                // saveStatsPerRoom(compareList);
+                //saveStatsPerRoom(compareList);
+                //saveStats(compareList);
 
                 SaveXMLParams saveXMLParams = new SaveXMLParams(compareList,"comparelist", new File(Environment.getExternalStorageDirectory(), "compare_"+algorithmsView.getPathLossModel().getValue()+".xml"));
-                saveTofile(saveXMLParams);*/
+                saveTofile(saveXMLParams);
                 floorPlanModel.setApMeasurements(result);
                 Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
             }
@@ -820,7 +823,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                     double shift = total/items.size();
                     total = 0;
                     for(CSVResult csvResult : compareList){
-                        total+=Math.abs(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
+                        total+=(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift)*(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
                     }
                     fw.print(total/compareList.size()+";");
                 }
@@ -866,11 +869,10 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                         System.out.println("nr: "+csvResult.getDrawingSize());
                         total+=csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX();
                     }
-                    System.out.println("++++++++++++++++++++");
                     double shift = total/items.size();
                     total = 0;
                     for(CSVResult csvResult : compareList){
-                        total+=Math.abs(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
+                        total+=(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift)*(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
                     }
                     fw.print(total/compareList.size()+";");
                 }
@@ -1003,6 +1005,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         dialog.setShowOnlySelectable(true);
         dialog.setCanCreateFiles(true);
         dialog.setTitle("Select file to save to or create a new one");
+        displayNewDialog(dialog);
     }
 
     private void saveRawData(ExportRawDataType exportType, File f) {
