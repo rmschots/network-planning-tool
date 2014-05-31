@@ -13,13 +13,31 @@ import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+/**
+ * The drawing area used to scale an imported image.
+ */
 public class ScaleImageView extends ImageView{
-	
-	public static enum Mode{
-		PRE_MOVE,
-		DRAG,
-		ZOOM,
-		SELECT
+
+    /**
+     * The mode the area is in.
+     */
+    public static enum Mode{
+        /**
+         * before dragging or zooming
+         */
+        PRE_MOVE,
+        /**
+         * drag mode
+         */
+        DRAG,
+        /**
+         * zoom mode
+         */
+        ZOOM,
+        /**
+         * selecting mode
+         */
+        SELECT
 	}
 	
 	private Paint paint = new Paint();
@@ -43,12 +61,21 @@ public class ScaleImageView extends ImageView{
 	public ScaleImageView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
-	
-	public void setBitmap(Bitmap bm){
-		setImageBitmap(bm);
-	}
 
-	@Override
+    /**
+     * Sets the background image bitmap.
+     *
+     * @param bm the background image bitmap
+     */
+    public void setBitmap(Bitmap bm){
+		setImageBitmap(bm);
+    }
+
+    /**
+     * Draws the area for scaling.
+     * @param canvas the canvas to draw on
+     */
+    @Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		if(coord1 != null){
@@ -65,10 +92,15 @@ public class ScaleImageView extends ImageView{
 				canvas.drawLine(x1, y1, x2, y2, paint);
 			}
 		}
-		
-	}
-	
-	@Override
+
+    }
+
+    /**
+     * Processes user input for zooming, dragging and selecting
+     * @param event the touch event
+     * @return whether to consume the event
+     */
+    @Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if(mode == Mode.SELECT){
 			matrix.getValues(values);
@@ -121,39 +153,67 @@ public class ScaleImageView extends ImageView{
 			setImageMatrix(matrix);
 		}
 		return true;
-	}
-	
-	private float spacing(MotionEvent event) {
+    }
+
+    /**
+     * Calculates the spacing between touching fingers to zoom.
+     * @param event the touching event
+     * @return the spacing between touching fingers to zoom
+     */
+    private float spacing(MotionEvent event) {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
 		return FloatMath.sqrt(x * x + y * y);
-	}
-	
-	private void midPoint(PointF point, MotionEvent event) {
+    }
+
+    /**
+     * Creates a point in the middle between the screen-touching fingers.
+     * @param point the point to store the middle location in
+     * @param event the touching event
+     */
+    private void midPoint(PointF point, MotionEvent event) {
 		float x = event.getX(0) + event.getX(1);
 		float y = event.getY(0) + event.getY(1);
 		point.set(x / 2, y / 2);
-	}
+    }
 
-	public Point getCoord1() {
+    /**
+     * Returns the first coordinate for scaling.
+     * @return the first coordinate for scaling
+     */
+    public Point getCoord1() {
 		return coord1;
-	}
+    }
 
-	public Point getCoord2() {
+    /**
+     * Returns the second coordinate for scaling.
+     * @return the second coordinate for scaling
+     */
+    public Point getCoord2() {
 		return coord2;
-	}
-	
-	public void zoomIn(){
+    }
+
+    /**
+     * Zooms in on the background image.
+     */
+    public void zoomIn(){
 		matrix.postScale(2, 2, getWidth()/2, getHeight()/2);
 		setImageMatrix(matrix);
-	}
-	
-	public void zoomOut(){
+    }
+
+    /**
+     * Zooms out on the background image.
+     */
+    public void zoomOut(){
 		matrix.postScale(0.5f, 0.5f, getWidth()/2, getHeight()/2);
 		setImageMatrix(matrix);
-	}
-	
-	public void setMode(Mode mode){
+    }
+
+    /**
+     * Sets the current mode of the area.
+     * @param mode he current mode of the area
+     */
+    public void setMode(Mode mode){
 		this.mode = mode;
 	}
 }

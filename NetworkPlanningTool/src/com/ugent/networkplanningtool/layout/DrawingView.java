@@ -43,6 +43,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * The view (and controller) containing the drawing area.
+ */
 public class DrawingView extends View implements Observer {
 
     private static final String TAG = DrawingView.class.getName();
@@ -51,12 +54,22 @@ public class DrawingView extends View implements Observer {
 
     private DrawingModel drawingModel = null;
 
+    /**
+     * The default constructor
+     *
+     * @param context context of parent view
+     * @param attrs   AttributeSet
+     */
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         FloorPlanModel.INSTANCE.addObserver(this);
         setDrawingCacheEnabled(true);
     }
 
+    /**
+     * Draws the drawing area and everying on it.
+     * @param canvas the canvas to draw on
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         if (drawingModel != null) {
@@ -93,15 +106,10 @@ public class DrawingView extends View implements Observer {
         super.onDraw(canvas);
     }
 
-//	private void drawResults(Canvas canvas) {
-//		OptimizeResultModel orm = OptimizeResultModel.getInstance();
-//		if(!orm.getResultList().isEmpty()){
-//			for(CSVResult or : orm.getResultList()){
-//				or.drawOnCanvas(canvas, drawingModel, paint, false);
-//			}
-//		}
-//	}
-
+    /**
+     * Draws the background
+     * @param canvas the canvas to draw on
+     */
     private void drawBackground(Canvas canvas) {
         if (drawingModel.getBackgroundImage() != null) {
             Bitmap bgImg = drawingModel.getBackgroundImage();
@@ -120,6 +128,10 @@ public class DrawingView extends View implements Observer {
         }
     }
 
+    /**
+     * Draws the access points
+     * @param canvas the canvas to draw on
+     */
     private void drawAccessPoints(Canvas canvas) {
         List<AccessPoint> accessPointList = FloorPlanModel.INSTANCE.getAccessPointList();
         for (AccessPoint ap : accessPointList) {
@@ -127,6 +139,10 @@ public class DrawingView extends View implements Observer {
         }
     }
 
+    /**
+     * Draws the connection points
+     * @param canvas the canvas to draw on
+     */
     private void drawConnectionPoints(Canvas canvas) {
         List<ConnectionPoint> connectionPointList = FloorPlanModel.INSTANCE.getConnectionPointList();
         for (ConnectionPoint cp : connectionPointList) {
@@ -135,6 +151,10 @@ public class DrawingView extends View implements Observer {
 
     }
 
+    /**
+     * Draws the activities
+     * @param canvas the canvas to draw on
+     */
     private void drawActivities(Canvas canvas) {
         List<DataActivity> activityList = FloorPlanModel.INSTANCE.getDataActivityList();
         for (DataActivity cp : activityList) {
@@ -142,6 +162,10 @@ public class DrawingView extends View implements Observer {
         }
     }
 
+    /**
+     * Draws the Wall objects
+     * @param canvas the canvas to draw on
+     */
     private void drawWalls(Canvas canvas) {
         List<Wall> wallList = FloorPlanModel.INSTANCE.getWallList();
         for (Wall w : wallList) {
@@ -149,6 +173,10 @@ public class DrawingView extends View implements Observer {
         }
     }
 
+    /**
+     * Draws the touched FloorPlanObject
+     * @param canvas the canvas to draw on
+     */
     private void drawTouch(Canvas canvas) {
         FloorPlanObject tw = drawingModel.getTouchFloorPlanObject();
         if (tw != null && tw.canDraw()) {
@@ -156,6 +184,10 @@ public class DrawingView extends View implements Observer {
         }
     }
 
+    /**
+     * Draws the grid
+     * @param canvas the canvas to draw on
+     */
     private void drawGrid(Canvas canvas) {
         paint.setColor(Color.BLACK);
 
@@ -175,6 +207,11 @@ public class DrawingView extends View implements Observer {
     }
 
 
+    /**
+     * Contains all reactions for when the user touches the screen.
+     * @param event the MotionEvent triggering this method
+     * @return whether to consume the event
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         System.out.println(drawingModel.getState());
@@ -385,28 +422,39 @@ public class DrawingView extends View implements Observer {
         return true;
     }
 
+    /**
+     * Updates this view. Triggered by a model.
+     * @param observable the observable that triggered the update
+     * @param data the data that has been updated
+     */
     @Override
     public void update(Observable observable, Object data) {
         invalidate();
     }
 
     /**
-     * @return the model
+     * Returns the drawing model
+     * @return the drawing model
      */
     public DrawingModel getModel() {
         return drawingModel;
     }
 
     /**
-     * @param drawingModel the model to set
+     * Sets the drawing model
+     * @param drawingModel the drawing model
      */
     public void setModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
         drawingModel.addObserver(this);
     }
 
-    /* (non-Javadoc)
-     * @see android.view.View#onSizeChanged(int, int, int, int)
+    /**
+     * Updates the drawing model and calls superclass
+     * @param w then new width
+     * @param h the new height
+     * @param oldw the old width
+     * @param oldh the old height
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {

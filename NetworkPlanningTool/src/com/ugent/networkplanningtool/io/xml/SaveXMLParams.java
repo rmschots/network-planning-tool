@@ -5,9 +5,6 @@ import com.ugent.networkplanningtool.data.XMLTransformable;
 import java.io.File;
 import java.util.List;
 
-/**
- * Created by Roel on 11/03/14.
- */
 public class SaveXMLParams {
     private final XMLTransformable xmlTransformable;
     private final List<XMLTransformable> xmlTransformableList;

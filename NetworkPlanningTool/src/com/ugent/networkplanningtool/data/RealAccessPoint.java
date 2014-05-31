@@ -2,12 +2,9 @@ package com.ugent.networkplanningtool.data;
 
 import com.ugent.networkplanningtool.data.enums.Frequency;
 
-/**
- * Created by Roel on 15/03/14.
- */
 public class RealAccessPoint {
 
-    private static RealAccessPoint emptyDummy = new RealAccessPoint("","","",null,0);
+    private static RealAccessPoint emptyDummy = new RealAccessPoint("", "", "", null, 0);
 
     private String ssid;
     private String BSSID;
@@ -93,7 +90,7 @@ public class RealAccessPoint {
 
     @Override
     public String toString() {
-        if(this == emptyDummy){
+        if (this == emptyDummy) {
             return "";
         }
         return ssid + ", " + signalStrength + " dBm";

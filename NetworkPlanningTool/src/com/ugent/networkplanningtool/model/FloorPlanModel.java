@@ -22,8 +22,14 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Stack;
 
+/**
+ * Model for the floor plan
+ */
 public class FloorPlanModel extends Observable {
 
+    /**
+     * The instance used in the application
+     */
     public static FloorPlanModel INSTANCE = new FloorPlanModel();
 
     private FloorPlan floorPlan;
@@ -34,6 +40,14 @@ public class FloorPlanModel extends Observable {
     private Stack<FloorPlan> undoStack;
     private Stack<FloorPlan> redoStack;
 
+    /**
+     * Creates a new instance with given values
+     *
+     * @param wallList            the list of Walls
+     * @param connectionPointList the list of ConnectionPoints
+     * @param accessPointList     the list of AccessPoints
+     * @param dataActivityList    the list of DataActivities
+     */
     private FloorPlanModel(ArrayList<Wall> wallList, ArrayList<ConnectionPoint> connectionPointList, ArrayList<AccessPoint> accessPointList, ArrayList<DataActivity> dataActivityList) {
         floorPlan = new FloorPlan(wallList, connectionPointList, accessPointList, dataActivityList);
         undoStack = new Stack<FloorPlan>();
@@ -41,6 +55,9 @@ public class FloorPlanModel extends Observable {
         apMeasurements = new ArrayList<ApMeasurement>();
     }
 
+    /**
+     * Creates a new instance with default values
+     */
     private FloorPlanModel() {
         floorPlan = new FloorPlan();
         undoStack = new Stack<FloorPlan>();
@@ -48,50 +65,98 @@ public class FloorPlanModel extends Observable {
         apMeasurements = new ArrayList<ApMeasurement>();
     }
 
+    /**
+     * Getter for the floor plan
+     * @return the floor plan
+     */
     public FloorPlan getFloorPlan() {
         return floorPlan;
     }
 
+    /**
+     * Getter for the Wall list
+     * @return the Wall list
+     */
     public List<Wall> getWallList() {
         return floorPlan.getWallList();
     }
 
+    /**
+     * Getter for the ConnectionPoint list
+     * @return the ConnectionPoint list
+     */
     public List<ConnectionPoint> getConnectionPointList() {
         return floorPlan.getConnectionPointList();
     }
 
+    /**
+     * Getter for the AccessPoint list
+     * @return the AccessPoint list
+     */
     public List<AccessPoint> getAccessPointList() {
         return floorPlan.getAccessPointList();
     }
 
+    /**
+     * Getter for the DataActivity list
+     * @return the DataActivity list
+     */
     public List<DataActivity> getDataActivityList() {
         return floorPlan.getDataActivityList();
     }
 
+    /**
+     * Getter for the results of a model
+     * @return the results of a model
+     */
     public DeusResult getDeusResult() {
         return deusResult;
     }
 
+    /**
+     * Sets the Wall list
+     * @param wallList the Wall list to be set
+     */
     private void setWallList(List<Wall> wallList) {
         floorPlan.setWallList(wallList);
     }
 
+    /**
+     * Gets the user measurements
+     * @return the user measurements
+     */
     public List<ApMeasurement> getApMeasurements() {
         return apMeasurements;
     }
 
+    /**
+     * Sets the ConnectionPoint list
+     * @param connectionPointList the ConnectionPoint list
+     */
     private void setConnectionPointList(List<ConnectionPoint> connectionPointList) {
         floorPlan.setConnectionPointList(connectionPointList);
     }
 
+    /**
+     * Sets the AccessPoint list
+     * @param accessPointList the AccessPoint list
+     */
     private void setAccessPointList(List<AccessPoint> accessPointList) {
         floorPlan.setAccessPointList(accessPointList);
     }
 
+    /**
+     * Sets the DataActivity list
+     * @param dataActivityList
+     */
     private void setDataActivityList(List<DataActivity> dataActivityList) {
         floorPlan.setDataActivityList(dataActivityList);
     }
 
+    /**
+     * Sets the results of a model
+     * @param deusResult the results of a model
+     */
     public void setDeusResult(DeusResult deusResult) {
         if (this.deusResult != deusResult) {
             this.deusResult = deusResult;
@@ -100,12 +165,19 @@ public class FloorPlanModel extends Observable {
         }
     }
 
+    /**
+     * Shifts the results of the model
+     * @param shift the shift to be applied on the results
+     */
     public void shiftDeusResult(double shift) {
         getDeusResult().shiftResults(shift);
         setChanged();
         notifyObservers();
     }
 
+    /**
+     * Resets the model to default values
+     */
     public void resetModel() {
         floorPlan = new FloorPlan();
         undoStack = new Stack<FloorPlan>();
@@ -116,6 +188,10 @@ public class FloorPlanModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets the floor plan
+     * @param floorPlan the floor plan
+     */
     public void setFloorPlan(FloorPlan floorPlan) {
         this.floorPlan = floorPlan;
         undoStack = new Stack<FloorPlan>();
@@ -124,12 +200,20 @@ public class FloorPlanModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets the user measurements
+     * @param measurements the user measurements
+     */
     public void setApMeasurements(List<ApMeasurement> measurements) {
         this.apMeasurements = measurements;
         setChanged();
         notifyObservers();
     }
 
+    /**
+     * Adds a FloorPlanObject to the floor plan
+     * @param touchFloorPlanObject the FloorPlanObject to be added
+     */
     public void addFloorPlanObject(FloorPlanObject touchFloorPlanObject) {
         if (touchFloorPlanObject.isComplete()) {
             if (!(touchFloorPlanObject instanceof ApMeasurement)) {
@@ -240,7 +324,10 @@ public class FloorPlanModel extends Observable {
         }
     }
 
-
+    /**
+     * Adds a FloorPlanObject to the appropriate list
+     * @param floorPlanObject the FloorPlanObject to add
+     */
     private void addFloorPlanObjectToList(FloorPlanObject floorPlanObject) {
         if (floorPlanObject instanceof AccessPoint) {
             getAccessPointList().add((AccessPoint) floorPlanObject);
@@ -257,6 +344,10 @@ public class FloorPlanModel extends Observable {
         }
     }
 
+    /**
+     * Removes a floorPlanObject
+     * @param touchFloorPlanObject the FloorPlanObject to be removed
+     */
     public void removeFloorPlanObject(FloorPlanObject touchFloorPlanObject) {
         if (!(touchFloorPlanObject instanceof ApMeasurement)) {
             pushStateToStack(undoStack);
@@ -267,6 +358,10 @@ public class FloorPlanModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Removes a FloorPlanObject from the appropriate list
+     * @param dataobject the FloorPlanObject to remove
+     */
     private void removeFloorPlanObjectFromList(FloorPlanObject dataobject) {
         Log.d("DEBUG", "removeFloorPlanObjectFromList");
         if (dataobject instanceof AccessPoint) {
@@ -284,6 +379,9 @@ public class FloorPlanModel extends Observable {
         }
     }
 
+    /**
+     * Undo operation
+     */
     public void undo() {
         pushStateToStack(redoStack);
         restoreStateFromStack(undoStack);
@@ -291,6 +389,9 @@ public class FloorPlanModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Redo operation
+     */
     public void redo() {
         pushStateToStack(undoStack);
         restoreStateFromStack(redoStack);
@@ -298,14 +399,25 @@ public class FloorPlanModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Returns whether an undo operation is possible
+     * @return whether an undo operation is possible
+     */
     public boolean canUndo() {
         return !undoStack.isEmpty();
     }
 
+    /**
+     * Returns whether a redo operation is possible
+     * @return whether a redo operation is possible
+     */
     public boolean canRedo() {
         return !redoStack.isEmpty();
     }
 
+    /**
+     * Deletes all access points
+     */
     public void deleteAllAccessPoints() {
         if (!getAccessPointList().isEmpty()) {
             pushStateToStack(undoStack);
@@ -316,6 +428,9 @@ public class FloorPlanModel extends Observable {
         }
     }
 
+    /**
+     * Deletes all data activities
+     */
     public void deleteAllDataActivities() {
         if (!getDataActivityList().isEmpty()) {
             pushStateToStack(undoStack);
@@ -326,6 +441,9 @@ public class FloorPlanModel extends Observable {
         }
     }
 
+    /**
+     * Deletes all connection points
+     */
     public void deleteAllConnectionPoints() {
         if (!getConnectionPointList().isEmpty()) {
             pushStateToStack(undoStack);
@@ -336,6 +454,11 @@ public class FloorPlanModel extends Observable {
         }
     }
 
+    /**
+     * Returns the distance and location of the closest edge of a Wall to the given point
+     * @param p the point
+     * @return the distance and location of the closest edge of a Wall to the given point
+     */
     public Couple<Double, Point> getClosestCornerToPoint(Point p) {
         Point closest = null;
         double distance = Double.POSITIVE_INFINITY;
@@ -351,9 +474,15 @@ public class FloorPlanModel extends Observable {
                 closest = w.getPoint2();
             }
         }
-        return new Couple<Double, Point>(distance,closest);
+        return new Couple<Double, Point>(distance, closest);
     }
 
+    /**
+     * Returns the distance and location of the closest Wall to the given point
+     * @param p the point
+     * @param upright whether only upright locations to the Walls need to be considered
+     * @return the distance and location of the closest Wall to the given point
+     */
     public Couple<Double, Wall> getClosestWallToPoint(Point p, boolean upright) {
         Wall closest = null;
         double distance = Double.POSITIVE_INFINITY;
@@ -370,6 +499,10 @@ public class FloorPlanModel extends Observable {
         return new Couple<Double, Wall>(distance, closest);
     }
 
+    /**
+     * Pushes the current state to the stack
+     * @param stack the stack to push the current state to
+     */
     private void pushStateToStack(Stack<FloorPlan> stack) {
         ArrayList<Wall> wallsClone = new ArrayList<Wall>();
         for (Wall w : getWallList()) {
@@ -395,6 +528,10 @@ public class FloorPlanModel extends Observable {
         stack.push(fpm);
     }
 
+    /**
+     * Restore the most recent state from the given stack
+     * @param stack the stack to restore a state of
+     */
     private void restoreStateFromStack(Stack<FloorPlan> stack) {
         FloorPlan fpm = stack.pop();
         setWallList(fpm.getWallList());
@@ -403,6 +540,12 @@ public class FloorPlanModel extends Observable {
         setAccessPointList(fpm.getAccessPointList());
     }
 
+    /**
+     * Returns the closest FloorPlanObject to the given location
+     * @param touchPoint
+     * @param select whether general FloorPlanObjects or measurements should be selected
+     * @return the closest FloorPlanObject to the given location
+     */
     public Couple<Double, FloorPlanObject> getClosestFloorPlanObjectToPoint(Point touchPoint, boolean select) {
         double minDist = Double.POSITIVE_INFINITY;
         FloorPlanObject closest = null;

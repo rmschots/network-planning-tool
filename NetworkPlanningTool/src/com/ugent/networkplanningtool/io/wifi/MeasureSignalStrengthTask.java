@@ -17,13 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Roel on 24/03/14.
- */
 public class MeasureSignalStrengthTask extends AbstractASyncTask<MeasureParams, Integer> {
 
     private Context context;
     private int samplesLeft;
+
+    private final Map<String, List<Integer>> sampleMap = new HashMap<String, List<Integer>>();
 
     public MeasureSignalStrengthTask(Context context) {
         this.context = context;
@@ -46,7 +45,6 @@ public class MeasureSignalStrengthTask extends AbstractASyncTask<MeasureParams, 
         }
 
         samplesLeft = parameter.getSampleCount();
-        final Map<String, List<Integer>> sampleMap = new HashMap<String, List<Integer>>();
 
         context.registerReceiver(new BroadcastReceiver() {
             @Override
@@ -95,6 +93,7 @@ public class MeasureSignalStrengthTask extends AbstractASyncTask<MeasureParams, 
         if (maxSS == null) {
             throw new ASyncTaskException("No linked device detected.");
         }
+        sampleMap.clear();
         System.out.println("max: " + maxSSAp + " - " + maxSS);
         return maxSS;
     }

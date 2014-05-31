@@ -4,9 +4,6 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 
 import java.util.List;
 
-/**
- * Created by Roel on 24/03/14.
- */
 public class MeasureParams {
 
     private int sampleCount;

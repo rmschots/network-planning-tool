@@ -20,8 +20,14 @@ import com.ugent.networkplanningtool.utils.Utils;
 
 import java.util.Observable;
 
+/**
+ * Model with drawing data.
+ */
 public class DrawingModel extends Observable {
 
+    /**
+     * Result of a placement attempt.
+     */
     public static enum PlaceResult {
         SUCCESS(null),
         CONNECTION_POINT_NOT_ADJACENT_TO_WALL(MainActivity.getInstance().getResources().getString(R.string.connectionPointNotAdjacentToWall)),
@@ -37,9 +43,54 @@ public class DrawingModel extends Observable {
         }
     }
 
-    // states the drawing area can be in
+    /**
+     * The state the drawing area is in.
+     */
     public static enum STATE {
-        IDLE, PRE_PLACE, PLACING, SELECTING_INFO, PRE_SELECTING_INFO, SELECTING_EDIT, PRE_SELECTING_EDIT, SELECTING_REMOVE, PRE_SELECTING_REMOVE, PRE_MEASURE_REMOVE, MEASURE_REMOVE
+        /**
+         * Drawing area not responding to any touches.
+         */
+        IDLE,
+        /**
+         * placing a FloorPlanObject (user not touching screen)
+         */
+        PRE_PLACE,
+        /**
+         * placing a FloorPlanObject (user touching screen)
+         */
+        PLACING,
+        /**
+         * selecting FloorPlanObject for info (user not touching screen)
+         */
+        PRE_SELECTING_INFO,
+        /**
+         * selecting FloorPlanObject for info (user touching screen)
+         */
+        SELECTING_INFO,
+        /**
+         * selecting FloorPlanObject to edit (user not touching screen)
+         */
+        PRE_SELECTING_EDIT,
+        /**
+         * selecting FloorPlanObject to edit (user touching screen)
+         */
+        SELECTING_EDIT,
+        /**
+         * removing FloorPlanObject (user not touching screen)
+         */
+        PRE_SELECTING_REMOVE,
+        /**
+         * removing FloorPlanObject (user touching screen)
+         */
+        SELECTING_REMOVE,
+        /**
+         * removing measurement (user not touching screen)
+         */
+        PRE_MEASURE_REMOVE,
+        /**
+         * removing measurement (user touching screen)
+         */
+        MEASURE_REMOVE
     }
 
 
@@ -77,6 +128,12 @@ public class DrawingModel extends Observable {
     private Bitmap backgroundImage;
     private double backgroundScale;
 
+    /**
+     * Default constructor
+     *
+     * @param viewWidth  drawing area width in pixels on the screen
+     * @param viewHeight drawing area height in pixels on the screen
+     */
     public DrawingModel(int viewWidth, int viewHeight) {
         offsetX = 0;
         offsetY = 0;
@@ -93,22 +150,42 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Getter for the x offset on the floor plan where the displayed drawing should start
+     * @return x offset on the floor plan where the displayed drawing should start
+     */
     public float getOffsetX() {
         return offsetX;
     }
 
+    /**
+     * Getter for the y offset on the floor plan where the displayed drawing should start
+     * @return y offset on the floor plan where the displayed drawing should start
+     */
     public float getOffsetY() {
         return offsetY;
     }
 
+    /**
+     * Returns the actual width of the view in units (not in screen pixels)
+     * @return the actual width of the view in units (not in screen pixels)
+     */
     public float getActualViewWidth() {
         return (viewWidth - 1) * INTERVAL / pixelsPerInterval;
     }
 
+    /**
+     * Returns the actual height of the view in units (not in screen pixels)
+     * @return the actual height of the view in units (not in screen pixels)
+     */
     public float getActualViewHeight() {
         return (viewHeight - 1) * INTERVAL / pixelsPerInterval;
     }
 
+    /**
+     * Setter for the x offset on the floor plan where the displayed drawing should start
+     * @return x offset on the floor plan where the displayed drawing should start
+     */
     public void setOffsetY(float offsetY) {
         if (offsetY > 0) {
             float actualViewHeight = getActualViewHeight();
@@ -124,6 +201,10 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Setter for the y offset on the floor plan where the displayed drawing should start
+     * @return y offset on the floor plan where the displayed drawing should start
+     */
     public void setOffsetX(float offsetX) {
         if (offsetX > 0) {
             float actualViewWidth = getActualViewWidth();
@@ -139,18 +220,34 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Returns if results should be drawn
+     * @return if results should be drawn
+     */
     public boolean isDrawResult() {
         return drawResult;
     }
 
+    /**
+     * Sets whether results should be drawn
+     * @param drawResult whether results should be drawn
+     */
     public void setDrawResult(boolean drawResult) {
         this.drawResult = drawResult;
     }
 
+    /**
+     * Sets whether access points should be drawn
+     * @return whether access points should be drawn
+     */
     public boolean isDrawAccessPoints() {
         return drawAccessPoints;
     }
 
+    /**
+     * Sets whether to draw the access points
+     * @param drawAccessPoints whether to draw the access points
+     */
     public void setDrawAccessPoints(boolean drawAccessPoints) {
         if (this.drawAccessPoints != drawAccessPoints) {
             this.drawAccessPoints = drawAccessPoints;
@@ -160,10 +257,18 @@ public class DrawingModel extends Observable {
 
     }
 
+    /**
+     * Whether activities should be drawn
+     * @return whether activities should be drawn
+     */
     public boolean isDrawActivities() {
         return drawActivities;
     }
 
+    /**
+     * Sets whether activities should be drawn
+     * @param drawActivities whether activities should be drawn
+     */
     public void setDrawActivities(boolean drawActivities) {
         if (this.drawActivities != drawActivities) {
             this.drawActivities = drawActivities;
@@ -172,10 +277,18 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Whether labels should be drawn
+     * @return whether labels should be drawn
+     */
     public boolean isDrawLabels() {
         return drawLabels;
     }
 
+    /**
+     * Sets whether labels should be drawn
+     * @param drawLabels whether labels should be drawn
+     */
     public void setDrawLabels(boolean drawLabels) {
         if (this.drawLabels != drawLabels) {
             this.drawLabels = drawLabels;
@@ -184,10 +297,18 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Whether grid points should be drawn
+     * @return whether grid points should be drawn
+     */
     public boolean isDrawGridPoints() {
         return drawGridPoints;
     }
 
+    /**
+     * Sets whether grid points should be drawn
+     * @param drawGridPoints whether grid points should be drawn
+     */
     public void setDrawGridPoints(boolean drawGridPoints) {
         if (this.drawGridPoints != drawGridPoints) {
             this.drawGridPoints = drawGridPoints;
@@ -196,10 +317,18 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Returns the type of the results to render
+     * @return the type of the results to render
+     */
     public DeusResult.ResultType getResultRenderType() {
         return resultRenderType;
     }
 
+    /**
+     * Sets the type of the results to render
+     * @param resultRenderType the type of the results to render
+     */
     public void setResultRenderType(DeusResult.ResultType resultRenderType) {
         if (this.resultRenderType != resultRenderType) {
             this.resultRenderType = resultRenderType;
@@ -208,18 +337,37 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Get the location the user touched
+     * @return the location the user touched
+     */
     public Point getTouchLocation() {
         return touchLocation;
     }
 
+    /**
+     * Returns whether the zoom in is maxed
+     * @return whether the zoom in is maxed
+     */
     public boolean isZoomInMaxed() {
         return zoomInMaxed;
     }
 
+    /**
+     * Returns whether the zoom out is maxed
+     * @return whether the zoom out is maxed
+     */
     public boolean isZoomOutMaxed() {
         return zoomOutMaxed;
     }
 
+    /**
+     * Moves the current location for dragging and zooming.
+     * @param x1 x1
+     * @param y1 y1
+     * @param x2 x2
+     * @param y2 y2
+     */
     public void move(float x1, float y1, float x2, float y2) {
         double distanceMoved = calculateDistance(x1, y1, x2, y2);
 
@@ -235,6 +383,13 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Called when user starts touching with two fingers for dragging and zooming.
+     * @param x1 x1
+     * @param y1 y1
+     * @param x2 x2
+     * @param y2 y2
+     */
     public void moveStart(float x1, float y1, float x2, float y2) {
         switch (state) {
             case PLACING:
@@ -258,6 +413,9 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Deselect currently selected FloorPlanObject.
+     */
     public void deselect() {
         Log.d("DEBUG", "DESELECT");
         switch (state) {
@@ -290,16 +448,31 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Calculates the distance between two points.
+     * @param x1 x1
+     * @param y1 y1
+     * @param x2 x2
+     * @param y2 y2
+     * @return the distance
+     */
     private double calculateDistance(float x1, float y1, float x2, float y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
+    /**
+     * Stops moving (dragging and zooming)
+     */
     public void moveStop() {
         moving = false;
         setChanged();
         notifyObservers();
     }
 
+    /**
+     * Places the current FloorPlanObject. (adds it to the FloorPlanPodel)
+     * @return
+     */
     public PlaceResult place() {
         Log.d("debug", "place");
         state = STATE.PRE_PLACE;
@@ -350,6 +523,11 @@ public class DrawingModel extends Observable {
         return PlaceResult.NOTHING_TO_PLACE;
     }
 
+    /**
+     * Sets the current touch location.
+     * @param x x
+     * @param y y
+     */
     public void setTouchLocation(float x, float y) {
         if (touchFloorPlanObject != null) {
             state = STATE.PLACING;
@@ -404,11 +582,22 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Gets the touch location on the floor plan.
+     * @param x x
+     * @param y y
+     * @return point on the floor plan
+     */
     public Point getActualTouchLocation(float x, float y) {
         return new Point((int) (offsetX + x / pixelsPerInterval * DrawingModel.INTERVAL),
                 (int) (offsetY + y / pixelsPerInterval * DrawingModel.INTERVAL));
     }
 
+    /**
+     * Sets the view size in pixels of the screen.
+     * @param width width
+     * @param height height
+     */
     public void setViewSize(int width, int height) {
         System.out.println("setViewSize: " + width + " " + height);
         this.viewWidth = width;
@@ -418,12 +607,18 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Zooms in with a factor of 2
+     */
     public void zoomIn() {
         setPixelsPerInterval(pixelsPerInterval * 2f);
         setChanged();
         notifyObservers();
     }
 
+    /**
+     * Zooms out with a factor of 2
+     */
     public void zoomOut() {
         setPixelsPerInterval(pixelsPerInterval * 0.5f);
         setChanged();
@@ -431,7 +626,8 @@ public class DrawingModel extends Observable {
     }
 
     /**
-     * @return the touchWall
+     * returns the touched FloorPlanObject
+     * @return the touched FloorPlanObject
      */
     public FloorPlanObject getTouchFloorPlanObject() {
         return touchFloorPlanObject;
@@ -447,6 +643,10 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets whether to snap to grid
+     * @param snapToGrid whether to snap to grid
+     */
     public void setSnapToGrid(SnapTo snapToGrid) {
         this.snapTo = snapToGrid;
     }
@@ -459,6 +659,9 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets mode to "edit"
+     */
     public void setEditSelectionMode() {
         Log.d("DEBUG", "INFOEDIT MODE");
         state = STATE.PRE_SELECTING_EDIT;
@@ -467,6 +670,9 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets mode to "remove"
+     */
     public void setRemoveSelectionMode() {
         Log.d("DEBUG", "INFOREMOVE MODE");
         state = STATE.PRE_SELECTING_REMOVE;
@@ -475,6 +681,9 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets mode to "remove measurement"
+     */
     public void setMeasureRemoveMode() {
         Log.d("DEBUG", "MEASUREREMOVE MODE");
         state = STATE.PRE_MEASURE_REMOVE;
@@ -483,12 +692,19 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Sets mode to "place"
+     */
     public void setPlaceMode() {
         state = STATE.PRE_PLACE;
         setChanged();
         notifyObservers();
     }
 
+    /**
+     * Sets mode to place and set the FloorPlanObject to place.
+     * @param floorPlanObject FloorPlanObject to place.
+     */
     public void setPlaceMode(FloorPlanObject floorPlanObject) {
         System.out.println("PREPACCCCEE");
         state = STATE.PRE_PLACE;
@@ -497,6 +713,12 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Starts selecting at given location
+     * @param x x
+     * @param y x
+     * @param select false if selecting measurement
+     */
     public void startSelect(float x, float y, boolean select) {
         switch (state) {
             case PRE_SELECTING_EDIT:
@@ -517,6 +739,12 @@ public class DrawingModel extends Observable {
         select(x, y, select);
     }
 
+    /**
+     * Continues selecting at given location
+     * @param x x
+     * @param y y
+     * @param select false if selecting measurement
+     */
     public void select(float x, float y, boolean select) {
         touchLocation = getActualTouchLocation(x, y);
         // get closest
@@ -536,6 +764,10 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Returns the selected FloorPlanObject
+     * @return the selected FloorPlanObject
+     */
     public FloorPlanObject getSelected() {
         switch (state) {
             case SELECTING_EDIT:
@@ -549,6 +781,9 @@ public class DrawingModel extends Observable {
         }
     }
 
+    /**
+     * Sets the state to "idle"
+     */
     public void setIdle() {
         state = STATE.IDLE;
         touchFloorPlanObject = null;
@@ -556,14 +791,27 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Returns the current state
+     * @return the current state
+     */
     public STATE getState() {
         return state;
     }
 
+    /**
+     * Returns whether the user is moving the floor plan (dragging or zooming)
+     * @return
+     */
     public boolean isMoving() {
         return moving;
     }
 
+    /**
+     * Sets the background image
+     * @param bgImg bitmap with image
+     * @param bgScale scale on which to draw the bitmap
+     */
     public void setBackground(Bitmap bgImg, double bgScale) {
         this.backgroundImage = bgImg;
         this.backgroundScale = bgScale;
@@ -571,23 +819,45 @@ public class DrawingModel extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Returns the background image
+     * @return the background image
+     */
     public Bitmap getBackgroundImage() {
         return backgroundImage;
     }
 
+    /**
+     * Returns the background scale
+     * @return the background scale
+     */
     public double getBackgroundScale() {
         return backgroundScale;
     }
 
+    /**
+     * Converts coordinate on the view to location on the floor plan
+     * @param isXCoord whether it is an x coordinate
+     * @param coordinate the coordinate on the view
+     * @return the converted coordinate
+     */
     public float convertCoordinateToLocation(boolean isXCoord, float coordinate) {
         return (coordinate - (isXCoord ? getOffsetX() : getOffsetY()))
                 * getPixelsPerInterval() / DrawingModel.INTERVAL;
     }
 
+    /**
+     * Returns the pixels on the screen per interval on the floor plan
+     * @return the pixels on the screen per interval on the floor plan
+     */
     public float getPixelsPerInterval() {
         return pixelsPerInterval;
     }
 
+    /**
+     * Sets the pixels on the screen per interval on the floor plan
+     * @param pixelsPerInterval the pixels on the screen per interval on the floor plan
+     */
     public void setPixelsPerInterval(float pixelsPerInterval) {
         if (pixelsPerInterval > 0) {
             if (pixelsPerInterval < Math.min(viewWidth - 1, viewHeight - 1)

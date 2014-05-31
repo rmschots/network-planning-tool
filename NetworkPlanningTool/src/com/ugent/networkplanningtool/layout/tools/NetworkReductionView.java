@@ -11,9 +11,6 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 28/02/14.
- */
 public class NetworkReductionView extends LinearLayout {
     private ArrayAdapter<ActivityType> activityAdapter;
 

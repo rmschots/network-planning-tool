@@ -6,11 +6,7 @@ import org.w3c.dom.Element;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-public class FloorPlan implements XMLTransformable{
+public class FloorPlan implements XMLTransformable {
 
     private List<Wall> wallList;
     private List<ConnectionPoint> connectionPointList;

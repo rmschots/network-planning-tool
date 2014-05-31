@@ -9,9 +9,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-/**
- * Created by Roel on 11/03/14.
- */
 public class SaveXMLTask extends AbstractASyncTask<SaveXMLParams, File> {
 
     @Override

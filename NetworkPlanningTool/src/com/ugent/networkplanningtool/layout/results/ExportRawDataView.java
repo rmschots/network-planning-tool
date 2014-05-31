@@ -11,9 +11,6 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 9/03/14.
- */
 public class ExportRawDataView extends LinearLayout {
 
     private RadioGroup exportRadioGroup;
@@ -57,9 +54,9 @@ public class ExportRawDataView extends LinearLayout {
         benchmarksRadioButton.setTag(ExportRawDataType.BENCHMARK);
     }
 
-    public ExportRawDataType getExportType(){
-        Object o = ((RadioButton)findViewById(exportRadioGroup.getCheckedRadioButtonId())).getTag();
-        if(o != null && o instanceof ExportRawDataType);
+    public ExportRawDataType getExportType() {
+        Object o = findViewById(exportRadioGroup.getCheckedRadioButtonId()).getTag();
+        if (o != null && o instanceof ExportRawDataType) ;
         return (ExportRawDataType) o;
     }
 }

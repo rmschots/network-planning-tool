@@ -5,9 +5,6 @@ import com.ugent.networkplanningtool.io.AbstractASyncTask;
 
 import java.io.File;
 
-/**
- * Created by Roel on 11/03/14.
- */
 public class LoadFloorPlanTask extends AbstractASyncTask<File, FloorPlan> {
 
     @Override

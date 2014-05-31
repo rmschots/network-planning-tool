@@ -1,6 +1,5 @@
 package com.ugent.networkplanningtool.io.wifi;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,17 +10,14 @@ import android.net.wifi.WifiManager;
 import com.ugent.networkplanningtool.data.RealAccessPoint;
 import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.io.AbstractASyncTask;
-import com.ugent.networkplanningtool.layout.measure.ApLinkingView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Roel on 17/03/14.
- */
 public class WifiDetectTask extends AbstractASyncTask<WifiManager, List<RealAccessPoint>> {
 
     private Context context;
+    private final List<RealAccessPoint> rapList = new ArrayList<RealAccessPoint>();
 
     public WifiDetectTask(Context context){
         this.context = context;
@@ -30,7 +26,7 @@ public class WifiDetectTask extends AbstractASyncTask<WifiManager, List<RealAcce
 
     @Override
     protected List<RealAccessPoint> performTaskInBackground(final WifiManager wifi) throws Exception {
-        final List<RealAccessPoint> rapList = new ArrayList<RealAccessPoint>();
+
         context.registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

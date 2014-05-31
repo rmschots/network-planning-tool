@@ -10,10 +10,7 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 28/02/14.
- */
-public class EstimateSARView extends LinearLayout{
+public class EstimateSARView extends LinearLayout {
 
     private EditText personAgeEditText;
     private EditText personHeightEditText;
@@ -44,11 +41,11 @@ public class EstimateSARView extends LinearLayout{
         roomHeightBar = (MySeekBar) findViewById(R.id.roomHeightView);
     }
 
-    public int getPersonAge(){
+    public int getPersonAge() {
         return Integer.parseInt(personAgeEditText.getText().toString());
     }
 
-    public int getPersonHeight(){
+    public int getPersonHeight() {
         return Integer.parseInt(personHeightEditText.getText().toString());
     }
 

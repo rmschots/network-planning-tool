@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 
 import java.io.File;
 
-/**
- * Created by Roel on 17/03/14.
- */
 public class SaveImageParams {
 
     private Bitmap bitmap;

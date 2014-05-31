@@ -5,9 +5,6 @@ import android.widget.ArrayAdapter;
 import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.RealAccessPoint;
 
-/**
- * Created by Roel on 15/03/14.
- */
 public class ApLinkingRowItem {
     private AccessPoint ap;
     private ArrayAdapter<RealAccessPoint> apAdapter;

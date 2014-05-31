@@ -11,9 +11,6 @@ import com.ugent.networkplanningtool.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * Created by Roel on 24/03/14.
- */
 public class ApMeasurement extends FloorPlanObject implements XMLTransformable {
     private Integer signalStrength = null;
     public static int DEFAULT_SAMPLE_POOL_SIZE = 2;
@@ -83,8 +80,7 @@ public class ApMeasurement extends FloorPlanObject implements XMLTransformable {
 
     @Override
     public FloorPlanObject getPartialDeepCopy() {
-        ApMeasurement apm = new ApMeasurement(samplePoolSize);
-        return apm;
+        return new ApMeasurement(samplePoolSize);
     }
 
     @Override

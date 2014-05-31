@@ -186,7 +186,6 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
                     paint.setColor(Color.BLACK);
                     float textX = (pixelsX2 + pixelsX1) / 2;
                     float textY = ((pixelsY2 + pixelsY1) / 2 - ((paint.descent() + paint.ascent()) / 2));
-                    ;
                     double distanceCM = Utils.pointToPointDistance(point1, point2);
                     canvas.drawText(Math.round(distanceCM) / 100.0 + " m", textX, textY, paint);
                 }

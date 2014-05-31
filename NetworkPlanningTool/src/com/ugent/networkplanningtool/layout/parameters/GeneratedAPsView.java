@@ -16,9 +16,6 @@ import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 25/02/14.
- */
 public class GeneratedAPsView extends LinearLayout {
 
     private ArrayAdapter<RadioType> apTypeAdapter;

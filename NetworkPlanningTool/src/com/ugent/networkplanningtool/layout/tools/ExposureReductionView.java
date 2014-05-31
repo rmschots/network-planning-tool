@@ -13,9 +13,6 @@ import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 28/02/14.
- */
 public class ExposureReductionView extends LinearLayout {
     private ArrayAdapter<ActivityType> activityAdapter;
 
@@ -51,11 +48,11 @@ public class ExposureReductionView extends LinearLayout {
         defaultActivitySpinner.setAdapter(activityAdapter);
     }
 
-    public double getdistanceToAP(){
+    public double getdistanceToAP() {
         return apDistanceSeekBar.getValue();
     }
 
-    public double getMaxEField(){
+    public double getMaxEField() {
         return Double.parseDouble(maxEFieldEditText.getText().toString());
     }
 

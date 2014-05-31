@@ -15,9 +15,6 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Roel on 13/03/14.
- */
 public class ApLinkingView extends LinearLayout {
 
     private ListView lv;
@@ -47,12 +44,12 @@ public class ApLinkingView extends LinearLayout {
 
         for (AccessPoint ap : apList) {
             List<RealAccessPoint> links = new ArrayList<RealAccessPoint>();
-            if(!realAccessPointList.contains(ap.getRap())){
+            if (!realAccessPointList.contains(ap.getRap())) {
                 links.add(ap.getRap());
-                if(!ap.getRap().equals(RealAccessPoint.getEmptyDummy())){
+                if (!ap.getRap().equals(RealAccessPoint.getEmptyDummy())) {
                     links.add(RealAccessPoint.getEmptyDummy());
                 }
-            }else{
+            } else {
                 links.add(RealAccessPoint.getEmptyDummy());
             }
 

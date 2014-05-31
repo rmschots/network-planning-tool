@@ -10,21 +10,14 @@ import android.widget.Spinner;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.parameters.PathLossModel;
-import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 25/02/14.
- */
 public class AlgorithmsView extends LinearLayout {
 
     private CheckBox frequenciesCheckBox;
     private Spinner pathLossModelSpinner;
 
-    private DrawingModel drawingModel;
-
-    public AlgorithmsView(Context context, DrawingModel drawingModel) {
+    public AlgorithmsView(Context context) {
         super(context);
-        this.drawingModel = drawingModel;
         init();
     }
 

@@ -9,9 +9,6 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 25/02/14.
- */
 public class MarginsView extends LinearLayout {
 
     private MySeekBar interferenceMarginBar;

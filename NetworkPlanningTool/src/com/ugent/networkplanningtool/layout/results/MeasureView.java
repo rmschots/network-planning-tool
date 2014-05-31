@@ -15,9 +15,6 @@ import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 24/03/14.
- */
 public class MeasureView extends LinearLayout {
 
     private DrawingModel drawingModel;

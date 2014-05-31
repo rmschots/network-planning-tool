@@ -20,14 +20,13 @@ import org.ksoap2.serialization.SoapObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Roel on 10/03/14.
- */
 public class KSoap2Parser {
     public static DeusResult parseDeusResult(SoapObject so, DeusRequest.RequestType requestType) throws ASyncTaskException {
         if (so.hasProperty("errormsg")) {
             throw new ASyncTaskException(so.getPropertyAsString("errormsg"));
         }
+
+        // TODO parse unused data
 
         Double[] infoArray = new Double[3];
         int infoIndex = 0;

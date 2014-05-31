@@ -19,6 +19,9 @@ import android.widget.TextView;
 
 import com.ugent.networkplanningtool.R;
 
+/**
+ * View used to import a background image
+ */
 public class ImportImage extends Dialog implements OnTouchListener, OnKeyListener, OnClickListener{
 	
 	private boolean completed = false;
@@ -42,7 +45,12 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 	private Button okButton;
 	private Button cancelButton;
 
-	public ImportImage(Context context) {
+    /**
+     * Default constructor
+     *
+     * @param context context of the parent
+     */
+    public ImportImage(Context context) {
 		super(context);
 		LinearLayout ll = new LinearLayout(context);
 		
@@ -78,13 +86,21 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
         cancelButton.setOnClickListener(this);
         
         setContentView(ll);
-	}
+    }
 
-	public void setImage(Bitmap image){
+    /**
+     * Sets the background image bitmap
+     * @param image the background image bitmap
+     */
+    public void setImage(Bitmap image){
 		iv.setImageBitmap(image);
-	}
-	
-	@Override
+    }
+
+    /**
+     * Invoked when a button of this view is clicked.
+     * @param v the button that has been clicked
+     */
+    @Override
 	public void onClick(View v) {
 		if(v == zoomInButton){
 			iv.zoomIn();
@@ -105,24 +121,38 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 			selectButton.setEnabled(false);
 			moveButton.setEnabled(true);
 			iv.setMode(ScaleImageView.Mode.SELECT);
-		}
-	}
-	
-	@Override
+        }
+    }
+
+    /**
+     * Called when the area containing the image has been touched.
+     * @param v the view that has been touched
+     * @param event the touch data
+     * @return whether to consume the touch
+     */
+    @Override
 	public boolean onTouch(View v, MotionEvent event) {
 		updateViews();
 		return false;
-	}
-	
-	private void updateViews(){
+    }
+
+    /**
+     * Updates the components of this view.
+     */
+    private void updateViews(){
 		Point c1 = iv.getCoord1();
 		Point c2 = iv.getCoord2();
 		coord1Tv.setText(c1==null?"not set":c1.x+" "+c1.y);
 		coord2Tv.setText(c2==null?"not set":c2.x+" "+c2.y);
 		updateScale(c1, c2);
-	}
-	
-	private void updateScale(Point c1, Point c2){
+    }
+
+    /**
+     * Updates the scale set by the user.
+     * @param c1 first point to base scale on
+     * @param c2 second point to base scale on
+     */
+    private void updateScale(Point c1, Point c2){
 		if(c2!=null){
 			scale = Math.sqrt(Math.pow((c1.x-c2.x), 2) + Math.pow((c1.y-c2.y), 2))/(distance*100.0);
 			scaleTv.setText(String.format("%.6f", scale));
@@ -130,10 +160,17 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 		}else{
 			okButton.setEnabled(false);
 			scaleTv.setText("\"?\"");
-		}
-	}
+        }
+    }
 
-	@Override
+    /**
+     * Called when the text of the distance EditText has been changed.
+     * @param v the EditText
+     * @param keyCode the relevant key
+     * @param event what action the key did
+     * @return whether to consume the event
+     */
+    @Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		try{
 			distance = Double.parseDouble(distanceEt.getText().toString());
@@ -143,13 +180,21 @@ public class ImportImage extends Dialog implements OnTouchListener, OnKeyListene
 			scaleTv.setText("\"?\"");
 		}
 		return false;
-	}
+    }
 
-	public double getScale() {
+    /**
+     * Returns the scale of the image
+     * @return the scale of the image
+     */
+    public double getScale() {
 		return scale;
-	}
-	
-	public boolean isCompleted(){
+    }
+
+    /**
+     * Returns whether the import and scaling is completed.
+     * @return whether the import and scaling is completed
+     */
+    public boolean isCompleted(){
 		return completed;
 	}
 

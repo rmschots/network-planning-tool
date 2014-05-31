@@ -90,34 +90,37 @@ import java.util.Set;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserDialog.OnFileSelectedListener;
 
-public class MainActivity extends Activity implements Observer,OnTouchListener{
+/**
+ * The main activity. Contains all functionality for the main screen.
+ */
+public class MainActivity extends Activity implements Observer, OnTouchListener {
 
     private static final String TAG = MainActivity.class.getName();
-	
-	private static MainActivity mContext;
-	
-	private DrawingView drawingView;
-	private TextView locationText;
-	private TextView coordinatesText;
+
+    private static MainActivity mContext;
+
+    private DrawingView drawingView;
+    private TextView locationText;
+    private TextView coordinatesText;
 
     private View designActive;
-	private View mainActive;
-	private View parametersActive;
-	private View toolsActive;
-	private View resultsActive;
-	
-	private ViewFlipper mainFlip;
-	private ViewFlipper designFlip;
-	private ViewFlipper parametersFlip;
-	private ViewFlipper toolsFlip;
-	private ViewFlipper resultsFlip;
-	
-	private WallView wallView;
-	private WallView doorView;
-	private WallView windowView;
-	private AccessPointView accessPointView;
-	private DataActivityView dataActivityView;
-	private ConnectionPointView connectionPointView;
+    private View mainActive;
+    private View parametersActive;
+    private View toolsActive;
+    private View resultsActive;
+
+    private ViewFlipper mainFlip;
+    private ViewFlipper designFlip;
+    private ViewFlipper parametersFlip;
+    private ViewFlipper toolsFlip;
+    private ViewFlipper resultsFlip;
+
+    private WallView wallView;
+    private WallView doorView;
+    private WallView windowView;
+    private AccessPointView accessPointView;
+    private DataActivityView dataActivityView;
+    private ConnectionPointView connectionPointView;
 
     private AlgorithmsView algorithmsView;
     private GeneratedAPsView generatedAPsView;
@@ -137,38 +140,38 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     private boolean canMeasure = false;
 
     private ZoomControls zoomControls;
-	private ImageButton undoButton;
-	private ImageButton redoButton;
+    private ImageButton undoButton;
+    private ImageButton redoButton;
 
     private Button resultsButton;
 
     private DrawingModel drawingModel;
-	private FloorPlanModel floorPlanModel;
-	
-	private ASyncIOTaskManager taskManager;
-	private Dialog dialog;
+    private FloorPlanModel floorPlanModel;
+
+    private ASyncIOTaskManager taskManager;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_main);
-        
+
         drawingView = (DrawingView) findViewById(R.id.drawingView);
         drawingModel = new DrawingModel(drawingView.getWidth(), drawingView.getHeight());
         floorPlanModel = FloorPlanModel.INSTANCE;
 
         MyScrollBar hScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar1);
         MyScrollBar vScrollBar = (MyScrollBar) findViewById(R.id.myScrollBar2);
-        locationText = (TextView)findViewById(R.id.locationText);
-        coordinatesText = (TextView)findViewById(R.id.coordinatesTextView);
-        
-        mainFlip = (ViewFlipper)findViewById(R.id.mainFlipper);
-        designFlip = (ViewFlipper)findViewById(R.id.designFlipper);
-        parametersFlip = (ViewFlipper)findViewById(R.id.parametersFlipper);
-        toolsFlip = (ViewFlipper)findViewById(R.id.toolsFlipper);
-        resultsFlip = (ViewFlipper)findViewById(R.id.resultsFlipper);
-        
+        locationText = (TextView) findViewById(R.id.locationText);
+        coordinatesText = (TextView) findViewById(R.id.coordinatesTextView);
+
+        mainFlip = (ViewFlipper) findViewById(R.id.mainFlipper);
+        designFlip = (ViewFlipper) findViewById(R.id.designFlipper);
+        parametersFlip = (ViewFlipper) findViewById(R.id.parametersFlipper);
+        toolsFlip = (ViewFlipper) findViewById(R.id.toolsFlipper);
+        resultsFlip = (ViewFlipper) findViewById(R.id.resultsFlipper);
+
         wallView = (WallView) findViewById(R.id.wallViewWall);
         doorView = (WallView) findViewById(R.id.wallViewDoor);
         windowView = (WallView) findViewById(R.id.wallViewWindow);
@@ -194,16 +197,16 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         Button eraseAccessPointsButton = (Button) findViewById(R.id.eraseAccesspointsButton);
         Button eraseDataActivitiesButton = (Button) findViewById(R.id.eraseActivitiesButton);
         Button eraseConnectionPointsButton = (Button) findViewById(R.id.eraseConnectionPointsButton);
-        
-        
+
+
         mainActive = findViewById(R.id.designButton);
         designActive = findViewById(R.id.wallsButton);
         parametersActive = findViewById(R.id.recieversButton);
         toolsActive = findViewById(R.id.predictCoverageButton);
         resultsActive = findViewById(R.id.renderDataButton);
-        
+
         zoomControls = (ZoomControls) findViewById(R.id.zoomControls1);
-        
+
         undoButton = (ImageButton) findViewById(R.id.undoButton);
         redoButton = (ImageButton) findViewById(R.id.redoButton);
 
@@ -218,14 +221,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         measureView.setDrawingModel(drawingModel);
 
 
-
         onParametersFlipClick(parametersActive);
         onToolsFlipClick(toolsActive);
         onResultsFlipClick(resultsActive);
         onMainFlipClick(mainActive);
         onDesignFlipClick(designActive);
-        
-        
+
+
         zoomControls.setOnZoomInClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,7 +240,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 drawingModel.zoomOut();
             }
         });
-        
+
         undoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -253,7 +255,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 Log.d("DEBUG", "redo");
             }
         });
-        
+
         eraseAccessPointsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,7 +274,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 floorPlanModel.deleteAllConnectionPoints();
             }
         });
-        
+
         drawingView.setModel(drawingModel);
         hScrollBar.setModel(drawingModel);
         vScrollBar.setModel(drawingModel);
@@ -283,158 +285,195 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         floorPlanModel.addObserver(renderDataView);
 
         drawingView.setOnTouchListener(this);
-        
+
         taskManager = new ASyncIOTaskManager(this);
     }
 
-
-	public void onMainFlipClick(View v) {
+    /**
+     * Called when one of the top buttons of the hierarchy is pressed. These buttons' texts start with a number.
+     *
+     * @param v the pressed button
+     */
+    public void onMainFlipClick(View v) {
         if (v.getId() == R.id.resultsButton) {
-            if(floorPlanModel.getDeusResult() == null){
+            if (floorPlanModel.getDeusResult() == null) {
                 Toast.makeText(MainActivity.this, "No result to display.", Toast.LENGTH_SHORT).show();
                 return;
-            }else{
+            } else {
                 drawingModel.setDrawResult(true);
             }
-        }else{
+        } else {
             drawingModel.setDrawResult(false);
         }
-        if(v.getId() == R.id.designButton){
+        if (v.getId() == R.id.designButton) {
             onDesignFlipClick(designActive);
-        }else{
+        } else {
             drawingModel.setIdle();
         }
         mainActive.setEnabled(true);
-		mainActive = v;
-		onFlipClick(v, mainFlip);
-	}
-	
-	public void onDesignFlipClick(View v) {
-		designActive.setEnabled(true);
-		designActive = v;
-		View flippedView = onFlipClick(v, designFlip);
-		Object tag = flippedView.getTag();
-		Log.d("DEBUG","FLIP: "+tag);
-		if(tag.equals(getResources().getString(R.string.wallText))){
-			wallView.updateDrawingModel();
-		}else if(tag.equals(getResources().getString(R.string.doorText))){
-			doorView.updateDrawingModel();
-		}else if(tag.equals(getResources().getString(R.string.windowText))){
-			windowView.updateDrawingModel();
-		}else if(tag.equals(getResources().getString(R.string.accessPointText))){
-			accessPointView.updateDrawingModel();
-		}else if(tag.equals(getResources().getString(R.string.dataActivityText))){
-			dataActivityView.updateDrawingModel();
-		}else if(tag.equals(getResources().getString(R.string.connectionPointText))){
-			connectionPointView.updateDrawingModel();
-		}else if(tag.equals(getResources().getString(R.string.eraserText))){
-			drawingModel.setRemoveSelectionMode();
-		}else if(tag.equals(getResources().getString(R.string.editText))){
-			drawingModel.setEditSelectionMode();
-		}else if(tag.equals(getResources().getString(R.string.infoText))){
-			drawingModel.setInfoSelectionMode();
-		}else{
-			Log.e("DEBUG","LOLWUTUTRYNTODO?");
-		}
-	}
-	
-	public void onParametersFlipClick(View v) {
-		parametersActive.setEnabled(true);
-		parametersActive = v;
+        mainActive = v;
+        onFlipClick(v, mainFlip);
+    }
+
+    /**
+     * Called when a button of the second level of the hierarchy (design node) is clicked.
+     *
+     * @param v the clicked button
+     */
+    public void onDesignFlipClick(View v) {
+        designActive.setEnabled(true);
+        designActive = v;
+        View flippedView = onFlipClick(v, designFlip);
+        Object tag = flippedView.getTag();
+        Log.d("DEBUG", "FLIP: " + tag);
+        if (tag.equals(getResources().getString(R.string.wallText))) {
+            wallView.updateDrawingModel();
+        } else if (tag.equals(getResources().getString(R.string.doorText))) {
+            doorView.updateDrawingModel();
+        } else if (tag.equals(getResources().getString(R.string.windowText))) {
+            windowView.updateDrawingModel();
+        } else if (tag.equals(getResources().getString(R.string.accessPointText))) {
+            accessPointView.updateDrawingModel();
+        } else if (tag.equals(getResources().getString(R.string.dataActivityText))) {
+            dataActivityView.updateDrawingModel();
+        } else if (tag.equals(getResources().getString(R.string.connectionPointText))) {
+            connectionPointView.updateDrawingModel();
+        } else if (tag.equals(getResources().getString(R.string.eraserText))) {
+            drawingModel.setRemoveSelectionMode();
+        } else if (tag.equals(getResources().getString(R.string.editText))) {
+            drawingModel.setEditSelectionMode();
+        } else if (tag.equals(getResources().getString(R.string.infoText))) {
+            drawingModel.setInfoSelectionMode();
+        } else {
+            Log.e("DEBUG", "LOLWUTUTRYNTODO?");
+        }
+    }
+
+    /**
+     * Called when a button of the second level of the hierarchy (parameters node) is clicked.
+     *
+     * @param v the clicked button
+     */
+    public void onParametersFlipClick(View v) {
+        parametersActive.setEnabled(true);
+        parametersActive = v;
         View flippedView = onFlipClick(v, parametersFlip);
         flippedView.getTag();
         drawingModel.setIdle();
     }
-	
-	public void onToolsFlipClick(View v) {
-		toolsActive.setEnabled(true);
-		toolsActive = v;
-		onFlipClick(v, toolsFlip);
-		drawingModel.setIdle();
-	}
-	
-	public void onResultsFlipClick(View v) {
-        if(!canMeasure&& v.equals(findViewById(R.id.measureButton))){
+
+    /**
+     * Called when a button of the second level of the hierarchy (tools node) is clicked.
+     *
+     * @param v the clicked button
+     */
+    public void onToolsFlipClick(View v) {
+        toolsActive.setEnabled(true);
+        toolsActive = v;
+        onFlipClick(v, toolsFlip);
+        drawingModel.setIdle();
+    }
+
+    /**
+     * Called when a button of the second level of the hierarchy (results node) is clicked.
+     *
+     * @param v the clicked button
+     */
+    public void onResultsFlipClick(View v) {
+        // one can only use the measurements functionality if 'predict coverage' is done (and thus canMeasure is set).
+        if (!canMeasure && v.equals(findViewById(R.id.measureButton))) {
             Toast.makeText(MainActivity.this, "Can only perform measurements for predicted coverage", Toast.LENGTH_LONG).show();
             v = findViewById(R.id.renderDataButton);
         }
-		resultsActive.setEnabled(true);
-		resultsActive = v;
+        resultsActive.setEnabled(true);
+        resultsActive = v;
         View flippedView = onFlipClick(v, resultsFlip);
         Object tag = flippedView.getTag();
         if (tag.equals(getResources().getString(R.string.measureText))) {
             measureView.updateDrawingModel();
         } else {
+            // if not going to the measurements part, one should not be able to draw anything
             drawingModel.setIdle();
         }
     }
-	
-	private View onFlipClick(View v, ViewFlipper vf){
-		v.setEnabled(false);
-		Object o = v.getTag();
-		for(int i = 0; i < vf.getChildCount(); i ++){
-			if(vf.getChildAt(i).getTag().equals(o)){
-				vf.setDisplayedChild(i);
-				return vf.getChildAt(i);
-			}
-		}
-		return null;
-	}
-	
-	public View getEditView(String tag){
-		for(int i = 0; i < designFlip.getChildCount(); i ++){
-			if(designFlip.getChildAt(i).getTag().equals(tag)){
-				return designFlip.getChildAt(i);
-			}
-		}
-		return null;
-	}
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		Point touchLocation = drawingModel.getTouchLocation();
-    	if(touchLocation != null){
-    		coordinatesText.setText(touchLocation.x+":"+touchLocation.y);
-    	}else{
-    		coordinatesText.setText(":");
-    	}
-		
-		zoomControls.setIsZoomInEnabled(!drawingModel.isZoomInMaxed());
-		zoomControls.setIsZoomOutEnabled(!drawingModel.isZoomOutMaxed());
-		
-		undoButton.setEnabled(floorPlanModel.canUndo());
-		redoButton.setEnabled(floorPlanModel.canRedo());
-	}
+    /**
+     * @param v  the clicked button
+     * @param vf The viewflipper containing the view to show
+     * @return the newly displayed view
+     */
+    private View onFlipClick(View v, ViewFlipper vf) {
+        v.setEnabled(false);
+        Object o = v.getTag();
+        for (int i = 0; i < vf.getChildCount(); i++) {
+            if (vf.getChildAt(i).getTag().equals(o)) {
+                vf.setDisplayedChild(i);
+                return vf.getChildAt(i);
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		if(v == drawingView){
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-	        case MotionEvent.ACTION_MOVE:
-	        case MotionEvent.ACTION_UP:
-	        case MotionEvent.ACTION_CANCEL:
-	        	locationText.setText((int)event.getX(0)+":"+(int)event.getY(0));
-	            break;
-	        default: break;
-			}
-		}
-		return false;
-	}
-	
-	public void handleOpenFileClick(View v){
-		FileChooserDialog dialog = new FileChooserDialog(this);
-		dialog.addListener(new OnFileSelectedListener() {
-			
-			@Override
-			public void onFileSelected(Dialog source, File folder, String name) {
+    public View getEditView(String tag) {
+        for (int i = 0; i < designFlip.getChildCount(); i++) {
+            if (designFlip.getChildAt(i).getTag().equals(tag)) {
+                return designFlip.getChildAt(i);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        Point touchLocation = drawingModel.getTouchLocation();
+        if (touchLocation != null) {
+            coordinatesText.setText(touchLocation.x + ":" + touchLocation.y);
+        } else {
+            coordinatesText.setText(":");
+        }
+
+        zoomControls.setIsZoomInEnabled(!drawingModel.isZoomInMaxed());
+        zoomControls.setIsZoomOutEnabled(!drawingModel.isZoomOutMaxed());
+
+        undoButton.setEnabled(floorPlanModel.canUndo());
+        redoButton.setEnabled(floorPlanModel.canRedo());
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v == drawingView) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_MOVE:
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    locationText.setText((int) event.getX(0) + ":" + (int) event.getY(0));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Open a floor plan file to be loaded in the application.
+     *
+     * @param v the clicked button
+     */
+    public void handleOpenFileClick(View v) {
+        FileChooserDialog dialog = new FileChooserDialog(this);
+        dialog.addListener(new OnFileSelectedListener() {
+
+            @Override
+            public void onFileSelected(Dialog source, File folder, String name) {
                 // can not be reached
-			}
-			
-			@Override
-			public void onFileSelected(Dialog source, File file) {
-				Log.d("DEBUG",file.getAbsolutePath());
-				source.dismiss();
+            }
+
+            @Override
+            public void onFileSelected(Dialog source, File file) {
+                Log.d("DEBUG", file.getAbsolutePath());
+                source.dismiss();
                 taskManager.executeTask(new LoadFloorPlanTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<FloorPlan>() {
                     @Override
                     public void onTaskCompleteSuccess(FloorPlan result) {
@@ -449,24 +488,29 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                     }
                 }, false);
             }
-		});
-		dialog.setFilter(".*xml|.*XML");
+        });
+        dialog.setFilter(".*xml|.*XML");
         dialog.setShowOnlySelectable(true);
         dialog.setTitle("Select file to open");
-		displayNewDialog(dialog);
-		
-	}
-	
-	public void handleSaveClick(View v){
+        displayNewDialog(dialog);
+
+    }
+
+    /**
+     * Save the floor plan to a file.
+     *
+     * @param v the clicked button
+     */
+    public void handleSaveClick(View v) {
         FileChooserDialog dialog = new FileChooserDialog(this);
         dialog.addListener(new OnFileSelectedListener() {
             @Override
             public void onFileSelected(Dialog source, File folder, String name) {
                 source.dismiss();
-                if(!name.toLowerCase().endsWith(".xml")){
-                    name+=".xml";
+                if (!name.toLowerCase().endsWith(".xml")) {
+                    name += ".xml";
                 }
-                File file = new File(folder,name);
+                File file = new File(folder, name);
                 saveTofile(new SaveXMLParams(floorPlanModel.getFloorPlan(), file));
             }
 
@@ -481,8 +525,13 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         dialog.setCanCreateFiles(true);
         dialog.setTitle("Select file to save to or create a new one");
         displayNewDialog(dialog);
-	}
+    }
 
+    /**
+     * Saves XML to a file
+     *
+     * @param params parameters for the saving task
+     */
     public void saveTofile(SaveXMLParams params) {
         taskManager.executeTask(new SaveXMLTask(), params, "saving...", new OnAsyncTaskCompleteListener<File>() {
             @Override
@@ -498,6 +547,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Saves plain text to file
+     *
+     * @param plainTextParams parameters for the saving task
+     */
     public void saveTofile(SavePlainTextParams plainTextParams) {
         taskManager.executeTask(new SavePlainTextTask(), plainTextParams, "saving...", new OnAsyncTaskCompleteListener<File>() {
             @Override
@@ -513,30 +567,50 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
-    public void handleNewFileClick(View v){
+    /**
+     * Clears the designing area
+     *
+     * @param v the clicked button
+     */
+    public void handleNewFileClick(View v) {
         floorPlanModel.resetModel();
         onMainFlipClick(findViewById(R.id.designButton));
     }
-	
-	public static MainActivity getInstance(){
+
+    /**
+     * Returns the instance
+     *
+     * @return the instance
+     */
+    public static MainActivity getInstance() {
         return mContext;
     }
-	
-	public void handleStopDrawing(View view){
-		drawingModel.setTouchFloorPlanObject(drawingModel.getTouchFloorPlanObject());
-	}
-	
-	public void handleScreenshot(View v){
+
+    /**
+     * Removes any partially drawn object.
+     *
+     * @param view the clicked button
+     */
+    public void handleStopDrawing(View view) {
+        drawingModel.setTouchFloorPlanObject(drawingModel.getTouchFloorPlanObject());
+    }
+
+    /**
+     * Takes a screenshot and saves it to a file.
+     *
+     * @param v the clicked button
+     */
+    public void handleScreenshot(View v) {
         drawingView.invalidate();
         drawingView.destroyDrawingCache();
         drawingView.setDrawingCacheEnabled(false);
         drawingView.setDrawingCacheEnabled(true);
         drawingView.buildDrawingCache();
         final Bitmap bm = drawingView.getDrawingCache();
-		
-		final Dialog d = new Dialog(this);
-		d.setTitle(R.string.saveScreenshot);
-		d.setContentView(R.layout.save_name);
+
+        final Dialog d = new Dialog(this);
+        d.setTitle(R.string.saveScreenshot);
+        d.setContentView(R.layout.save_name);
         d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         FileChooserDialog dialog = new FileChooserDialog(this);
@@ -578,46 +652,56 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         dialog.setCanCreateFiles(true);
         dialog.setTitle("Select file to save to or create a new one");
         displayNewDialog(dialog);
-	}
-	
-	public void handleImportImage(View v){
-		FileChooserDialog dialog = new FileChooserDialog(this);
-		dialog.addListener(new OnFileSelectedListener() {
-			
-			@Override
-			public void onFileSelected(Dialog source, File folder, String name) {
-                // can not be reached
-			}
-			
-			@Override
-			public void onFileSelected(Dialog source, File file) {
-				source.dismiss();
-				
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-				final Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-				
-				final ImportImage iiDialog = new ImportImage(MainActivity.this);
-				iiDialog.setImage(bitmap);
-				iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-				iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-				displayNewDialog(iiDialog);
-				iiDialog.setOnDismissListener(new OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						if(iiDialog.isCompleted()){
-							drawingModel.setBackground(bitmap, iiDialog.getScale());
-						}
-					}
-				});
-			}
-		});
-		dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
-		dialog.setShowOnlySelectable(true);
-		displayNewDialog(dialog);
-	}
+    }
 
-    public void handleLinkingConfig(final View view){
+    /**
+     * Imports an image to be set as background for the design area.
+     *
+     * @param v
+     */
+    public void handleImportImage(View v) {
+        FileChooserDialog dialog = new FileChooserDialog(this);
+        dialog.addListener(new OnFileSelectedListener() {
+
+            @Override
+            public void onFileSelected(Dialog source, File folder, String name) {
+                // can not be reached
+            }
+
+            @Override
+            public void onFileSelected(Dialog source, File file) {
+                source.dismiss();
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                final Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+
+                final ImportImage iiDialog = new ImportImage(MainActivity.this);
+                iiDialog.setImage(bitmap);
+                iiDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                iiDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                displayNewDialog(iiDialog);
+                iiDialog.setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (iiDialog.isCompleted()) {
+                            drawingModel.setBackground(bitmap, iiDialog.getScale());
+                        }
+                    }
+                });
+            }
+        });
+        dialog.setFilter(".*jpg|.*png|.*gif|.*JPG|.*PNG|.*GIF");
+        dialog.setShowOnlySelectable(true);
+        displayNewDialog(dialog);
+    }
+
+    /**
+     * Opens the dialog to link drawn access points with real ones.
+     *
+     * @param view the clicked button
+     */
+    public void handleLinkingConfig(final View view) {
         final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         taskManager.executeTask(new WifiDetectTask(this), wifi, "Detecting wifi signals...", new OnAsyncTaskCompleteListener<List<RealAccessPoint>>() {
             @Override
@@ -635,6 +719,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Predicts the coverage of the floor plan.
+     *
+     * @param v the clicked button
+     */
     public void onPredictClick(final View v) {
         DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.PREDICT_COVERAGE);
         taskManager.executeTask(new PredictCoverageTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
@@ -654,6 +743,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Places access points optimal on the floor plan
+     *
+     * @param v the clicked button
+     */
     public void onOptimalPlacementClick(final View v) {
         DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.OPTIMAL_PLACEMENT);
         taskManager.executeTask(new OptimalPlacementTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
@@ -673,6 +767,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Reduces exposure on the floor plan
+     *
+     * @param v the clicked button
+     */
     public void onExposureReductionClick(final View v) {
         DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.EXPOSURE_REDUCTION);
         taskManager.executeTask(new ExposureReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
@@ -692,6 +791,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Reduces the current network on the floor plan to a minimum
+     *
+     * @param v the clicked button
+     */
     public void onNetworkReductionClick(final View v) {
         DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.NETWORK_REDUCTION);
         taskManager.executeTask(new NetworkReductionTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
@@ -711,6 +815,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Estimates the SAR on the floor plan
+     *
+     * @param v the clicked button
+     */
     public void onEstimateSARClick(final View v) {
         DeusRequest dr = composeDeusRequest(DeusRequest.RequestType.ESTIMATE_SAR);
         taskManager.executeTask(new EstimateSARTask(), dr, "ws in progress", new OnAsyncTaskCompleteListener<DeusResult>() {
@@ -730,28 +839,53 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }, false);
     }
 
+    /**
+     * Select a measurements file and load it.
+     *
+     * @param v the clicked button
+     */
     public void onLoadMeasurementsClick(final View v) {
-        File file = new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml");
-        taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
+        FileChooserDialog dialog = new FileChooserDialog(this);
+        dialog.addListener(new OnFileSelectedListener() {
+
             @Override
-            public void onTaskCompleteSuccess(List<ApMeasurement> result) {
-                floorPlanModel.setApMeasurements(result);
-                Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
+            public void onFileSelected(Dialog source, File folder, String name) {
+                // can not be reached
             }
 
             @Override
-            public void onTaskFailed(Exception cause) {
-                Log.e(TAG, cause.getMessage(), cause);
-                Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFileSelected(Dialog source, File file) {
+                source.dismiss();
+                taskManager.executeTask(new LoadMeasurementsTask(), file, "Loading" + file.getName() + " ...", new OnAsyncTaskCompleteListener<List<ApMeasurement>>() {
+                    @Override
+                    public void onTaskCompleteSuccess(List<ApMeasurement> result) {
+                        floorPlanModel.setApMeasurements(result);
+                        Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onTaskFailed(Exception cause) {
+                        Log.e(TAG, cause.getMessage(), cause);
+                        Toast.makeText(MainActivity.this, cause.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }, false);
             }
-        }, false);
+        });
+        dialog.setFilter(".*xml|.*XML");
+        dialog.setShowOnlySelectable(true);
+        displayNewDialog(dialog);
     }
 
-    private void saveStats(List<CSVResult> compareList){
+    /**
+     * Saves random generated MSE stats for usage in excel
+     *
+     * @param compareList the list of results to be compared with actual measurements
+     */
+    private void saveStats(List<CSVResult> compareList) {
         Random randomGenerator = new Random();
-        File f = new File(Environment.getExternalStorageDirectory(), "permutations_"+algorithmsView.getPathLossModel().getValue()+".txt");
+        File f = new File(Environment.getExternalStorageDirectory(), "permutations_" + algorithmsView.getPathLossModel().getValue() + ".txt");
         try {
-            PrintWriter fw = new PrintWriter(f,"UTF-8");
+            PrintWriter fw = new PrintWriter(f, "UTF-8");
 
             for (int i = 1; i < compareList.size(); i++) {
                 Set<Set<CSVResult>> seen = new HashSet<Set<CSVResult>>();
@@ -761,22 +895,22 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                         items = new HashSet<CSVResult>();
                         for (int k = 0; k < i; k++) {
                             int index;
-                            do{
+                            do {
                                 index = randomGenerator.nextInt(compareList.size());
-                            } while(!items.add(compareList.get(index)));
+                            } while (!items.add(compareList.get(index)));
 
                         }
                     } while (!seen.add(items));
                     double total = 0;
-                    for(CSVResult csvResult : items){
-                        total+=csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX();
+                    for (CSVResult csvResult : items) {
+                        total += csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX();
                     }
-                    double shift = total/items.size();
+                    double shift = total / items.size();
                     total = 0;
-                    for(CSVResult csvResult : compareList){
-                        total+=(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift)*(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
+                    for (CSVResult csvResult : compareList) {
+                        total += (csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX() - shift) * (csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX() - shift);
                     }
-                    fw.print(total/compareList.size()+";");
+                    fw.print(total / compareList.size() + ";");
                 }
                 fw.println();
             }
@@ -786,21 +920,26 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }
     }
 
-    private void saveStatsPerRoom(List<CSVResult> compareList){
+    /**
+     * Saves random per room generated MSE stats for usage in excel
+     *
+     * @param compareList the list of results to be compared with actual measurements
+     */
+    private void saveStatsPerRoom(List<CSVResult> compareList) {
         HashMap<Integer, List<CSVResult>> roomMap = new HashMap<Integer, List<CSVResult>>();
-        for(CSVResult csvResult : compareList){
+        for (CSVResult csvResult : compareList) {
             int roomNr = csvResult.getDrawingSize();
-            if(!roomMap.containsKey(roomNr)){
-                roomMap.put(roomNr,new ArrayList<CSVResult>());
+            if (!roomMap.containsKey(roomNr)) {
+                roomMap.put(roomNr, new ArrayList<CSVResult>());
             }
             roomMap.get(roomNr).add(csvResult);
         }
         List<Integer> roomNrList = new ArrayList<Integer>(roomMap.keySet());
 
         Random randomGenerator = new Random();
-        File f = new File(Environment.getExternalStorageDirectory(), "room_permutations_"+algorithmsView.getPathLossModel().getValue()+".txt");
+        File f = new File(Environment.getExternalStorageDirectory(), "room_permutations_" + algorithmsView.getPathLossModel().getValue() + ".txt");
         try {
-            PrintWriter fw = new PrintWriter(f,"UTF-8");
+            PrintWriter fw = new PrintWriter(f, "UTF-8");
 
             for (int i = 1; i <= roomNrList.size(); i++) {
 
@@ -809,23 +948,23 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                     Set<CSVResult> items;
                     do {
                         items = new HashSet<CSVResult>();
-                        Collections.shuffle(roomNrList,randomGenerator);
-                        for(int k = 0; k < i; k++){
+                        Collections.shuffle(roomNrList, randomGenerator);
+                        for (int k = 0; k < i; k++) {
                             List<CSVResult> roomList = roomMap.get(roomNrList.get(k));
                             items.add(roomList.get(randomGenerator.nextInt(roomList.size())));
                         }
                     } while (!seen.add(items));
                     double total = 0;
-                    for(CSVResult csvResult : items){
-                        System.out.println("nr: "+csvResult.getDrawingSize());
-                        total+=csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX();
+                    for (CSVResult csvResult : items) {
+                        System.out.println("nr: " + csvResult.getDrawingSize());
+                        total += csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX();
                     }
-                    double shift = total/items.size();
+                    double shift = total / items.size();
                     total = 0;
-                    for(CSVResult csvResult : compareList){
-                        total+=(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift)*(csvResult.getApMeasurement().getSignalStrength()-csvResult.getPowerRX()-shift);
+                    for (CSVResult csvResult : compareList) {
+                        total += (csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX() - shift) * (csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX() - shift);
                     }
-                    fw.print(total/compareList.size()+";");
+                    fw.print(total / compareList.size() + ";");
                 }
                 fw.println();
             }
@@ -835,11 +974,44 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }
     }
 
+    /**
+     * Saves all done measurements to myMeasurements.xml
+     *
+     * @param v the clicked button
+     */
     public void onSaveMeasurementsClick(final View v) {
-        List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
-        saveTofile(new SaveXMLParams(tmp, "measurements", new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml")));
+        FileChooserDialog dialog = new FileChooserDialog(this);
+        dialog.addListener(new OnFileSelectedListener() {
+            @Override
+            public void onFileSelected(Dialog source, File folder, String name) {
+                source.dismiss();
+                if (!name.toLowerCase().endsWith(".xml")) {
+                    name += ".xml";
+                }
+                File file = new File(folder, name);
+                List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
+                saveTofile(new SaveXMLParams(tmp, "measurements", file));
+            }
+
+            @Override
+            public void onFileSelected(Dialog source, File file) {
+                source.dismiss();
+                List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
+                saveTofile(new SaveXMLParams(tmp, "measurements", file));
+            }
+        });
+        dialog.setFilter(".*xml|.*XML");
+        dialog.setShowOnlySelectable(true);
+        dialog.setCanCreateFiles(true);
+        dialog.setTitle("Select file to save to or create a new one");
+        displayNewDialog(dialog);
     }
 
+    /**
+     * Applies the taken measurements to the model's results by shifting based on measurements.
+     *
+     * @param v the clicked button
+     */
     public void oneApplyMeasurementsClick(final View v) {
         List<ApMeasurement> apMeasurements = floorPlanModel.getApMeasurements();
         if (apMeasurements.size() > 0) {
@@ -870,6 +1042,12 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
 //        saveTofile(saveXMLParams);
     }
 
+    /**
+     * composes a DeusRequest object given the deus request type.
+     *
+     * @param type type of the request
+     * @return the composed DeusRequest
+     */
     private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {
         String pathLossModel = algorithmsView.getPathLossModel().getValue()/*+amount*/;
         double gridSize = recieversView.getGridSize() * 100;
@@ -922,33 +1100,41 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         if (taskManager == null) {
             taskManager = new ASyncIOTaskManager(this);
         }
+        // TODO : to implement
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         dismissDialog();
+
+        // TODO : to implement
     }
-    
+
     private void displayNewDialog(Dialog d) {
         dismissDialog();
         dialog = d;
         dialog.show();
     }
-    
+
     private void dismissDialog() {
         if (dialog != null) {
             dialog.dismiss();
         }
     }
 
-    public void handleSaveRawData(View view){
+    /**
+     * Saves the resulting data obtained from the web service.
+     *
+     * @param view the clicked button
+     */
+    public void handleSaveRawData(View view) {
         FileChooserDialog dialog = new FileChooserDialog(MainActivity.this);
         dialog.addListener(new OnFileSelectedListener() {
             @Override
             public void onFileSelected(Dialog source, File folder, String name) {
                 String extension = "";
-                switch (exportRawDataView.getExportType()){
+                switch (exportRawDataView.getExportType()) {
                     case NORMALIZED_PLAN:
                     case OPTIMIZED_PLAN:
                     case COVERAGE_DATA:
@@ -962,7 +1148,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 if (!name.toLowerCase().endsWith(extension)) {
                     name += extension;
                 }
-                File file = new File(folder,name);
+                File file = new File(folder, name);
                 saveRawData(exportRawDataView.getExportType(), file);
             }
 
@@ -972,7 +1158,7 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
                 saveRawData(exportRawDataView.getExportType(), file);
             }
         });
-        switch (exportRawDataView.getExportType()){
+        switch (exportRawDataView.getExportType()) {
             case NORMALIZED_PLAN:
             case OPTIMIZED_PLAN:
             case COVERAGE_DATA:
@@ -989,9 +1175,15 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         displayNewDialog(dialog);
     }
 
+    /**
+     * Saves the data given export type (plain text or xml) and the file to save to.
+     *
+     * @param exportType the export type
+     * @param f          the file to save to
+     */
     private void saveRawData(ExportRawDataType exportType, File f) {
         DeusResult dr = floorPlanModel.getDeusResult();
-        switch(exportType){
+        switch (exportType) {
             case NORMALIZED_PLAN:
                 if (dr.getNormalizedPlan() != null) {
                     saveTofile(new SaveXMLParams(dr.getNormalizedPlan(), f));
@@ -1031,6 +1223,11 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
         }
     }
 
+    /**
+     * Returns the task manager
+     *
+     * @return the task manager
+     */
     public ASyncIOTaskManager getTaskManager() {
         return taskManager;
     }

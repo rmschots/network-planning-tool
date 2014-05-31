@@ -3,20 +3,13 @@ package com.ugent.networkplanningtool.layout.results;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-/**
- * Created by Roel on 9/03/14.
- */
 public class VisualOptionsView extends LinearLayout {
 
     private CheckBox showAccessPointsCheckBox;
@@ -72,7 +65,7 @@ public class VisualOptionsView extends LinearLayout {
         });
     }
 
-    public void setDrawingModel(DrawingModel drawingModel){
+    public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }
 }

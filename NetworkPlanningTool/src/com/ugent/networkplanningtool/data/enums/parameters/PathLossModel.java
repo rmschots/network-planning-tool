@@ -7,9 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Roel on 25/02/14.
+ * Contains the different path loss models.
  */
 public enum PathLossModel {
+
     WHIPP(MainActivity.getInstance().getResources().getString(R.string.whippText), "sidp"),
     TGN(MainActivity.getInstance().getResources().getString(R.string.tgnText), "tgn"),
     FREE_SPACE(MainActivity.getInstance().getResources().getString(R.string.freespaceText), "freespace"),

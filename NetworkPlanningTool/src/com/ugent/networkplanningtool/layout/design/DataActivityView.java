@@ -47,7 +47,7 @@ public class DataActivityView extends DataObjectView {
             if (type.equals(ViewType.INFO)) {
                 activityTypeRadioGroup.setEnabled(false);
                 for (int i = 0; i < activityTypeRadioGroup.getChildCount(); i++) {
-                    ((RadioButton) activityTypeRadioGroup.getChildAt(i)).setEnabled(false);
+                    activityTypeRadioGroup.getChildAt(i).setEnabled(false);
                 }
             } else {
                 OnCheckedChangeListener listener = new OnCheckedChangeListener() {

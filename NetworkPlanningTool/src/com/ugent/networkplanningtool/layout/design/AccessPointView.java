@@ -75,23 +75,22 @@ public class AccessPointView extends DataObjectView {
         transmitPowerEditText = (EditText) findViewById(R.id.transmitPowerEditText);
         elevationEditText = (EditText) findViewById(R.id.elevationEditText);
 
-        typeAdapter = new ArrayAdapter<RadioType>(getContext(),android.R.layout.simple_spinner_dropdown_item,RadioType.values());
+        typeAdapter = new ArrayAdapter<RadioType>(getContext(), android.R.layout.simple_spinner_dropdown_item, RadioType.values());
         networkSignalTypeSpinner.setAdapter(typeAdapter);
 
 
-
-        freqBandAdapter = new ArrayAdapter<FrequencyBand>(getContext(),android.R.layout.simple_spinner_dropdown_item,FrequencyBand.values());
+        freqBandAdapter = new ArrayAdapter<FrequencyBand>(getContext(), android.R.layout.simple_spinner_dropdown_item, FrequencyBand.values());
         networkMHzSpinner.setAdapter(freqBandAdapter);
         networkMHzSpinner.setSelection(freqBandAdapter.getPosition(FrequencyBand.FREQBAND_2400));
         networkMHzSpinner.setEnabled(false);
 
-        freqAdapter = new ArrayAdapter<Frequency>(getContext(),android.R.layout.simple_spinner_dropdown_item,Frequency.values());
+        freqAdapter = new ArrayAdapter<Frequency>(getContext(), android.R.layout.simple_spinner_dropdown_item, Frequency.values());
         networkChannelSpinner.setAdapter(freqAdapter);
 
-        modelAdapter = new ArrayAdapter<RadioModel>(getContext(),android.R.layout.simple_spinner_dropdown_item,RadioModel.values());
+        modelAdapter = new ArrayAdapter<RadioModel>(getContext(), android.R.layout.simple_spinner_dropdown_item, RadioModel.values());
         networkModelSpinner.setAdapter(modelAdapter);
 
-        networkAdapter = new ArrayAdapter<Network>(getContext(),android.R.layout.simple_spinner_dropdown_item,Network.values());
+        networkAdapter = new ArrayAdapter<Network>(getContext(), android.R.layout.simple_spinner_dropdown_item, Network.values());
         networkIDSpinner.setAdapter(networkAdapter);
     }
 
@@ -175,16 +174,16 @@ public class AccessPointView extends DataObjectView {
 
     public void updateDrawingModel() {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
-        String name = nameEditText.getText().toString();
+        String name = nameEditText.getText() == null ? "" : nameEditText.getText().toString();
         RadioType signalType = getSelectedSignalType();
         Frequency freq = getSelectedFrequency();
         System.out.println(freq);
         FrequencyBand freqBand = getSelectedFrequencyBand();
         RadioModel model = getSelectedModel();
         Network network = getSelectedNetwork();
-        int transmitPower = Integer.parseInt(transmitPowerEditText.getText().toString());
-        int antennaGain = Integer.parseInt(antennaGainEditText.getText().toString());
-        int elevation = Integer.parseInt(elevationEditText.getText().toString());
+        int transmitPower = transmitPowerEditText.getText() == null ? 14 : Integer.parseInt(transmitPowerEditText.getText().toString());
+        int antennaGain = antennaGainEditText.getText() == null ? 2 : Integer.parseInt(antennaGainEditText.getText().toString());
+        int elevation = elevationEditText.getText() == null ? 200 : Integer.parseInt(elevationEditText.getText().toString());
 
         if (drawingModel.getTouchFloorPlanObject() != null
                 && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.ACCESS_POINT)) {
@@ -213,9 +212,9 @@ public class AccessPointView extends DataObjectView {
         networkModelSpinner.setSelection(modelAdapter.getPosition(ap.getModel()));
         networkIDSpinner.setSelection(networkAdapter.getPosition(ap.getNetwork()));
 
-        antennaGainEditText.setText(""+ap.getGain());
-        transmitPowerEditText.setText(""+ap.getPower());
-        elevationEditText.setText(""+ap.getHeight());
+        antennaGainEditText.setText("" + ap.getGain());
+        transmitPowerEditText.setText("" + ap.getPower());
+        elevationEditText.setText("" + ap.getHeight());
     }
 
 
