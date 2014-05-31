@@ -19,8 +19,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -738,19 +736,6 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
             @Override
             public void onTaskCompleteSuccess(List<ApMeasurement> result) {
                 floorPlanModel.setApMeasurements(result);
-                List<XMLTransformable> compareList = new ArrayList<XMLTransformable>();
-
-                for(ApMeasurement apMeasurement : result){
-                    CSVResult closestResult = Utils.getResultAt(apMeasurement.getPoint1(), floorPlanModel.getDeusResult().getCsv());
-                    closestResult.setApMeasurement(apMeasurement);
-                    compareList.add(closestResult);
-                }
-                //saveStatsPerRoom(compareList);
-                //saveStats(compareList);
-
-                SaveXMLParams saveXMLParams = new SaveXMLParams(compareList,"comparelist", new File(Environment.getExternalStorageDirectory(), "compare_"+algorithmsView.getPathLossModel().getValue()+".xml"));
-                saveTofile(saveXMLParams);
-                floorPlanModel.setApMeasurements(result);
                 Toast.makeText(MainActivity.this, "measurements loaded", Toast.LENGTH_LONG).show();
             }
 
@@ -856,8 +841,33 @@ public class MainActivity extends Activity implements Observer,OnTouchListener{
     }
 
     public void oneApplyMeasurementsClick(final View v) {
-        List<XMLTransformable> tmp = new ArrayList<XMLTransformable>(floorPlanModel.getApMeasurements());
-        saveTofile(new SaveXMLParams(tmp, "measurements", new File(Environment.getExternalStorageDirectory(), "myMeasurements.xml")));
+        List<ApMeasurement> apMeasurements = floorPlanModel.getApMeasurements();
+        if (apMeasurements.size() > 0) {
+            List<CSVResult> compareList = new ArrayList<CSVResult>();
+
+            for (ApMeasurement apMeasurement : apMeasurements) {
+                CSVResult closestResult = Utils.getResultAt(apMeasurement.getPoint1(), floorPlanModel.getDeusResult().getCsv());
+                closestResult.setApMeasurement(apMeasurement);
+                compareList.add(closestResult);
+            }
+
+            double total = 0;
+            for (CSVResult csvResult : compareList) {
+                total += csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX();
+            }
+            double shift = total / compareList.size();
+            floorPlanModel.shiftDeusResult(shift);
+
+            Toast.makeText(MainActivity.this, "Shift of " + shift + " applied. Results can be checked at the powerRX results.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "There are no measurements", Toast.LENGTH_SHORT).show();
+        }
+
+
+//        saveStatsPerRoom(compareList);
+//        saveStats(compareList);
+//        SaveXMLParams saveXMLParams = new SaveXMLParams(compareList,"comparelist", new File(Environment.getExternalStorageDirectory(), "compare_"+algorithmsView.getPathLossModel().getValue()+".xml"));
+//        saveTofile(saveXMLParams);
     }
 
     private DeusRequest composeDeusRequest(DeusRequest.RequestType type) {

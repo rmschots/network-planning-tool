@@ -88,6 +88,17 @@ public class DeusResult {
         this.normalizedPlan = normalizedPlan;
         this.optimizedPlan = optimizedPlan;
 
+        generateBitmaps();
+    }
+
+    public void shiftResults(double shift) {
+        for (CSVResult csvResult : getCsv()) {
+            csvResult.setPowerRX(csvResult.getPowerRX() + shift);
+        }
+        generateBitmaps();
+    }
+
+    private void generateBitmaps() {
         int width = DrawingModel.FLOOR_WIDTH / 10;
         int height = DrawingModel.FLOOR_HEIGHT / 10;
 

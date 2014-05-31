@@ -61,10 +61,18 @@
         android:id="@+id/loadMeasurementsButton"
         android:onClick="onLoadMeasurementsClick" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="It is advised to take at least 5 measurements at random locations to improve results."
+        android:id="@+id/measurementAdviseText"
+        android:layout_gravity="center_horizontal" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Apply measurements"
-        android:id="@+id/button" />
+        android:text="Improve results"
+        android:id="@+id/improveResultsButton"
+        android:onClick="oneApplyMeasurementsClick" />
 
 </LinearLayout>

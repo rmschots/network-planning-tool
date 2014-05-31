@@ -21,7 +21,7 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
     private final Double download; // (mbps)
     private final Double upload; // (mbps)
     private final Double pathloss; // (db)
-    private final Double powerRX; // (db)
+    private Double powerRX; // (db)
     private final Double powerTX; // (db)
     private final Double absorption; //SAR W/kg?
     private final Double eField; // veldsterkte V/m
@@ -130,6 +130,10 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
 
     public Double getPdDif() {
         return pdDif;
+    }
+
+    public void setPowerRX(Double powerRX) {
+        this.powerRX = powerRX;
     }
 
     @Override

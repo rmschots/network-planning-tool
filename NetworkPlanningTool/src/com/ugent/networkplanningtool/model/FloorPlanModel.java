@@ -7,8 +7,8 @@ import com.ugent.networkplanningtool.data.AccessPoint;
 import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.FloorPlan;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.ServiceData.DeusResult;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.utils.Couple;
@@ -98,6 +98,12 @@ public class FloorPlanModel extends Observable {
             setChanged();
             notifyObservers(deusResult);
         }
+    }
+
+    public void shiftDeusResult(double shift) {
+        getDeusResult().shiftResults(shift);
+        setChanged();
+        notifyObservers();
     }
 
     public void resetModel() {
