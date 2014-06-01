@@ -222,9 +222,9 @@ public class AccessPointView extends FloorPlanObjectView {
         FrequencyBand freqBand = getSelectedFrequencyBand();
         RadioModel model = getSelectedModel();
         Network network = getSelectedNetwork();
-        int transmitPower = transmitPowerEditText.getText() == null ? 14 : Integer.parseInt(transmitPowerEditText.getText().toString());
-        int antennaGain = antennaGainEditText.getText() == null ? 2 : Integer.parseInt(antennaGainEditText.getText().toString());
-        int elevation = elevationEditText.getText() == null ? 200 : Integer.parseInt(elevationEditText.getText().toString());
+        int transmitPower = transmitPowerEditText.getText().length()==0 ? 14 : Integer.parseInt(transmitPowerEditText.getText().toString());
+        int antennaGain = antennaGainEditText.getText().length()==0 ? 2 : Integer.parseInt(antennaGainEditText.getText().toString());
+        int elevation = elevationEditText.getText().length()==0 ? 200 : Integer.parseInt(elevationEditText.getText().toString());
 
         if (drawingModel.getTouchFloorPlanObject() != null
                 && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.FloorPlanObjectType.ACCESS_POINT)) {

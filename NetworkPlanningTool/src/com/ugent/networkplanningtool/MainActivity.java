@@ -928,7 +928,7 @@ public class MainActivity extends Activity implements Observer, OnTouchListener 
     private void saveStatsPerRoom(List<CSVResult> compareList) {
         HashMap<Integer, List<CSVResult>> roomMap = new HashMap<Integer, List<CSVResult>>();
         for (CSVResult csvResult : compareList) {
-            int roomNr = csvResult.getDrawingSize();
+            int roomNr = csvResult.getRoomNumber();
             if (!roomMap.containsKey(roomNr)) {
                 roomMap.put(roomNr, new ArrayList<CSVResult>());
             }

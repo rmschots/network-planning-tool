@@ -92,7 +92,7 @@ public class GeneratedAPsView extends LinearLayout {
      * @return the set transmit power of the generated access point
      */
     public double getTransmitPower() {
-        return Double.parseDouble(transmitPowerEditText.getText().toString());
+        return transmitPowerEditText.getText().length()==0 ? 14 : Double.parseDouble(transmitPowerEditText.getText().toString());
     }
 
     /**
