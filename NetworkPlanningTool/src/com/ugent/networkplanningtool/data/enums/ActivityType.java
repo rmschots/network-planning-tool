@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type of an activity
+ */
 public enum ActivityType {
     HD_VIDEO(MainActivity.getInstance().getResources().getString(R.string.hdVideotext)),
     ACTION_GAMES(MainActivity.getInstance().getResources().getString(R.string.actionGamesText)),

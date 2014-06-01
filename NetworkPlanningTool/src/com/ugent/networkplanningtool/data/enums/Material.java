@@ -8,6 +8,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The material of a Wall
+ */
 public enum Material {
     BRICK(MainActivity.getInstance().getResources().getString(R.string.brickText), Color.rgb(221, 0, 0)),
     LAYERED_DRYWALL(MainActivity.getInstance().getResources().getString(R.string.layeredDrywallText), Color.rgb(176, 129, 64)),

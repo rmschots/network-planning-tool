@@ -11,6 +11,9 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View used to export resulting data
+ */
 public class ExportRawDataView extends LinearLayout {
 
     private RadioGroup exportRadioGroup;
@@ -20,14 +23,11 @@ public class ExportRawDataView extends LinearLayout {
     private RadioButton exposureInfoRadioButton;
     private RadioButton benchmarksRadioButton;
 
-    private DrawingModel drawingModel;
-
-    public ExportRawDataView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public ExportRawDataView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -54,6 +54,10 @@ public class ExportRawDataView extends LinearLayout {
         benchmarksRadioButton.setTag(ExportRawDataType.BENCHMARK);
     }
 
+    /**
+     * Returns which data to export
+     * @return which data to export
+     */
     public ExportRawDataType getExportType() {
         Object o = findViewById(exportRadioGroup.getCheckedRadioButtonId()).getTag();
         if (o != null && o instanceof ExportRawDataType) ;

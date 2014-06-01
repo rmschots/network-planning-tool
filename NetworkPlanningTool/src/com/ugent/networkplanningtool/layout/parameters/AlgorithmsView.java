@@ -11,16 +11,19 @@ import android.widget.Spinner;
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.parameters.PathLossModel;
 
+/**
+ * View for setting the model to use
+ */
 public class AlgorithmsView extends LinearLayout {
 
     private CheckBox frequenciesCheckBox;
     private Spinner pathLossModelSpinner;
 
-    public AlgorithmsView(Context context) {
-        super(context);
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public AlgorithmsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -35,10 +38,18 @@ public class AlgorithmsView extends LinearLayout {
         pathLossModelSpinner = (Spinner) findViewById(R.id.pathlossModelSpinner);
     }
 
+    /**
+     * Returns whether to request the frequencies
+     * @return whether to request the frequencies
+     */
     public boolean isGetFrequencies() {
         return frequenciesCheckBox.isChecked();
     }
 
+    /**
+     * Gets the path loss model to use
+     * @return the path loss model to use
+     */
     public PathLossModel getPathLossModel() {
         String itemAsString = pathLossModelSpinner.getSelectedItem().toString();
         PathLossModel type = PathLossModel.getPathLossModelByName(itemAsString);

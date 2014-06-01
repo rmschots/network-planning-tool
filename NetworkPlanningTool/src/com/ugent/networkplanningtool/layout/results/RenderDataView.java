@@ -20,6 +20,9 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * View used for rendering path loss model results
+ */
 public class RenderDataView extends LinearLayout implements Observer {
 
     private Spinner viewSpinner;
@@ -29,14 +32,11 @@ public class RenderDataView extends LinearLayout implements Observer {
 
     private DrawingModel drawingModel;
 
-    private DeusResult currentResult;
-
-    public RenderDataView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public RenderDataView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -51,8 +51,11 @@ public class RenderDataView extends LinearLayout implements Observer {
         legendTable = (TableLayout) findViewById(R.id.legendTable);
     }
 
+    /**
+     * Updates the views with the given path loss model results
+     * @param dr the path loss model results
+     */
     private void updateViews(DeusResult dr) {
-        currentResult = dr;
         legendTable.removeAllViewsInLayout();
         viewSpinner.setAdapter(null);
         if (dr != null) {
@@ -99,6 +102,11 @@ public class RenderDataView extends LinearLayout implements Observer {
     }
 
 
+    /**
+     * Invoked by a model to update this view
+     * @param observable the invoking model
+     * @param o updated data
+     */
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof FloorPlanModel) {
@@ -109,6 +117,10 @@ public class RenderDataView extends LinearLayout implements Observer {
         }
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }

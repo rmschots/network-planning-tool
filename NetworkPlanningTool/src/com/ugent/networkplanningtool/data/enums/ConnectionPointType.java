@@ -8,6 +8,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The connection type of a ConnectionPoint (data or power)
+ */
 public enum ConnectionPointType {
     DATA(MainActivity.getInstance().getResources().getString(R.string.dataConnectionPointText), Color.rgb(114, 15, 24)),
     POWER(MainActivity.getInstance().getResources().getString(R.string.powerConnectionPointText), Color.rgb(116, 172, 36));

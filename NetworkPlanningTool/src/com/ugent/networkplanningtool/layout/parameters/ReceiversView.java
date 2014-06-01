@@ -18,6 +18,9 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * View used to set the receiver's parameters
+ */
 public class ReceiversView extends LinearLayout {
 
     private ArrayAdapter<Receiver> receiversAdapter;
@@ -28,14 +31,11 @@ public class ReceiversView extends LinearLayout {
 
     private CheckBox[] receiverTypeCheckboxes;
 
-    private DrawingModel drawingModel;
-
-    public ReceiversView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public ReceiversView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -75,14 +75,26 @@ public class ReceiversView extends LinearLayout {
         });
     }
 
+    /**
+     * Returns the receiver type as String
+     * @return the receiver type as String
+     */
     public String getReceiver() {
         return receiversAdapter.getItem(receiversSpinner.getSelectedItemPosition()).getText();
     }
 
+    /**
+     * Returns the height of the receiver
+     * @return the height of the receiver
+     */
     public double getElevation() {
         return elevationSeekBar.getValue();
     }
 
+    /**
+     * Returns set the grid size (smaller means more locations are returned with results)
+     * @return set the grid size
+     */
     public double getGridSize() {
         return gridSizeSeeBar.getValue();
     }

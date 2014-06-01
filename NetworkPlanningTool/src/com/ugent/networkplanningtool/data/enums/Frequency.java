@@ -8,6 +8,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The frequency of an access point
+ */
 public enum Frequency {
     FREQ_1(MainActivity.getInstance().getResources().getString(R.string.frequency1), 2412),
     FREQ_2(MainActivity.getInstance().getResources().getString(R.string.frequency2), 2417),

@@ -8,6 +8,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The thickness of a Wall
+ */
 public enum Thickness {
     THICK(MainActivity.getInstance().getResources().getString(R.string.thickText), 30),
     THIN(MainActivity.getInstance().getResources().getString(R.string.thinText), 10);

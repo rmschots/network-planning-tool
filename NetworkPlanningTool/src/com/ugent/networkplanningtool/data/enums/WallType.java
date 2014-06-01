@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type of a Wall object
+ */
 public enum WallType {
     WALL(MainActivity.getInstance().getResources().getString(R.string.wallText).toLowerCase()),
     DOOR(MainActivity.getInstance().getResources().getString(R.string.doorText).toLowerCase()),

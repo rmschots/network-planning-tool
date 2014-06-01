@@ -12,7 +12,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.ugent.networkplanningtool.R;
-import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.Wall;
 import com.ugent.networkplanningtool.data.enums.Material;
 import com.ugent.networkplanningtool.data.enums.SnapTo;
@@ -21,7 +21,10 @@ import com.ugent.networkplanningtool.data.enums.WallType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.utils.UniqueIdGenerator;
 
-public class WallView extends DataObjectView {
+/**
+ * View containing Wall properties
+ */
+public class WallView extends FloorPlanObjectView {
 
     private Material[] materials;
 
@@ -36,6 +39,12 @@ public class WallView extends DataObjectView {
 
     private DrawingModel drawingModel;
 
+    /**
+     * Constructor to create an instance containing the given data.
+     * @param context the context of the parent
+     * @param type type of Wall to create a view for
+     * @param drawingModel drawing model containing the data to use
+     */
     public WallView(Context context, ViewType type, DrawingModel drawingModel) {
         super(context, type);
         this.drawingModel = drawingModel;
@@ -45,6 +54,11 @@ public class WallView extends DataObjectView {
         initComponents();
     }
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public WallView(Context context, AttributeSet attrs) {
         super(context, attrs);
         tag = getTag();
@@ -142,6 +156,10 @@ public class WallView extends DataObjectView {
         stopDrawingButton.setVisibility(type.equals(ViewType.DRAW) ? View.VISIBLE : View.GONE);
     }
 
+    /**
+     * Returns the selected material type
+     * @return the selected material type
+     */
     public Material getSelectedMaterial() {
         RadioButton rb = (RadioButton) findViewById(materialsRadioGroup.getCheckedRadioButtonId());
         Material material = Material.getMaterialByText(rb.getText().toString());
@@ -149,6 +167,10 @@ public class WallView extends DataObjectView {
         return material;
     }
 
+    /**
+     * Returns the selected Wall thickness
+     * @return the selected Wall thickness
+     */
     public Thickness getSelectedThickness() {
         RadioButton rb = (RadioButton) findViewById(thicknessRadioGroup.getCheckedRadioButtonId());
         Thickness thickness = Thickness.getThicknessByText(rb.getText().toString());
@@ -156,6 +178,10 @@ public class WallView extends DataObjectView {
         return thickness;
     }
 
+    /**
+     * Returns the selected "snap to" mode
+     * @return the selected "snap to" mode
+     */
     public SnapTo getSnapTo() {
         RadioButton rb = (RadioButton) findViewById(snapToRadioGroup.getCheckedRadioButtonId());
         SnapTo snapTo = SnapTo.getSnapToByText(rb.getText().toString());
@@ -163,21 +189,32 @@ public class WallView extends DataObjectView {
         return snapTo;
     }
 
+    /**
+     * Returns the Wall type
+     * @return the Wall type
+     */
     public WallType getWallType() {
         return wallType;
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }
 
+    /**
+     * Updates the drawing model with the set data
+     */
     public void updateDrawingModel() {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         WallType wallType = getWallType();
         Material material = getSelectedMaterial();
         Thickness thickness = getSelectedThickness();
         if (drawingModel.getTouchFloorPlanObject() != null
-                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.WALL)) {
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.FloorPlanObjectType.WALL)) {
             Wall wall = (Wall) drawingModel.getTouchFloorPlanObject();
             wall.setWallType(wallType);
             wall.setMaterial(material);
@@ -191,6 +228,9 @@ public class WallView extends DataObjectView {
         }
     }
 
+    /**
+     * Loads the data from the drawing model and update the view
+     */
     private void loadData() {
         Wall wall = (Wall) drawingModel.getSelected();
         System.out.println("thick: " + wall.getThickness());

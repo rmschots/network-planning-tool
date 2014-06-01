@@ -10,16 +10,25 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.DataActivity;
-import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class DataActivityView extends DataObjectView {
+/**
+ * View containing DataActivity properties
+ */
+public class DataActivityView extends FloorPlanObjectView {
 
     private RadioGroup activityTypeRadioGroup;
 
     private DrawingModel drawingModel;
 
+    /**
+     * Constructor setting the view type and drawing model
+     * @param context the context of the parent
+     * @param type the view type to be used
+     * @param drawingModel the drawing model to use
+     */
     public DataActivityView(Context context, ViewType type, DrawingModel drawingModel) {
         super(context, type);
         this.drawingModel = drawingModel;
@@ -27,6 +36,11 @@ public class DataActivityView extends DataObjectView {
         loadData();
     }
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public DataActivityView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -61,6 +75,10 @@ public class DataActivityView extends DataObjectView {
         }
     }
 
+    /**
+     * Returns the selected connection type
+     * @return the selected connection type
+     */
     public ActivityType getSelectedConnectionType() {
         RadioButton rb = (RadioButton) findViewById(activityTypeRadioGroup.getCheckedRadioButtonId());
         ActivityType type = ActivityType.getActivityTypeByText(rb.getText().toString());
@@ -68,16 +86,23 @@ public class DataActivityView extends DataObjectView {
         return type;
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }
 
+    /**
+     * Updates the drawing model with currently selected data
+     */
     public void updateDrawingModel() {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         ActivityType activityType = getSelectedConnectionType();
 
         if (drawingModel.getTouchFloorPlanObject() != null
-                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.DATA_ACTIVITY)) {
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.FloorPlanObjectType.DATA_ACTIVITY)) {
             DataActivity cp = (DataActivity) drawingModel.getTouchFloorPlanObject();
             cp.setType(activityType);
         } else {
@@ -86,6 +111,9 @@ public class DataActivityView extends DataObjectView {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
     }
 
+    /**
+     * Loads data of the drawing model in the view
+     */
     private void loadData() {
         DataActivity da = (DataActivity) drawingModel.getSelected();
         for (int i = 0; i < activityTypeRadioGroup.getChildCount(); i++) {

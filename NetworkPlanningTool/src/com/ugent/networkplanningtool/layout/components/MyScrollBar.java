@@ -14,6 +14,9 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Custom implementation of a scroll bar both horizontally and vertically usable
+ */
 public class MyScrollBar extends View implements Observer {
 
     private Paint paint = new Paint();
@@ -33,11 +36,20 @@ public class MyScrollBar extends View implements Observer {
     private float barEnd;
 
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     */
     public MyScrollBar(Context context) {
         super(context);
         horizontal = getWidth() >= getHeight();
     }
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public MyScrollBar(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -54,13 +66,18 @@ public class MyScrollBar extends View implements Observer {
     }
 
     /**
-     * @param model the model to set
+     * Sets the drawing model to use
+     * @param model the drawing model to use
      */
     public void setModel(DrawingModel model) {
         this.model = model;
         model.addObserver(this);
     }
 
+    /**
+     * Draws te scroll bar on the canvas
+     * @param canvas the canvas to draw on
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         if (model != null) {
@@ -97,6 +114,11 @@ public class MyScrollBar extends View implements Observer {
         super.onDraw(canvas);
     }
 
+    /**
+     * The user interaction with the scroll bar
+     * @param event the touch event
+     * @return wether to consume the event
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -140,17 +162,34 @@ public class MyScrollBar extends View implements Observer {
         return true;
     }
 
+    /**
+     * Updates the scroll bar when the drawing area dimensions change
+     * @param w the new width
+     * @param h the new height
+     * @param oldw the old width
+     * @param oldh the old height
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         horizontal = w >= h;
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
+    /**
+     * Invoked by a model when data changed
+     * @param observable the model triggering this method
+     * @param data the changed data
+     */
     @Override
     public void update(Observable observable, Object data) {
         invalidate();
     }
 
+    /**
+     * Converts dp to px
+     * @param dp the dp to convert
+     * @return the resulting px
+     */
     private int getPx(float dp) {
         return (int) (getResources().getDisplayMetrics().density * dp);
     }

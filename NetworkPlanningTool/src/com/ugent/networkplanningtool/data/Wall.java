@@ -15,6 +15,9 @@ import com.ugent.networkplanningtool.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * A Wall object can represent a wall, door or window.
+ */
 public class Wall extends FloorPlanObject implements XMLTransformable {
 
     private Point point2;
@@ -24,53 +27,85 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
 
     private Material material;
 
+    /**
+     * Constructor creating a deep copy of the given Wall
+     * @param wall wall to make a deep copy of
+     */
     public Wall(Wall wall) {
         super(wall);
-        DATA_OBJECT_TYPE = DataObjectType.WALL;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.WALL;
         this.point2 = new Point(wall.point2);
         this.wallType = wall.wallType;
         this.thickness = wall.thickness;
         this.material = wall.material;
     }
 
+    /**
+     * Creates a wall using its static properties (without edges)
+     * @param wallType the type of the wall
+     * @param thickness the thickness of the wall
+     * @param material the material the wall is made of
+     */
     public Wall(WallType wallType, Thickness thickness, Material material) {
         super();
-        DATA_OBJECT_TYPE = DataObjectType.WALL;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.WALL;
         this.wallType = wallType;
         this.thickness = thickness;
         this.material = material;
         point2 = null;
     }
 
+    /**
+     * Creates a wall using its static properties and one edge
+     * @param point1 the first edge of the wall
+     * @param wallType the type of the wall
+     * @param thickness the thickness of the wall
+     * @param material the material the wall is made of
+     */
     public Wall(Point point1, WallType wallType, Thickness thickness, Material material) {
         super(point1);
-        DATA_OBJECT_TYPE = DataObjectType.WALL;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.WALL;
         this.wallType = wallType;
         this.thickness = thickness;
         this.material = material;
         point2 = null;
     }
 
+    /**
+     * Creates a wall using its static properties and its two edges
+     * @param point1 the first edge of the wall
+     * @param point2 the second edge of the wall
+     * @param wallType the type of the wall
+     * @param thickness the thickness of the wall
+     * @param material the material the wall is made of
+     */
     public Wall(Point point1, Point point2, WallType wallType, Thickness thickness, Material material) {
         this(point1, wallType, thickness, material);
-        DATA_OBJECT_TYPE = DataObjectType.WALL;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.WALL;
         this.point2 = point2;
     }
 
     /**
-     * @return the x2
+     * Returns the second edge
+     * @return the second edge
      */
     public Point getPoint2() {
         return point2;
     }
 
     /**
-     * @param point2 the point2 to set
+     * Sets the second edge
+     * @param point2 the second edge
      */
     public void setPoint2(Point point2) {
         this.point2 = point2;
     }
 
+    /**
+     * Sets the second edge
+     * @param x x coordinate of second edge
+     * @param y y coordinate of second edge
+     */
     public void setPoint2(int x, int y) {
         if (x >= 0 && y >= 0) {
             if (point2 == null) {
@@ -82,14 +117,16 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
     }
 
     /**
-     * @return the wallType
+     * Returns the type of the Wall
+     * @return the type of the Wall
      */
     public WallType getWallType() {
         return wallType;
     }
 
     /**
-     * @param wallType the wallType to set
+     * Sets the type of the Wall
+     * @param wallType the type of the Wall
      */
     public void setWallType(WallType wallType) {
         if (wallType != null) {
@@ -98,14 +135,16 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
     }
 
     /**
-     * @return the thickness
+     * Returns the thickness of the Wall
+     * @return the thickness of the Wall
      */
     public Thickness getThickness() {
         return thickness;
     }
 
     /**
-     * @param thickness the thickness to set
+     * Sets the thickness of the Wall
+     * @param thickness the thickness of the Wall
      */
     public void setThickness(Thickness thickness) {
         if (thickness != null) {
@@ -114,14 +153,16 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
     }
 
     /**
-     * @return the Material
+     * Returns the material of the Wall
+     * @return the material of the Wall
      */
     public Material getMaterial() {
         return material;
     }
 
     /**
-     * @param material the Material to set
+     * Sets the material of the Wall
+     * @param material the material of the Wall
      */
     public void setMaterial(Material material) {
         if (material != null) {
@@ -224,6 +265,11 @@ public class Wall extends FloorPlanObject implements XMLTransformable {
         return wallElement;
     }
 
+    /**
+     * Returns whether the given Wall is at the same location
+     * @param wall2 the Wall to compare to
+     * @return whether the given Wall is at the same location
+     */
     public boolean equalsLocation(Wall wall2) {
         return (point1.equals(wall2.point1) && point2.equals(wall2.point2))
                 || (point1.equals(wall2.point2) && point2.equals(wall2.point1));

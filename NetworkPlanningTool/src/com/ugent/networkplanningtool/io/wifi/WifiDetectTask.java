@@ -14,16 +14,28 @@ import com.ugent.networkplanningtool.io.AbstractASyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Task for detecting WiFi signals with the device
+ */
 public class WifiDetectTask extends AbstractASyncTask<WifiManager, List<RealAccessPoint>> {
 
     private Context context;
     private final List<RealAccessPoint> rapList = new ArrayList<RealAccessPoint>();
 
+    /**
+     * Default constructor to set the application context, used to detect the signals
+     * @param context the application context
+     */
     public WifiDetectTask(Context context){
         this.context = context;
     }
 
-
+    /**
+     * Performs the task detecting all access point signals using the device
+     * @param wifi the wifi manager to use
+     * @return the detected real access points
+     * @throws Exception any exception preventing the task from being executed
+     */
     @Override
     protected List<RealAccessPoint> performTaskInBackground(final WifiManager wifi) throws Exception {
 

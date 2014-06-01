@@ -9,20 +9,20 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View used to set different types of margins for the models
+ */
 public class MarginsView extends LinearLayout {
 
     private MySeekBar interferenceMarginBar;
     private MySeekBar shadowingMarginBar;
     private MySeekBar fadeMarginBar;
 
-    private DrawingModel drawingModel;
-
-    public MarginsView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public MarginsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -38,14 +38,26 @@ public class MarginsView extends LinearLayout {
         fadeMarginBar = (MySeekBar) findViewById(R.id.fadeMarginView);
     }
 
+    /**
+     * Returns the set interference margin
+     * @return the set interference margin
+     */
     public double getInterferenceMargin() {
         return interferenceMarginBar.getValue();
     }
 
+    /**
+     * Returns the set shadowing margin
+     * @return the set shadowing margin
+     */
     public double getShadowMargin() {
         return shadowingMarginBar.getValue();
     }
 
+    /**
+     * Returns the set fade margin
+     * @return the set fade margin
+     */
     public double getFadeMargin() {
         return fadeMarginBar.getValue();
     }

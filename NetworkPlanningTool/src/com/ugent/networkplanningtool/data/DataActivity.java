@@ -14,42 +14,64 @@ import com.ugent.networkplanningtool.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Represents an activity that should be possible at this location
+ */
 public class DataActivity extends FloorPlanObject implements XMLTransformable {
 
     private ActivityType type;
 
+    /**
+     * Constructor creating a deep copy of another DataActivity
+     * @param da the DataActivity to create a deep copy of
+     */
     public DataActivity(DataActivity da) {
         super(da);
-        DATA_OBJECT_TYPE = DataObjectType.DATA_ACTIVITY;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.DATA_ACTIVITY;
         this.type = da.type;
     }
 
+    /**
+     * Constructor setting the type of activity
+     * @param type the type of activity
+     */
     public DataActivity(ActivityType type) {
         super();
-        DATA_OBJECT_TYPE = DataObjectType.DATA_ACTIVITY;
-        this.type = type;
-    }
-
-    public DataActivity(Point point, ActivityType type) {
-        super(point);
-        DATA_OBJECT_TYPE = DataObjectType.DATA_ACTIVITY;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.DATA_ACTIVITY;
         this.type = type;
     }
 
     /**
-     * @return the type
+     * Constructor setting the type of activity and location
+     * @param point the location
+     * @param type the type of activity
+     */
+    public DataActivity(Point point, ActivityType type) {
+        super(point);
+        DATA_OBJECT_TYPE = FloorPlanObjectType.DATA_ACTIVITY;
+        this.type = type;
+    }
+
+    /**
+     * Returns the type of activity
+     * @return the type of activity
      */
     public ActivityType getType() {
         return type;
     }
 
     /**
-     * @param type the type to set
+     * Sets the type of activity
+     * @param type the type of activity
      */
     public void setType(ActivityType type) {
         this.type = type;
     }
 
+    /**
+     * Returns the color this activity should be draw in
+     * @return the color this activity should be draw in
+     */
     public int getColor() {
         return type.equals(ActivityType.NO_COVERAGE) ? Color.RED : Color.GREEN;
     }

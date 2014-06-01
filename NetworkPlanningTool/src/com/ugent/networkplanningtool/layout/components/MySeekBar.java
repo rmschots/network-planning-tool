@@ -12,6 +12,9 @@ import com.ugent.networkplanningtool.R;
 
 import java.text.DecimalFormat;
 
+/**
+ * SeekBar implementation used for setting properties in the application.
+ */
 public class MySeekBar extends LinearLayout {
 
     private TextView titleView;
@@ -26,11 +29,20 @@ public class MySeekBar extends LinearLayout {
     private double stepSize = 1;
     private String unitType = "";
 
+    /**
+     * Default constructor
+     * @param context
+     */
     public MySeekBar(Context context) {
         super(context);
         init();
     }
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public MySeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MySeekBar);
@@ -101,6 +113,10 @@ public class MySeekBar extends LinearLayout {
         unitTextView.setText(unitType);
     }
 
+    /**
+     * Returns the selected value
+     * @return the selected value
+     */
     public double getValue() {
         return Double.parseDouble(unitAmountTextView.getText().toString());
     }

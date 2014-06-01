@@ -2,6 +2,7 @@ package com.ugent.networkplanningtool.io;
 
 /**
  * Observer for executing logic asynchronously.
+ * https://github.com/thira/blog-demos/tree/master/android-kSOAP2-example
  * 
  * @author Thiranjith
  * 

@@ -15,6 +15,9 @@ import com.ugent.networkplanningtool.data.ApMeasurement;
 import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View used for performing device measurements
+ */
 public class MeasureView extends LinearLayout {
 
     private DrawingModel drawingModel;
@@ -23,6 +26,11 @@ public class MeasureView extends LinearLayout {
     private Button selectButton;
     private EditText sampleAmountEditText;
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public MeasureView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -65,7 +73,7 @@ public class MeasureView extends LinearLayout {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (drawingModel.getTouchFloorPlanObject() != null
-                        && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.DataObjectType.AP_MEASUREMENT)) {
+                        && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.FloorPlanObjectType.AP_MEASUREMENT)) {
                     ApMeasurement apm = (ApMeasurement) drawingModel.getTouchFloorPlanObject();
                     int samplePoolSize;
                     try {
@@ -84,11 +92,20 @@ public class MeasureView extends LinearLayout {
         drawButton.setEnabled(false);
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }
 
+    /**
+     * Updates the drawing model
+     */
     public void updateDrawingModel() {
-        drawingModel.setPlaceMode(new ApMeasurement(Integer.parseInt(sampleAmountEditText.getText().toString())));
+        if(drawingModel != null){
+            drawingModel.setPlaceMode(new ApMeasurement(Integer.parseInt(sampleAmountEditText.getText().toString())));
+        }
     }
 }

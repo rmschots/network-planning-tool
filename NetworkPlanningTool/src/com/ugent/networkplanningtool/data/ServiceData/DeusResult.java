@@ -14,8 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * Represents the result returned by the web service
+ */
 public class DeusResult {
 
+    /**
+     * Possible types of returned results and contains legend display data
+     */
     public enum ResultType {
         DOWNLOAD(new double[]{40, 21, 16, 10, 6, 6}, new int[]{Color.RED, Color.rgb(225, 130, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.GRAY}),
         UPLOAD(new double[]{40, 21, 16, 10, 6, 6}, new int[]{Color.RED, Color.rgb(225, 130, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.GRAY}),
@@ -75,6 +81,20 @@ public class DeusResult {
     private Bitmap[] resultBitmaps = new Bitmap[ResultType.values().length];
     private double scale;
 
+    /**
+     * Constructor setting all variables
+     * @param requestType the type of the request (and thus result)
+     * @param accessPoints the returned access point
+     * @param benchmarks the returned benchmarks
+     * @param csv the returned location specific results
+     * @param diffusePower the returned diffuse power
+     * @param grid the returned grid size
+     * @param info the returned extra info
+     * @param infomsg the returned info message
+     * @param losPower the return los power
+     * @param normalizedPlan the returned normalized floor plan
+     * @param optimizedPlan the returned optimized floor plan
+     */
     public DeusResult(DeusRequest.RequestType requestType, List<AccessPoint> accessPoints, String benchmarks, List<CSVResult> csv, Double diffusePower, Double[] grid, Double[] info, String infomsg, Vector<Double> losPower, FloorPlan normalizedPlan, FloorPlan optimizedPlan) {
         this.requestType = requestType;
         this.accessPoints = accessPoints;
@@ -91,6 +111,10 @@ public class DeusResult {
         generateBitmaps();
     }
 
+    /**
+     * Shifts the location specific receive power by the given shift
+     * @param shift the mount to shift the location specific receive power
+     */
     public void shiftResults(double shift) {
         for (CSVResult csvResult : getCsv()) {
             csvResult.setPowerRX(csvResult.getPowerRX() + shift);
@@ -98,6 +122,9 @@ public class DeusResult {
         generateBitmaps();
     }
 
+    /**
+     * Generates the bitmaps used to draw the location specific results
+     */
     private void generateBitmaps() {
         int width = DrawingModel.FLOOR_WIDTH / 10;
         int height = DrawingModel.FLOOR_HEIGHT / 10;
@@ -138,50 +165,100 @@ public class DeusResult {
         }
     }
 
+    /**
+     * returns the request type
+     * @return the request type
+     */
     public DeusRequest.RequestType getRequestType() {
         return requestType;
     }
 
+    /**
+     * Returns the returned access points
+     * @return the returned access points
+     */
     public List<AccessPoint> getAccessPoints() {
         return accessPoints;
     }
 
+    /**
+     * returns the benchmarks
+     * @return the benchmarks
+     */
     public String getBenchmarks() {
         return benchmarks;
     }
 
+    /**
+     * Returns the returned location specific results
+     * @return the returned location specific results
+     */
     public List<CSVResult> getCsv() {
         return csv;
     }
 
+    /**
+     * Returns the returned diffuse power
+     * @return the returned diffuse power
+     */
     public Double getDiffusePower() {
         return diffusePower;
     }
 
+    /**
+     * Returns the grid size
+     * @return the grid size
+     */
     public Double[] getGrid() {
         return grid;
     }
 
+    /**
+     * Returns the returned extra info
+     * @return the returned extra info
+     */
     public Double[] getInfo() {
         return info;
     }
 
+    /**
+     * Returns the returned info message
+     * @return the returned info message
+     */
     public String getInfomsg() {
         return infomsg;
     }
 
+    /**
+     * Returns the returned los power
+     * @return the returned los power
+     */
     public Vector<Double> getLosPower() {
         return losPower;
     }
 
+    /**
+     * Returns the normalized floor plan
+     * @return the normalized floor plan
+     */
     public FloorPlan getNormalizedPlan() {
         return normalizedPlan;
     }
 
+    /**
+     * Returns the optimized floor plan
+     * @return the optimized floor plan
+     */
     public FloorPlan getOptimizedPlan() {
         return optimizedPlan;
     }
 
+    /**
+     * Draws the location specific results
+     * @param canvas the canvas to draw on
+     * @param drawingModel the DrawingModel used for information how to draw exactly
+     * @param rt the type of result to draw
+     */
     public void drawResult(Canvas canvas, DrawingModel drawingModel, ResultType rt) {
         Matrix m = new Matrix();
         double newScale = drawingModel.getPixelsPerInterval() / (scale * DrawingModel.INTERVAL);
@@ -195,6 +272,10 @@ public class DeusResult {
         canvas.drawBitmap(resultBitmaps[rt.ordinal()], m, new Paint());
     }
 
+    /**
+     * Returns all types of results returned by the web service
+     * @return all types of results returned by the web service
+     */
     public List<ResultType> getResultTypes() {
         ArrayList<ResultType> rts = new ArrayList<ResultType>();
         for (ResultType rt : ResultType.values()) {
@@ -205,6 +286,10 @@ public class DeusResult {
         return rts;
     }
 
+    /**
+     * Returns the returned extra info including amount of access points, median exposure and P95 exposure
+     * @return the returned extra info including amount of access points, median exposure and P95 exposure
+     */
     public String getInfoAsString(){
         if(info==null || info.length < 3){
             return "";

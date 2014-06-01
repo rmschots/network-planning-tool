@@ -31,8 +31,8 @@ import com.ugent.networkplanningtool.io.wifi.MeasureSignalStrengthTask;
 import com.ugent.networkplanningtool.layout.design.AccessPointView;
 import com.ugent.networkplanningtool.layout.design.ConnectionPointView;
 import com.ugent.networkplanningtool.layout.design.DataActivityView;
-import com.ugent.networkplanningtool.layout.design.DataObjectView;
-import com.ugent.networkplanningtool.layout.design.DataObjectView.ViewType;
+import com.ugent.networkplanningtool.layout.design.FloorPlanObjectView;
+import com.ugent.networkplanningtool.layout.design.FloorPlanObjectView.ViewType;
 import com.ugent.networkplanningtool.layout.design.WallView;
 import com.ugent.networkplanningtool.model.DrawingModel;
 import com.ugent.networkplanningtool.model.DrawingModel.PlaceResult;
@@ -323,7 +323,7 @@ public class DrawingView extends View implements Observer {
                         if (dObj != null) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                             alert.setTitle("Edit");
-                            DataObjectView view = null;
+                            FloorPlanObjectView view = null;
                             switch (dObj.DATA_OBJECT_TYPE) {
                                 case ACCESS_POINT:
                                     view = new AccessPointView(getContext(), ViewType.EDIT, drawingModel);
@@ -360,7 +360,7 @@ public class DrawingView extends View implements Observer {
                         if (dObj != null) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                             alert.setTitle("Info");
-                            DataObjectView view = null;
+                            FloorPlanObjectView view = null;
                             switch (dObj.DATA_OBJECT_TYPE) {
                                 case ACCESS_POINT:
                                     view = new AccessPointView(getContext(), ViewType.INFO, drawingModel);

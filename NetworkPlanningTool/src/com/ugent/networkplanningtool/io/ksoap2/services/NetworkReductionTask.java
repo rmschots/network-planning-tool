@@ -14,15 +14,27 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
+/**
+ * Reduces the network as much as possible while complying with the constraints given the floor plan
+ */
 public class NetworkReductionTask extends AbstractASyncTask<DeusRequest, DeusResult> {
     private static final String METHOD_NAME = "symbioselect";
     private static final String SOAP_ACTION = "http://wicaweb2.intec.ugent.be:80/DeusService/Deus/symbioselect";
     private static final String NAMESPACE = "http://web.deus.wica.intec.ugent.be/";
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
+    /**
+     * Default constructor
+     */
     public NetworkReductionTask() {
     }
 
+    /**
+     * Performs the task by transforming the request, sending it to the web service and parsing the result
+     * @param dr the request to send
+     * @return the results of the web service
+     * @throws Exception any exception preventing the task from being executed
+     */
     @Override
     protected DeusResult performTaskInBackground(DeusRequest dr)
             throws Exception {

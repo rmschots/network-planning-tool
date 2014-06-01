@@ -12,25 +12,41 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Represents a connection point for data or power
+ */
 public class ConnectionPoint extends FloorPlanObject implements XMLTransformable{
 
     private ConnectionPointType type;
 
+    /**
+     * Constructor creating a deep copy of another ConnectionPoint
+     * @param cp the ConnectionPoint to create a deep copy of
+     */
     public ConnectionPoint(ConnectionPoint cp) {
         super(cp);
-        DATA_OBJECT_TYPE = DataObjectType.CONNECTION_POINT;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.CONNECTION_POINT;
         this.type = cp.type;
     }
 
+    /**
+     * Constructor setting the connection point type
+     * @param type the connection point type
+     */
     public ConnectionPoint(ConnectionPointType type) {
         super();
-        DATA_OBJECT_TYPE = DataObjectType.CONNECTION_POINT;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.CONNECTION_POINT;
         this.type = type;
     }
 
+    /**
+     * Constructor setting the connection point type and location
+     * @param point the location
+     * @param type the connection point type
+     */
     public ConnectionPoint(Point point, ConnectionPointType type) {
         super(point);
-        DATA_OBJECT_TYPE = DataObjectType.CONNECTION_POINT;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.CONNECTION_POINT;
         this.type = type;
     }
 
@@ -54,10 +70,18 @@ public class ConnectionPoint extends FloorPlanObject implements XMLTransformable
         paint.reset();
     }
 
+    /**
+     * Returns the type of the connection point
+     * @return the type of the connection point
+     */
     public ConnectionPointType getType() {
         return type;
     }
 
+    /**
+     * Sets the type of the connection point
+     * @param type the type of the connection point
+     */
     public void setType(ConnectionPointType type) {
         if (type != null) {
             this.type = type;

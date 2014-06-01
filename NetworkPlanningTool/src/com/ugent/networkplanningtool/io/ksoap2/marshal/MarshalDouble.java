@@ -9,6 +9,9 @@ import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
 
+/**
+ * Enables support of "double" types in the SOAP request in ksoap2.
+ */
 public class MarshalDouble implements Marshal {
 	@Override
 	public Object readInstance(XmlPullParser parser, String namespace,

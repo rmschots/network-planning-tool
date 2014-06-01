@@ -20,13 +20,23 @@ import org.ksoap2.serialization.SoapObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class containing the functionality to parse SOAP messages of the web service
+ */
 public class KSoap2Parser {
+    /**
+     * Parses the given SoapObject and the request type
+     * @param so the soap object
+     * @param requestType the request type
+     * @return the parsed results
+     * @throws ASyncTaskException thrown when something goes wrong while parsing
+     */
     public static DeusResult parseDeusResult(SoapObject so, DeusRequest.RequestType requestType) throws ASyncTaskException {
         if (so.hasProperty("errormsg")) {
             throw new ASyncTaskException(so.getPropertyAsString("errormsg"));
         }
 
-        // TODO parse unused data
+        // TODO parse unused data (atm, we only parse data we use)
 
         Double[] infoArray = new Double[3];
         int infoIndex = 0;
@@ -69,6 +79,12 @@ public class KSoap2Parser {
         return new DeusResult(requestType, accessPoints, benchmarks, csv, null, null, infoArray, null, null, normalizedPlan, optimizedPlan);
     }
 
+    /**
+     * Parses the location specific results.
+     * (floor,X,Y,download speed,upload speed,path loss,RX power,TX power,SAR,electric field,PDLOS(non-relevant),PDDIF(non-relevant),(non-relevant),room number
+     * @param csvString String to parse
+     * @return the parsed results
+     */
     private static List<CSVResult> parseCSV(String csvString) {
         List<CSVResult> orList = new ArrayList<CSVResult>();
         if (csvString.startsWith("L")) {
@@ -94,8 +110,8 @@ public class KSoap2Parser {
                 pdLos = Double.parseDouble(attrStrings[i++]);
                 pdDif = Double.parseDouble(attrStrings[i++]);
             }
-            Double roomNumber = Double.parseDouble(attrStrings[i++]);
             Double drawingSize = Double.parseDouble(attrStrings[i]);
+            Double roomNumber = Double.parseDouble(attrStrings[i++]);
             CSVResult or = new CSVResult(new Point(x.intValue(), y.intValue()),
                     level.intValue(), download, upload, pathloss, powerRX,
                     powerTX, absorption, eField, pdLos, pdDif, roomNumber.intValue(),
@@ -106,6 +122,12 @@ public class KSoap2Parser {
     }
 
     // 1633.0;263.0;250;\n\tWiFi;14.0;2;DLink;2400;2462
+
+    /**
+     * Parses the access point data from the results
+     * @param apString the ap data as string
+     * @return the resulting list of access points
+     */
     private static List<AccessPoint> parseAccessPoints(String apString) {
         List<AccessPoint> apList = new ArrayList<AccessPoint>();
         String[] apStrings = apString.split("\n\t?");

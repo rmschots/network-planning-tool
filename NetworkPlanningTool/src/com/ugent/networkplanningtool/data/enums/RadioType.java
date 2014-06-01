@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type of radio device
+ */
 public enum RadioType {
     WIFI(MainActivity.getInstance().getResources().getString(R.string.wifiText), new FrequencyBand[]{FrequencyBand.FREQBAND_2400}),
     SENSOR(MainActivity.getInstance().getResources().getString(R.string.sensorText), new FrequencyBand[]{FrequencyBand.FREQBAND_2400}),

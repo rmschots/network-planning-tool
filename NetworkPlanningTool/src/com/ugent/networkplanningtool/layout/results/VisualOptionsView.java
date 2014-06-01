@@ -10,6 +10,9 @@ import android.widget.LinearLayout;
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View used to set the visual options for the results
+ */
 public class VisualOptionsView extends LinearLayout {
 
     private CheckBox showAccessPointsCheckBox;
@@ -19,12 +22,11 @@ public class VisualOptionsView extends LinearLayout {
 
     private DrawingModel drawingModel;
 
-    public VisualOptionsView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public VisualOptionsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -65,6 +67,10 @@ public class VisualOptionsView extends LinearLayout {
         });
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }

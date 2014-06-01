@@ -184,7 +184,6 @@ public class DrawingModel extends Observable {
 
     /**
      * Setter for the x offset on the floor plan where the displayed drawing should start
-     * @return x offset on the floor plan where the displayed drawing should start
      */
     public void setOffsetY(float offsetY) {
         if (offsetY > 0) {
@@ -203,7 +202,6 @@ public class DrawingModel extends Observable {
 
     /**
      * Setter for the y offset on the floor plan where the displayed drawing should start
-     * @return y offset on the floor plan where the displayed drawing should start
      */
     public void setOffsetX(float offsetX) {
         if (offsetX > 0) {
@@ -471,7 +469,7 @@ public class DrawingModel extends Observable {
 
     /**
      * Places the current FloorPlanObject. (adds it to the FloorPlanPodel)
-     * @return
+     * @return the result when trying to place
      */
     public PlaceResult place() {
         Log.d("debug", "place");
@@ -801,7 +799,7 @@ public class DrawingModel extends Observable {
 
     /**
      * Returns whether the user is moving the floor plan (dragging or zooming)
-     * @return
+     * @return whether the user is moving the floor plan (dragging or zooming)
      */
     public boolean isMoving() {
         return moving;

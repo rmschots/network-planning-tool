@@ -16,6 +16,9 @@ import com.ugent.networkplanningtool.layout.measure.ApLinkingRowItem;
 
 import java.util.List;
 
+/**
+ * Adapter for linking drawn access points with real device detected access points
+ */
 public class ApLinkingAdapter extends BaseAdapter {
     private Context context;
     private List<ApLinkingRowItem> rowItems;
@@ -31,6 +34,13 @@ public class ApLinkingAdapter extends BaseAdapter {
         Spinner apSpinner;
     }
 
+    /**
+     * Returns the selected real access point at the given position in the list
+     * @param position the position in the list
+     * @param convertView the ap linking row view
+     * @param parent the parent this view will be attached to
+     * @return A View corresponding to the data at the specified position.
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         final ApLinkingRowItem rowItem = (ApLinkingRowItem) getItem(position);
@@ -66,21 +76,40 @@ public class ApLinkingAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * Returns the amount of items in the list
+     * @return the amount of items in the list
+     */
     @Override
     public int getCount() {
         return rowItems.size();
     }
 
+    /**
+     * Returns the item at the given position in the list
+     * @param position the position in the list
+     * @return the item at the given position in the list
+     */
     @Override
     public Object getItem(int position) {
         return rowItems.get(position);
     }
 
+    /**
+     * Returns the id of the item at the given position in the list
+     * @param position the position in the list
+     * @return the id of the item at the given position in the list
+     */
     @Override
     public long getItemId(int position) {
         return rowItems.indexOf(getItem(position));
     }
 
+    /**
+     * Updates a link
+     * @param apLinkingRowItem the item to change
+     * @param rap the new real access point to link
+     */
     public void updateLink(ApLinkingRowItem apLinkingRowItem, RealAccessPoint rap) {
         boolean updateOtherLink = false;
         if (!rap.equals(RealAccessPoint.getEmptyDummy())) {

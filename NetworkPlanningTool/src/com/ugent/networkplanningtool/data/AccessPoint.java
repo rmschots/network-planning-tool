@@ -17,6 +17,9 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Represents an access point
+ */
 public class AccessPoint extends FloorPlanObject implements XMLTransformable {
 
     private String name;
@@ -32,9 +35,13 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
 
     private RealAccessPoint rap;
 
+    /**
+     * Constructor creating a deep copy of another AccessPoint
+     * @param accessPoint the AccessPoint to create a deep copy of
+     */
     public AccessPoint(AccessPoint accessPoint) {
         super(accessPoint);
-        DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.ACCESS_POINT;
         this.name = accessPoint.name;
         this.height = accessPoint.height;
         this.type = accessPoint.type;
@@ -48,11 +55,23 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
         this.rap = new RealAccessPoint(accessPoint.getRap());
     }
 
+    /**
+     * Constructor setting all variables except for the location
+     * @param name the name of the access point
+     * @param height the height at which the access point is located
+     * @param type the type of the access point
+     * @param model the model of the access point
+     * @param frequencyband the frequencyband of the access point
+     * @param frequency the frequency of the access point
+     * @param gain the gain of the access point
+     * @param power the power of the access point
+     * @param network the network of the access point
+     */
     public AccessPoint(String name, int height, RadioType type,
                        RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
                        int power, Network network) {
         super();
-        DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.ACCESS_POINT;
         this.name = name;
         this.height = height;
         this.type = type;
@@ -66,11 +85,24 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
         this.rap = RealAccessPoint.getEmptyDummy();
     }
 
+    /**
+     * Constructor setting all variables including the location
+     * @param point the location
+     * @param name the name of the access point
+     * @param height the height at which the access point is located
+     * @param type the type of the access point
+     * @param model the model of the access point
+     * @param frequencyband the frequencyband of the access point
+     * @param frequency the frequency of the access point
+     * @param gain the gain of the access point
+     * @param power the power of the access point
+     * @param network the network of the access point
+     */
     public AccessPoint(Point point, String name, int height, RadioType type,
                        RadioModel model, FrequencyBand frequencyband, Frequency frequency, int gain,
                        int power, Network network) {
         super(point);
-        DATA_OBJECT_TYPE = DataObjectType.ACCESS_POINT;
+        DATA_OBJECT_TYPE = FloorPlanObjectType.ACCESS_POINT;
         this.name = name;
         this.height = height;
         this.type = type;
@@ -84,42 +116,82 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
         this.rap = RealAccessPoint.getEmptyDummy();
     }
 
+    /**
+     * Returns the name of the access point
+     * @return the name of the access point
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the access point
+     * @param name the name of the access point
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the height at which the access point is located
+     * @return the height at which the access point is located
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Sets the height at which the access point is located
+     * @param height the height at which the access point is located
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /**
+     * Returns the type of the access point
+     * @return the type of the access point
+     */
     public RadioType getType() {
         return type;
     }
 
+    /**
+     * Sets the type of the access point
+     * @param type the type of the access point
+     */
     public void setType(RadioType type) {
         this.type = type;
     }
 
+    /**
+     * Returns the model of the access point
+     * @return the model of the access point
+     */
     public RadioModel getModel() {
         return model;
     }
 
+    /**
+     * Sets the model of the access point
+     * @param model the model of the access point
+     */
     public void setModel(RadioModel model) {
         this.model = model;
     }
 
+    /**
+     * Returns the frequency of the access point
+     * @return the frequency of the access point
+     */
     public Frequency getFrequency() {
         return frequency;
     }
 
+    /**
+     * Sets the frequency of the access point
+     * @param frequency the frequency of the access point
+     */
     public void setFrequency(Frequency frequency) {
         if (!frequency.equals(rap.getFrequency())) {
             rap = RealAccessPoint.getEmptyDummy();
@@ -127,42 +199,82 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
         this.frequency = frequency;
     }
 
+    /**
+     * Returns the frequancyband of the access point
+     * @return the frequancyband of the access point
+     */
     public FrequencyBand getFrequencyband() {
         return frequencyband;
     }
 
+    /**
+     * Sets the frequancyband of the access point
+     * @param frequencyband the frequancyband of the access point
+     */
     public void setFrequencyband(FrequencyBand frequencyband) {
         this.frequencyband = frequencyband;
     }
 
+    /**
+     * Returns the gain of the access point
+     * @return the gain of the access point
+     */
     public int getGain() {
         return gain;
     }
 
+    /**
+     * the gain of the access point
+     * @param gain
+     */
     public void setGain(int gain) {
         this.gain = gain;
     }
 
+    /**
+     * Returns the power of the access point
+     * @return the power of the access point
+     */
     public int getPower() {
         return power;
     }
 
+    /**
+     * Sets the power of the access point
+     * @param power the power of the access point
+     */
     public void setPower(int power) {
         this.power = power;
     }
 
+    /**
+     * Returns the network of the access point
+     * @return the network of the access point
+     */
     public Network getNetwork() {
         return network;
     }
 
+    /**
+     * Sets the network of the access point
+     * @param network the network of the access point
+     */
     public void setNetwork(Network network) {
         this.network = network;
     }
 
+    /**
+     * Returns the real access point linked to this drawn access point
+     * @return the real access point linked to this drawn access point
+     */
     public RealAccessPoint getRap() {
         return rap;
     }
 
+    /**
+     * Sets the real access point linked to this drawn access point
+     * @param rap the real access point linked to this drawn access point
+     */
     public void setRap(RealAccessPoint rap) {
         this.rap = rap;
     }

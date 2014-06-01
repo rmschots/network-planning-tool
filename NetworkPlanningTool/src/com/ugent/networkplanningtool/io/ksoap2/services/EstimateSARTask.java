@@ -14,15 +14,27 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
+/**
+ * Estimates the SAR on the floor plan
+ */
 public class EstimateSARTask extends AbstractASyncTask<DeusRequest, DeusResult> {
     private static final String METHOD_NAME = "calculatesar";
     private static final String SOAP_ACTION = "http://wicaweb2.intec.ugent.be:80/DeusService/Deus/calculatesar";
     private static final String NAMESPACE = "http://web.deus.wica.intec.ugent.be/";
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
+    /**
+     * Default constructor
+     */
     public EstimateSARTask() {
     }
 
+    /**
+     * Performs the task by transforming the request, sending it to the web service and parsing the result
+     * @param dr the request to send
+     * @return the results of the web service
+     * @throws Exception any exception preventing the task from being executed
+     */
     @Override
     protected DeusResult performTaskInBackground(DeusRequest dr)
             throws Exception {

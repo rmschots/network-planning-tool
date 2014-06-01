@@ -8,6 +8,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represent networks
+ */
 public enum Network {
     NETWORK_A(MainActivity.getInstance().getResources().getString(R.string.networkAText), Color.rgb(115, 128, 190)),
     NETWORK_B(MainActivity.getInstance().getResources().getString(R.string.networkBText), Color.rgb(0, 128, 190)),

@@ -10,16 +10,25 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.ConnectionPoint;
-import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.enums.ConnectionPointType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class ConnectionPointView extends DataObjectView {
+/**
+ * View containing ConnectionPoint properties
+ */
+public class ConnectionPointView extends FloorPlanObjectView {
 
     private RadioGroup connectionTypeRadioGroup;
 
     private DrawingModel drawingModel;
 
+    /**
+     * Constructor setting the view type and drawing model
+     * @param context the context of the parent
+     * @param type the view type to be used
+     * @param drawingModel the drawing model to use
+     */
     public ConnectionPointView(Context context, ViewType type, DrawingModel drawingModel) {
         super(context, type);
         this.drawingModel = drawingModel;
@@ -27,6 +36,11 @@ public class ConnectionPointView extends DataObjectView {
         loadData();
     }
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public ConnectionPointView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -61,6 +75,10 @@ public class ConnectionPointView extends DataObjectView {
         }
     }
 
+    /**
+     * Returns the selected connection type
+     * @return the selected connection type
+     */
     public ConnectionPointType getSelectedConnectionType() {
         RadioButton rb = (RadioButton) findViewById(connectionTypeRadioGroup.getCheckedRadioButtonId());
         ConnectionPointType type = ConnectionPointType.getConnectionPointTypeByText(rb.getText().toString());
@@ -68,16 +86,23 @@ public class ConnectionPointView extends DataObjectView {
         return type;
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model to use
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }
 
+    /**
+     * Updates the drawing model with currently selected data
+     */
     public void updateDrawingModel() {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         ConnectionPointType connectionPointType = getSelectedConnectionType();
 
         if (drawingModel.getTouchFloorPlanObject() != null
-                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.CONNECTION_POINT)) {
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.FloorPlanObjectType.CONNECTION_POINT)) {
             ConnectionPoint cp = (ConnectionPoint) drawingModel.getTouchFloorPlanObject();
             cp.setType(connectionPointType);
         } else {
@@ -86,6 +111,9 @@ public class ConnectionPointView extends DataObjectView {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
     }
 
+    /**
+     * Loads data of the drawing model in the view
+     */
     private void loadData() {
         ConnectionPoint cp = (ConnectionPoint) drawingModel.getSelected();
         for (int i = 0; i < connectionTypeRadioGroup.getChildCount(); i++) {

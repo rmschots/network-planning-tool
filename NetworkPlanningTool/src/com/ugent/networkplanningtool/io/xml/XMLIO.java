@@ -44,8 +44,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+/**
+ * Class containing static methods for XML IO functionality
+ */
 public class XMLIO {
 
+    /**
+     * Loads the floor plan contained in a file
+     * @param file the file containing the floor plan to load
+     * @return the loaded floor plan
+     * @throws ParserConfigurationException exception in the parser configuration
+     * @throws SAXException sax exception
+     * @throws IOException IO exception
+     */
     public static FloorPlan loadFloorPlan(File file) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setIgnoringElementContentWhitespace(true);
@@ -54,6 +65,14 @@ public class XMLIO {
         return transformFloorPlan(doc);
     }
 
+    /**
+     * Loads measurements from the given file
+     * @param file the file containing the measurements to load
+     * @return the loaded measurements
+     * @throws ParserConfigurationException exception in the parser configuration
+     * @throws SAXException sax exception
+     * @throws IOException IO exception
+     */
     public static List<ApMeasurement> loadMeasurements(File file) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setIgnoringElementContentWhitespace(true);
@@ -76,6 +95,14 @@ public class XMLIO {
         return measurementList;
     }
 
+    /**
+     * Loads the floor plan contained in a String
+     * @param xmlAsString the floor plan as a String, formatted in XML
+     * @return the loaded floor plan
+     * @throws ParserConfigurationException exception in the parser configuration
+     * @throws SAXException sax exception
+     * @throws IOException IO exception
+     */
     public static FloorPlan loadFloorPlan(String xmlAsString) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setIgnoringElementContentWhitespace(true);
@@ -84,6 +111,11 @@ public class XMLIO {
         return transformFloorPlan(doc);
     }
 
+    /**
+     * Transforms a Document Object to a FloorPlan Object
+     * @param doc the document to transform
+     * @return the resulting floor plan
+     */
     private static FloorPlan transformFloorPlan(Document doc) {
         List<Wall> wallList = new ArrayList<Wall>();
         List<ConnectionPoint> connectionPointList = new ArrayList<ConnectionPoint>();
@@ -154,6 +186,11 @@ public class XMLIO {
         return new FloorPlan(wallList, connectionPointList, accessPointList, dataActivityList);
     }
 
+    /**
+     * Transforms an XMLTransformable object into a String formatted in XML.
+     * @param xmlTransformable the object to transform
+     * @return the formatted String
+     */
     public static String getXMLAsString(XMLTransformable xmlTransformable) {
         try {
             DOMSource domSource = new DOMSource(getDocument(xmlTransformable));
@@ -169,6 +206,13 @@ public class XMLIO {
         }
     }
 
+    /**
+     * Creates a Document from a XMLTransformable instance
+     * @param xmlTransformable the object to transform
+     * @return the created document
+     * @throws ParserConfigurationException exception in the parser configuration
+     * @throws TransformerException exception while transforming
+     */
     public static Document getDocument(XMLTransformable xmlTransformable) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -180,6 +224,14 @@ public class XMLIO {
         return doc;
     }
 
+    /**
+     * Creates a Document from a XMLTransformable instances
+     * @param xmlTransformableList the objects to transform
+     * @param rootName the name of the root element containing the transformed objects
+     * @return the created document
+     * @throws ParserConfigurationException exception in the parser configuration
+     * @throws TransformerException exception while transforming
+     */
     public static Document getDocument(List<XMLTransformable> xmlTransformableList, String rootName) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

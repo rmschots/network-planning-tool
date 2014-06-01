@@ -15,7 +15,7 @@ import android.widget.Spinner;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.AccessPoint;
-import com.ugent.networkplanningtool.data.FloorPlanObject.DataObjectType;
+import com.ugent.networkplanningtool.data.FloorPlanObject;
 import com.ugent.networkplanningtool.data.enums.Frequency;
 import com.ugent.networkplanningtool.data.enums.FrequencyBand;
 import com.ugent.networkplanningtool.data.enums.Network;
@@ -23,7 +23,10 @@ import com.ugent.networkplanningtool.data.enums.RadioModel;
 import com.ugent.networkplanningtool.data.enums.RadioType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
-public class AccessPointView extends DataObjectView {
+/**
+ * View containing AccessPoint properties
+ */
+public class AccessPointView extends FloorPlanObjectView {
 
     private EditText nameEditText;
     private Spinner networkSignalTypeSpinner;
@@ -44,6 +47,12 @@ public class AccessPointView extends DataObjectView {
 
     private DrawingModel drawingModel;
 
+    /**
+     * Constructor setting the view type and drawing model
+     * @param context the context of the parent
+     * @param type the view type to be used
+     * @param drawingModel the drawing model to use
+     */
     public AccessPointView(Context context, ViewType type, DrawingModel drawingModel) {
         super(context, type);
         this.drawingModel = drawingModel;
@@ -52,6 +61,11 @@ public class AccessPointView extends DataObjectView {
         initComponents();
     }
 
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public AccessPointView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -148,30 +162,57 @@ public class AccessPointView extends DataObjectView {
         }
     }
 
+    /**
+     * Returns the selected signal type
+     * @return the selected signal type
+     */
     public RadioType getSelectedSignalType() {
         return typeAdapter.getItem(networkSignalTypeSpinner.getSelectedItemPosition());
     }
 
+    /**
+     * Returns the selected frequency band
+     * @return the selected frequency band
+     */
     public FrequencyBand getSelectedFrequencyBand() {
         return freqBandAdapter.getItem(networkMHzSpinner.getSelectedItemPosition());
     }
 
+    /**
+     * returns the selected frequency
+     * @return the selected frequency
+     */
     public Frequency getSelectedFrequency() {
         return freqAdapter.getItem(networkChannelSpinner.getSelectedItemPosition());
     }
 
+    /**
+     * returns the selected access point model
+     * @return the selected access point model
+     */
     public RadioModel getSelectedModel() {
         return modelAdapter.getItem(networkModelSpinner.getSelectedItemPosition());
     }
 
+    /**
+     * Returns the selected network
+     * @return the selected network
+     */
     public Network getSelectedNetwork() {
         return networkAdapter.getItem(networkIDSpinner.getSelectedItemPosition());
     }
 
+    /**
+     * Sets the drawing model
+     * @param drawingModel the drawing model to use
+     */
     public void setDrawingModel(DrawingModel drawingModel) {
         this.drawingModel = drawingModel;
     }
 
+    /**
+     * Updates the drawing model with currently selected data
+     */
     public void updateDrawingModel() {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
         String name = nameEditText.getText() == null ? "" : nameEditText.getText().toString();
@@ -186,7 +227,7 @@ public class AccessPointView extends DataObjectView {
         int elevation = elevationEditText.getText() == null ? 200 : Integer.parseInt(elevationEditText.getText().toString());
 
         if (drawingModel.getTouchFloorPlanObject() != null
-                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(DataObjectType.ACCESS_POINT)) {
+                && drawingModel.getTouchFloorPlanObject().DATA_OBJECT_TYPE.equals(FloorPlanObject.FloorPlanObjectType.ACCESS_POINT)) {
             AccessPoint ap = (AccessPoint) drawingModel.getTouchFloorPlanObject();
             ap.setName(name);
             ap.setType(signalType);
@@ -203,6 +244,9 @@ public class AccessPointView extends DataObjectView {
         Log.d("DEBUG", "updateDrawingModel " + drawingModel.getTouchFloorPlanObject());
     }
 
+    /**
+     * Loads data of the drawing model in the view
+     */
     private void loadData() {
         AccessPoint ap = (AccessPoint) drawingModel.getSelected();
         nameEditText.setText(ap.getName());

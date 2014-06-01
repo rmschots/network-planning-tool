@@ -15,12 +15,20 @@ import com.ugent.networkplanningtool.model.FloorPlanModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The view for linking drawn access points with real device detected access points
+ */
 public class ApLinkingView extends LinearLayout {
 
     private ListView lv;
     private List<ApLinkingRowItem> rvList;
     private List<RealAccessPoint> realAccessPointList;
 
+    /**
+     * Constructor setting the list of detected access points
+     * @param context the parents context
+     * @param realAccessPointList the list of detected access points
+     */
     public ApLinkingView(Context context, List<RealAccessPoint> realAccessPointList) {
         super(context);
         this.realAccessPointList = realAccessPointList;

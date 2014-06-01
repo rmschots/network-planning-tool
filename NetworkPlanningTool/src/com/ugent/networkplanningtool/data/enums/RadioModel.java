@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The model of the radio device
+ */
 public enum RadioModel {
     DLINK(MainActivity.getInstance().getResources().getString(R.string.dlinkText)),
     CUSTOM(MainActivity.getInstance().getResources().getString(R.string.customText)),

@@ -147,7 +147,7 @@ public class FloorPlanModel extends Observable {
 
     /**
      * Sets the DataActivity list
-     * @param dataActivityList
+     * @param dataActivityList the DataActivity list
      */
     private void setDataActivityList(List<DataActivity> dataActivityList) {
         floorPlan.setDataActivityList(dataActivityList);
@@ -542,7 +542,7 @@ public class FloorPlanModel extends Observable {
 
     /**
      * Returns the closest FloorPlanObject to the given location
-     * @param touchPoint
+     * @param touchPoint the touched location
      * @param select whether general FloorPlanObjects or measurements should be selected
      * @return the closest FloorPlanObject to the given location
      */

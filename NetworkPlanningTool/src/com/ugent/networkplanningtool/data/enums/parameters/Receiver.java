@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Types of receivers
+ */
 public enum Receiver {
     REF_RECEIVER_2400(MainActivity.getInstance().getResources().getString(R.string.receiver2400Text), new String[]{MainActivity.getInstance().getResources().getString(R.string.wifiText)}),
     CC2420(MainActivity.getInstance().getResources().getString(R.string.cc2420Text), new String[]{MainActivity.getInstance().getResources().getString(R.string.sensorText)}),

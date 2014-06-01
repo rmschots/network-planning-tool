@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Task measuring the perceived signal strength at the current location with the device
+ */
 public class MeasureSignalStrengthTask extends AbstractASyncTask<MeasureParams, Integer> {
 
     private Context context;
@@ -24,10 +27,20 @@ public class MeasureSignalStrengthTask extends AbstractASyncTask<MeasureParams, 
 
     private final Map<String, List<Integer>> sampleMap = new HashMap<String, List<Integer>>();
 
+    /**
+     * Default constructor to set the application context, used to detect the signals
+     * @param context the application context
+     */
     public MeasureSignalStrengthTask(Context context) {
         this.context = context;
     }
 
+    /**
+     * Takes the given amount of signal strength samples
+     * @param parameter the access points to sample signal strengths from and the amount of samples
+     * @return the average perceived signal strength
+     * @throws Exception any exception preventing the task from being executed
+     */
     @Override
     protected Integer performTaskInBackground(final MeasureParams parameter) throws Exception {
         final WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

@@ -14,6 +14,9 @@ import com.ugent.networkplanningtool.model.DrawingModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Contains location specific web service results
+ */
 public class CSVResult extends FloorPlanObject implements XMLTransformable {
 
     private ApMeasurement apMeasurement;
@@ -30,6 +33,22 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
     private final Integer roomNumber;
     private final Integer drawingSize; // non-relevant; always squares of 10cm; don't draw if 0
 
+    /**
+     * Constructor setting all variables
+     * @param point the location of the results
+     * @param level the floor
+     * @param download the download speed
+     * @param upload the upload speed
+     * @param pathloss the path loss
+     * @param powerRX the received power
+     * @param powerTX the transmit power
+     * @param absorption the absorption
+     * @param eField the electric field
+     * @param pdLos not used
+     * @param pdDif not used
+     * @param roomNumber the room number
+     * @param drawingSize not used
+     */
     public CSVResult(Point point, Integer level, Double download, Double upload, Double pathloss, Double powerRX, Double powerTX, Double absorption, Double eField, Double pdLos, Double pdDif, Integer roomNumber, Integer drawingSize) {
         super(point);
         this.level = level;
@@ -46,6 +65,10 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
         this.drawingSize = drawingSize;
     }
 
+    /**
+     * Returns the real device measurement at this location
+     * @return the real device measurement at this location
+     */
     public ApMeasurement getApMeasurement() {
         return apMeasurement;
     }
@@ -55,48 +78,55 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
     }
 
     /**
-     * @return the level
+     * Returns the floor
+     * @return the floor
      */
     public Integer getLevel() {
         return level;
     }
 
     /**
-     * @return the download
+     * Returns the download speed
+     * @return the download speed
      */
     public Double getDownload() {
         return download;
     }
 
     /**
-     * @return the upload
+     * Returns the upload speed
+     * @return the upload speed
      */
     public Double getUpload() {
         return upload;
     }
 
     /**
-     * @return the pathloss
+     * Returns the path loss
+     * @return the path loss
      */
     public Double getPathloss() {
         return pathloss;
     }
 
     /**
-     * @return the powerRX
+     * Returns the received power
+     * @return the received power
      */
     public Double getPowerRX() {
         return powerRX;
     }
 
     /**
-     * @return the powerTX
+     * Returns the transmit power
+     * @return the transmit power
      */
     public Double getPowerTX() {
         return powerTX;
     }
 
     /**
+     * returns the absorption
      * @return the absorption
      */
     public Double getAbsorption() {
@@ -104,34 +134,25 @@ public class CSVResult extends FloorPlanObject implements XMLTransformable {
     }
 
     /**
-     * @return the eField
+     * Returns the electric field
+     * @return the electric field
      */
     public Double geteField() {
         return eField;
     }
 
     /**
-     * @return the roomNumber
+     * Returns the room number
+     * @return the room number
      */
     public Integer getRoomNumber() {
         return roomNumber;
     }
 
     /**
-     * @return the drawingSize
+     * Sets the received power (used by shifting with real measurements)
+     * @param powerRX the new received power
      */
-    public Integer getDrawingSize() {
-        return drawingSize;
-    }
-
-    public Double getPdLos() {
-        return pdLos;
-    }
-
-    public Double getPdDif() {
-        return pdDif;
-    }
-
     public void setPowerRX(Double powerRX) {
         this.powerRX = powerRX;
     }

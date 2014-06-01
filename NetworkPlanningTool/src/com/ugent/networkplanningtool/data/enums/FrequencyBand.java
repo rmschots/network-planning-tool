@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The frequency band of an access point
+ */
 public enum FrequencyBand {
 	FREQBAND_2100(MainActivity.getInstance().getResources().getString(R.string.frequencyBand2100)),
 	FREQBAND_2400(MainActivity.getInstance().getResources().getString(R.string.frequencyBand2400)),

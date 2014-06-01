@@ -657,7 +657,7 @@ public class MainActivity extends Activity implements Observer, OnTouchListener 
     /**
      * Imports an image to be set as background for the design area.
      *
-     * @param v
+     * @param v the clicked button
      */
     public void handleImportImage(View v) {
         FileChooserDialog dialog = new FileChooserDialog(this);
@@ -956,7 +956,6 @@ public class MainActivity extends Activity implements Observer, OnTouchListener 
                     } while (!seen.add(items));
                     double total = 0;
                     for (CSVResult csvResult : items) {
-                        System.out.println("nr: " + csvResult.getDrawingSize());
                         total += csvResult.getApMeasurement().getSignalStrength() - csvResult.getPowerRX();
                     }
                     double shift = total / items.size();

@@ -14,6 +14,9 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
+/**
+ * Predicts the optimal placement of access points on the floor plan
+ */
 public class OptimalPlacementTask extends AbstractASyncTask<DeusRequest, DeusResult> {
 
     private static final String METHOD_NAME = "optimize";
@@ -21,9 +24,18 @@ public class OptimalPlacementTask extends AbstractASyncTask<DeusRequest, DeusRes
     private static final String NAMESPACE = "http://web.deus.wica.intec.ugent.be/";
     private static final String URL = "http://wicaweb2.intec.ugent.be/DeusService/Deus?wsdl";
 
+    /**
+     * Default constructor
+     */
     public OptimalPlacementTask() {
     }
 
+    /**
+     * Performs the task by transforming the request, sending it to the web service and parsing the result
+     * @param dr the request to send
+     * @return the results of the web service
+     * @throws Exception any exception preventing the task from being executed
+     */
     @Override
     protected DeusResult performTaskInBackground(DeusRequest dr)
             throws Exception {

@@ -4,10 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.WindowManager;
 
+/**
+ * Manager of ASyncTasks used for input and output
+ */
 public class ASyncIOTaskManager {
 
     private final ProgressDialog progressDialog;
 
+    /**
+     * Default constructor creating the progress dialog for the application to use
+     * @param context the context of the parent
+     */
     public ASyncIOTaskManager(Context context) {
         this.progressDialog = new ProgressDialog(context);
         this.progressDialog.setCancelable(false);
@@ -35,14 +42,16 @@ public class ASyncIOTaskManager {
         task.execute(request);
     }
 
-    // ------------------------------------------------------------------------
-    // Progress Handlers
-    // ------------------------------------------------------------------------
-
+    /**
+     * Handler for the start of the progress
+     */
     public void onStartProgress() {
         progressDialog.show();
     }
 
+    /**
+     * Handler for the stop of the progress
+     */
     public void onStopProgress() {
         progressDialog.dismiss();
     }

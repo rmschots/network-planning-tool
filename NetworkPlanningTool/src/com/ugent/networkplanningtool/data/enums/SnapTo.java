@@ -6,6 +6,9 @@ import com.ugent.networkplanningtool.R;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Whether to snap to the grid or to a wall when drawing
+ */
 public enum SnapTo {
     GRID(MainActivity.getInstance().getResources().getString(R.string.snapToGridText)),
     WALLS(MainActivity.getInstance().getResources().getString(R.string.snapToWallsText));

@@ -3,6 +3,11 @@ package com.ugent.networkplanningtool.io;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * Abstract class for an asynchronous task to be extended for specific tasks
+ * @param <P> the input type for the task
+ * @param <R> the output type for the task
+ */
 public abstract class AbstractASyncTask<P, R> extends AsyncTask<P, Void, R> {
 
     private final String TAG = getClass().getName();
@@ -12,19 +17,33 @@ public abstract class AbstractASyncTask<P, R> extends AsyncTask<P, Void, R> {
     // Most recent exception (used to diagnose failures)
     private Exception mostRecentException;
 
+    /**
+     * Default constructor
+     */
     public AbstractASyncTask() {
     }
 
+    /**
+     * Sets the listener that needs to be alerted when the task is complete
+     * @param taskCompletionListener the listener that needs to be alerted when the task is complete
+     */
     public final void setOnTaskCompletionListener(OnAsyncTaskCompleteListener<R> taskCompletionListener) {
         this.taskCompletionListener = taskCompletionListener;
     }
 
+    /**
+     * Sets the progress tracker that needs to be alerted when the task progress changed
+     * @param progressTracker the progress tracker that needs to be alerted when the task progress changed
+     */
     public final void setProgressTracker(ASyncIOTaskManager progressTracker) {
         if (progressTracker != null) {
             this.progressTracker = progressTracker;
         }
     }
 
+    /**
+     * Alerts the progress tracker before the task begins executing
+     */
     @Override
     protected final void onPreExecute() {
         if (progressTracker != null) {
@@ -33,7 +52,9 @@ public abstract class AbstractASyncTask<P, R> extends AsyncTask<P, Void, R> {
     }
 
     /**
-     * Invoke the web service request
+     * Invokes the task (only the first parameter is used)
+     * @param parameters the parameters for the task
+     * @return the result of the task
      */
     @Override
     protected final R doInBackground(P... parameters) {
@@ -50,11 +71,17 @@ public abstract class AbstractASyncTask<P, R> extends AsyncTask<P, Void, R> {
         return result;
     }
 
+    /**
+     * Task performing method to be implemented by extending classes
+     * @param parameter the task input parameter
+     * @return the result of the task
+     * @throws Exception The Exception when the task fails.
+     */
     protected abstract R performTaskInBackground(P parameter) throws Exception;
 
     /**
-     * @param result to be sent back to the observer (typically an {@link android.app.Activity} running on the UI Thread). This can be <code>null</code> if
-     *               an error occurs while attempting to invoke the web service (e.g. web service was unreachable, or network I/O issue etc.)
+     * Alerts the listener and progress tracker that the task is done.
+     * @param result the task result
      */
     @Override
     protected final void onPostExecute(R result) {
