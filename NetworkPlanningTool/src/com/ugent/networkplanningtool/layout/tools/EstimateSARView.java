@@ -10,6 +10,9 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View containing the settings for estimating SAR.
+ */
 public class EstimateSARView extends LinearLayout {
 
     private EditText personAgeEditText;
@@ -17,19 +20,19 @@ public class EstimateSARView extends LinearLayout {
     private EditText personWeightEditText;
     private MySeekBar roomHeightBar;
 
-    private DrawingModel drawingModel;
-
-    public EstimateSARView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public EstimateSARView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
+    /**
+     * Initializes the GUI
+     */
     private void init() {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -41,18 +44,34 @@ public class EstimateSARView extends LinearLayout {
         roomHeightBar = (MySeekBar) findViewById(R.id.roomHeightView);
     }
 
+    /**
+     * Returns the set person age
+     * @return the set person age
+     */
     public int getPersonAge() {
         return Integer.parseInt(personAgeEditText.getText().toString());
     }
 
+    /**
+     * Returns the set person height
+     * @return the set person height
+     */
     public int getPersonHeight() {
         return Integer.parseInt(personHeightEditText.getText().toString());
     }
 
+    /**
+     * Returns the set person weight
+     * @return the set person weight
+     */
     public int getPersonWeight() {
         return Integer.parseInt(personWeightEditText.getText().toString());
     }
 
+    /**
+     * Returns the set room height
+     * @return the set room height
+     */
     public double getRoomHeight() {
         return roomHeightBar.getValue();
     }

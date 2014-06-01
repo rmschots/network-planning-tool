@@ -11,6 +11,9 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View containing the settings for optimizing the access point placement
+ */
 public class OptimalPlacementView extends LinearLayout {
 
     private ArrayAdapter<ActivityType> activityAdapter;
@@ -18,14 +21,11 @@ public class OptimalPlacementView extends LinearLayout {
     private Spinner placeAccesspointsSpinner;
     private Spinner defaultActivitySpinner;
 
-    private DrawingModel drawingModel;
-
-    public OptimalPlacementView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public OptimalPlacementView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -43,10 +43,18 @@ public class OptimalPlacementView extends LinearLayout {
         defaultActivitySpinner.setAdapter(activityAdapter);
     }
 
+    /**
+     * Returns the set default activity
+     * @return the set default activity
+     */
     public ActivityType getDefaultActivity() {
         return activityAdapter.getItem(defaultActivitySpinner.getSelectedItemPosition());
     }
 
+    /**
+     * Returns the set access point placement mode
+     * @return the set access point placement mode
+     */
     public String getPlaceAccessPoints() {
         return placeAccesspointsSpinner.getSelectedItem().toString();
     }

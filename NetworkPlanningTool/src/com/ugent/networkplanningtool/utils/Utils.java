@@ -11,6 +11,9 @@ import org.w3c.dom.Node;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class providing all kinds of utilities
+ */
 public class Utils {
 	
 	private static Rect r = new Rect();
@@ -32,7 +35,14 @@ public class Utils {
 	    }
 	    return r;
 	}
-  
+
+    /**
+     * Determines the maximum text size given the maximum height in pixels and a predicted value.
+     * @param str the text to determine the maximum text size of
+     * @param maxHeight the maximum height of the text
+     * @param prediction the predicted text size
+     * @return the maximum text size
+     */
 	public static int determineMaxTextSize(String str, float maxHeight, int prediction){
 		int size = prediction;
 		do{
@@ -45,11 +55,25 @@ public class Utils {
 		}while(r.height() >= maxHeight);
 		return size;
 	}
-	  
+
+    /**
+     * Calculates the point-to-point distance of two given points
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return the point-to-point distance of two given points
+     */
 	public static double pointToPointDistance(Point p1, Point p2){
 		return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));  
 	}
-	
+
+    /**
+     * Calculates the point-to-line distance given a point and a line.
+     * @param a the first edge of the line
+     * @param b the second edge of the line
+     * @param p the point
+     * @param upright whether only upright distances are considered
+     * @return the point-to-line distance given a point and a line
+     */
 	public static double pointToLineDistance(Point a, Point b, Point p, boolean upright) {
 		double distAToB = pointToPointDistance(a, b);
 		double distToA = pointToPointDistance(a,p);
@@ -67,7 +91,16 @@ public class Utils {
 		}
 		return (Math.abs((p.x-a.x)*(b.y-a.y)-(p.y-a.y)*(b.x-a.x))/pointToPointDistance(a,b));
 	}
-	
+
+    /**
+     * Calculates the intersection point or points (in case the lines would be overlapping) of two given lines
+     * @param line1point1 the first edge of line 1
+     * @param line1point2 the second edge of line 1
+     * @param line2point1 the first edge of line 2
+     * @param line2point2 the second edge of line 2
+     * @param upright whether only upright distances of edges are considered
+     * @return the intersection point of two given lines
+     */
 	public static Point[] getIntersectionSpecial(Point line1point1, Point line1point2, Point line2point1, Point line2point2, boolean upright){
 		double dist1 = pointToLineDistance(line1point1, line1point2, line2point1,upright);
 		double dist2 = pointToLineDistance(line1point1, line1point2, line2point2,upright);
@@ -139,7 +172,14 @@ public class Utils {
 		}
 		return new Point[]{};
 	}
-	
+
+    /**
+     * Returns the perpendicular projection of the given point on the given line
+     * @param a the first edge of the line
+     * @param b the second edge of the line
+     * @param p the point to project
+     * @return the projected location
+     */
 	public static Point pointProjectionOnLine(Point a, Point b, Point p){
 		int x;
 		int y;
@@ -167,6 +207,12 @@ public class Utils {
 		return null;
 	}
 
+    /**
+     * Returns the closes result to the given location
+     * @param point the location
+     * @param csvResults the list of results to consider
+     * @return the closes result to the given location
+     */
     public static CSVResult getResultAt(Point point, List<CSVResult> csvResults) {
         Point p;
 

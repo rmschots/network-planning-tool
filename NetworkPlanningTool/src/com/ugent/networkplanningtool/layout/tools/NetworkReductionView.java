@@ -11,19 +11,19 @@ import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View containing the settings for reducing the network
+ */
 public class NetworkReductionView extends LinearLayout {
     private ArrayAdapter<ActivityType> activityAdapter;
 
     private Spinner defaultActivitySpinner;
 
-    private DrawingModel drawingModel;
-
-    public NetworkReductionView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public NetworkReductionView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -40,6 +40,10 @@ public class NetworkReductionView extends LinearLayout {
         defaultActivitySpinner.setAdapter(activityAdapter);
     }
 
+    /**
+     * Returns the set default activity
+     * @return the set default activity
+     */
     public ActivityType getDefaultActivity() {
         return activityAdapter.getItem(defaultActivitySpinner.getSelectedItemPosition());
     }

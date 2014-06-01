@@ -13,6 +13,9 @@ import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
 import com.ugent.networkplanningtool.model.DrawingModel;
 
+/**
+ * View containing the settings for reducing the exposure
+ */
 public class ExposureReductionView extends LinearLayout {
     private ArrayAdapter<ActivityType> activityAdapter;
 
@@ -21,14 +24,11 @@ public class ExposureReductionView extends LinearLayout {
     private Spinner placeAccesspointsSpinner;
     private Spinner defaultActivitySpinner;
 
-    private DrawingModel drawingModel;
-
-    public ExposureReductionView(Context context, DrawingModel drawingModel) {
-        super(context);
-        this.drawingModel = drawingModel;
-        init();
-    }
-
+    /**
+     * Default constructor
+     * @param context the context of the parent
+     * @param attrs the attribute set
+     */
     public ExposureReductionView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -48,18 +48,34 @@ public class ExposureReductionView extends LinearLayout {
         defaultActivitySpinner.setAdapter(activityAdapter);
     }
 
+    /**
+     * Returns the maximum distance to the access point
+     * @return the maximum distance to the access point
+     */
     public double getdistanceToAP() {
         return apDistanceSeekBar.getValue();
     }
 
+    /**
+     * Returns he maximum electric field value
+     * @return he maximum electric field value
+     */
     public double getMaxEField() {
         return Double.parseDouble(maxEFieldEditText.getText().toString());
     }
 
+    /**
+     * Returns the set default activity
+     * @return the set default activity
+     */
     public ActivityType getDefaultActivity() {
         return activityAdapter.getItem(defaultActivitySpinner.getSelectedItemPosition());
     }
 
+    /**
+     * Returns the set access point placing mode
+     * @return the set access point placing mode
+     */
     public String getPlaceAccessPoints() {
         return placeAccesspointsSpinner.getSelectedItem().toString();
     }

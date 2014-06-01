@@ -2,6 +2,9 @@ package com.ugent.networkplanningtool.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Generator of unique id's
+ */
 public class UniqueIdGenerator {
 
 	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
