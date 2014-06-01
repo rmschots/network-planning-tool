@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.ActivityType;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
-import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
  * View containing the settings for reducing the exposure

@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
-import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
  * View containing the settings for estimating SAR.

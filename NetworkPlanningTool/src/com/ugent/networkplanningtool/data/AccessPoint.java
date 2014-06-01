@@ -224,8 +224,8 @@ public class AccessPoint extends FloorPlanObject implements XMLTransformable {
     }
 
     /**
-     * the gain of the access point
-     * @param gain
+     * Returns the gain of the access point
+     * @param gain the gain of the access point
      */
     public void setGain(int gain) {
         this.gain = gain;

@@ -13,7 +13,6 @@ import android.widget.Spinner;
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.parameters.Receiver;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
-import com.ugent.networkplanningtool.model.DrawingModel;
 
 import java.util.Arrays;
 import java.util.List;

@@ -31,7 +31,7 @@ public class MySeekBar extends LinearLayout {
 
     /**
      * Default constructor
-     * @param context
+     * @param context the context of the parent
      */
     public MySeekBar(Context context) {
         super(context);

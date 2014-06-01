@@ -9,7 +9,6 @@ import android.widget.RadioGroup;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.data.enums.results.ExportRawDataType;
-import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
  * View used to export resulting data

@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 
 import com.ugent.networkplanningtool.R;
 import com.ugent.networkplanningtool.layout.components.MySeekBar;
-import com.ugent.networkplanningtool.model.DrawingModel;
 
 /**
  * View used to set different types of margins for the models
